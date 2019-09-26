@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{description}
+\item [Name] Emily Horsman
+\item [Mac ID] horsmane
+\item [Student Number] 400072650
+\item [Other Group Members] Tanner Ryan (ryant3)
+\item [Supervisors] Dr. Spencer Smith, Dr. Jacques Carette
+\end{description}
+
+\section{Project Description}
+
+The goal of our application is to make it easy to monitor and consume data from a variety of common hardware peripherals (e.g., off-the-shelf accelerometers, temperature sensors, moisture sensors, etc). This will include a back-end which manages application logic for microcontrollers connected to peripherals; provides an API for logged sensor data to be consumed by arbitrary applications (machine learning, analysis, etc); and an easily configurable dashboard in a web browser for viewing peripheral data.
+\\\\
+If we achieve our goal then a user should be able to plug in a new sensor to commonly available microcontrollers and immediately view data from the sensor in their browser after minimal configuration.
+
+\subsection{Highlights and Possible Scope}
+
+\begin{itemize}
+    \item Auto-discovery of I\textsuperscript{2}C sensors using the common request-response protocol.
+    \item A library for ``Arduino-compatible'' microcontrollers to send sensor data to a back-end.
+    \item An API to read and write sensor data via a common interface.
+    \item A dashboard in a web browser to interact with hardware peripherals remotely.
+    \item A variety of widgets to view data on the dashboard in various formats.
+\end{itemize}
+
+\end{document}
