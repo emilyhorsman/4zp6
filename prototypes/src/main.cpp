@@ -54,7 +54,7 @@ void loop()
 
     mqtt.loop();
 
-    /*char buff[6];
+    char buff[6];
     wire->beginTransmission(0x44);
     wire->write(0x24);
     wire->write(0x0);
@@ -70,10 +70,10 @@ void loop()
     t *= 175;
     t /= 0xffff;
     t = -45 + t;
-    Serial.printf("Temp: %f\n", t);*/
+    Serial.printf("Temp: %f\n", t);
 
 
-
+    /*
     wire->beginTransmission(0x18);
     // Set the MSB in the 8 bit address to 1 so that it will auto increment.
     // Page 21/42 of https://cdn-shop.adafruit.com/datasheets/LIS3DH.pdf
@@ -115,7 +115,34 @@ void loop()
     xg = (float) x / 16380;
     yg = (float) y / 16380;
     zg = (float) z / 16380;
-    Serial.printf("[%d] 0x18 %f %f %f\n", count, xg, yg, zg);
+    Serial.printf("[%d] 0x18 %f %f %f\n", count, xg, yg, zg);*/
+
+    uint8_t thermalBuf[128];
+    for (int i = 0; i < 128; i++) {
+        wire->beginTransmission(0x69);
+        wire->write(0x80 + i);
+        wire->endTransmission();
+        wire->requestFrom(0x69, 1);
+        thermalBuf[i] = wire->read();
+    }
+    float image[64];
+    for (int i = 0; i < 64; i++) {
+        uint16_t foo = thermalBuf[i * 2];
+        foo |= thermalBuf[i * 2 + 1] << 8;
+        foo &= 0b0000011111111111;
+        image[i] = (float) foo / 4;
+    }
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            if (image[x * 8 + y] > t) {
+                Serial.printf("1");
+            } else {
+                Serial.printf("0");
+            }
+        }
+        Serial.println();
+    }
+    delay(1000);
 
 
     /*
