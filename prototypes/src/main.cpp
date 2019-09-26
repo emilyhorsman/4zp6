@@ -40,6 +40,7 @@ void setup()
 
 void loop()
 {
+<<<<<<< HEAD
     if (WiFi.status() != WL_CONNECTED)
     {
         Serial.println(F("[Wifi] Connection lost"));
@@ -73,6 +74,29 @@ void loop()
     Serial.printf("Temp: %f\n", t);*/
 
 
+=======
+    /*char buff[6];
+    wire->beginTransmission(0x44);
+    wire->write(0x24);
+    wire->write(0x0);
+    wire->endTransmission();
+    delay(30);
+    wire->requestFrom(0x44, 6);
+    wire->readBytes(buff, 6);
+
+    uint16_t temp;
+    temp = buff[0];
+    temp <<= 8;
+    temp |= buff[1];
+
+    double t = temp;
+    t *= 175;
+    t /= 0xffff;
+    t = -45 + t;
+    Serial.printf("Temp: %f\n", t);*/
+
+
+>>>>>>> c0d29e20fa7351bf64df7c25bd46b0ef240c01af
 
     wire->beginTransmission(0x18);
     // Set the MSB in the 8 bit address to 1 so that it will auto increment.
