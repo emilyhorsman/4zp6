@@ -1,8 +1,10 @@
-/*
- * Copyright (c) 2019 Emily Horsman, Tanner Ryan. All rights reserved.
- */
-#include "headers.h"
-#include "Wire.h"
+#include "header.h"
+#include <Wire.h>
+
+// Telemetry protobuf
+#include <pb_encode.h>
+#include <pb_decode.h>
+#include <Telemetry.pb.h>
 
 //********** COMMON SETTINGS **********//
 
@@ -23,8 +25,10 @@ void setup()
     Serial.println();
     delay(10);
 
-    connect_wifi();
+    pinMode(LED_BUILTIN, OUTPUT);
 
+    // establish connectivity
+    connect_wifi();
     mqtt.setServer(MQTT_HOST, MQTT_PORT);
     mqtt.setCallback(mqtt_rx);
     connect_mqtt();
@@ -45,15 +49,14 @@ void loop()
         Serial.println(F("[Wifi] Connection lost"));
         connect_wifi();
     }
-
     if (!mqtt.connected())
     {
         Serial.println(F("[MQTT] Connection lost"));
         connect_mqtt();
     }
-
     mqtt.loop();
 
+    /*
     char buff[6];
     wire->beginTransmission(0x44);
     wire->write(0x24);
@@ -71,6 +74,7 @@ void loop()
     t /= 0xffff;
     t = -45 + t;
     Serial.printf("Temp: %f\n", t);
+    */
 
 
     /*
@@ -117,6 +121,7 @@ void loop()
     zg = (float) z / 16380;
     Serial.printf("[%d] 0x18 %f %f %f\n", count, xg, yg, zg);*/
 
+    /*
     uint8_t thermalBuf[128];
     for (int i = 0; i < 128; i++) {
         wire->beginTransmission(0x69);
@@ -145,7 +150,6 @@ void loop()
     delay(1000);
 
 
-    /*
     for (uint8_t i=0; i < 128; i++)
     {
         wire->requestFrom(i, 1);
@@ -154,9 +158,11 @@ void loop()
         else
             Serial.printf("Nothing on %x\n", i);
     }*/
-    delay(1000);
+    // delay(1000);
 }
 
+// Establish wifi connection. Called on setup and upon disconnection. Will block
+// until connection is established.
 void connect_wifi()
 {
     Serial.print(F("[Wifi] Connecting to "));
@@ -166,6 +172,7 @@ void connect_wifi()
     while (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
         Serial.println(F("[Wifi] Connection failed, retrying..."));
+        delay(5000);
         WiFi.begin(WIFI_SSID, WIFI_PASS);
     }
 
@@ -179,6 +186,8 @@ void connect_wifi()
     uuid = normalize_mac(WiFi.macAddress());
 }
 
+// Establish MQTT connection. Called on setup and upon disconnection. Will block
+// until connection is established.
 void connect_mqtt()
 {
     Serial.print(F("[MQTT] Connecting to "));
@@ -196,16 +205,74 @@ void connect_mqtt()
         mqtt.connect(uuid.c_str());
     }
 
-    // send hello here
+    // subscribe to incoming messages (broadcast and specific topic)
+    mqtt.subscribe(MQTT_RX);
+    mqtt.subscribe(String(MQTT_RX + uuid).c_str());
 
-    // subscribe to incoming messages here
-    mqtt.subscribe("tanner");
-
+    // send hello message
+    mqtt_tx_hello();
     Serial.println(F("[MQTT] Connected"));
 }
 
+// Incoming MQTT message handler. Called on incoming MQTT messages.
 void mqtt_rx(char* topic, byte* payload, unsigned int msg_length)
 {
-    // incoming MQTT message handler
-    Serial.printf("%s :: %s\n", topic, payload);
+    bool status;
+
+    Telemetry msg = Telemetry_init_zero;
+    pb_istream_t stream = pb_istream_from_buffer(payload, msg_length);
+    status = pb_decode(&stream, Telemetry_fields, &msg);
+
+    if (!status)
+    {
+        Serial.println(F("[MQTT] Error decoding RX message"));
+    } else
+    {
+        switch (msg.type)
+        {
+            case Telemetry_Type_RX_HELLO:
+                Serial.println(F("[MQTT] Received RX_HELLO message"));
+                mqtt_tx_hello();
+                break;
+
+            case Telemetry_Type_RX_ACTION:
+                Serial.println(F("[MQTT] Received RX_ACTION message"));
+                if (msg.action.type == MsgAction_Action_DIGITAL_LOW)
+                    digitalWrite(msg.action.pin, LOW);
+                else
+                    digitalWrite(msg.action.pin, HIGH);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+// Send MQTT TX_HELLO message.
+void mqtt_tx_hello()
+{
+    uint8_t buffer[Telemetry_size];
+    size_t msg_length;
+    bool status;
+
+    Telemetry msg = Telemetry_init_zero;
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    // message fields
+    msg.type = Telemetry_Type_TX_HELLO;
+    strcpy(msg.hello.ip, String(WiFi.localIP().toString()).c_str());
+    msg.hello.version = 1;
+
+    status = pb_encode(&stream, Telemetry_fields, &msg);
+    msg_length = stream.bytes_written;
+
+    if (!status)
+    {
+        Serial.println(F("[MQTT] Error encoding TX_HELLO"));
+    } else
+    {
+        mqtt.publish(String(MQTT_TX + uuid).c_str(), buffer, msg_length);
+        Serial.println(F("[MQTT] Sent TX_HELLO message"));
+    }
 }

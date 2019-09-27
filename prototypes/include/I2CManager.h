@@ -1,5 +1,5 @@
 #include <bitset>
-#include "Wire.h"
+#include <Wire.h>
 
 #define I2CMANAGER_DEFAULT_POLL_INTERVAL_MILLI 1000
 #define I2CMANAGER_DEFAULT_SCAN_INTERVAL_MILLI 5
