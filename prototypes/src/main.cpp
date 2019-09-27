@@ -167,6 +167,7 @@ void connect_wifi()
 {
     Serial.print(F("[Wifi] Connecting to "));
     Serial.println(F(WIFI_SSID));
+    WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 
     while (WiFi.waitForConnectResult() != WL_CONNECTED)
@@ -175,6 +176,8 @@ void connect_wifi()
         delay(5000);
         WiFi.begin(WIFI_SSID, WIFI_PASS);
     }
+    WiFi.enableIpV6();
+    delay(5000);
 
     Serial.print(F("[Wifi] Connected\n[Wifi] IPv4: "));
     Serial.println(WiFi.localIP());
