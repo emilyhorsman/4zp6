@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[L]{COMPSCI 4ZP6A --- Initial Document}
+\fancyhead[R]{Tanner Ryan <ryant3>, 400053060}
+
+\begin{document}
+
+\section*{September Deliverable}
+
+\subsection*{Project Information}
+
+\begin{itemize}
+    \item \textbf{Group Member}: Emily Horsman <horsmane>
+    \item \textbf{Supervisors}: Dr. Spencer Smith, Dr. Jacques Carette
+\end{itemize}
+
+\subsection*{Project Description}
+
+I\textsuperscript{2}C (Inter-Integrated Circuit) is an existing protocol which
+enables hardware peripherals to communicate with microcontrollers. Currently,
+application-level interfacing with I\textsuperscript{2}C devices requires
+implementations that are specific to a particular device. This creates a
+significant amount of work when interfacing with different device types.\\
+
+Our group would like to propose a modular system that allows for the
+autodiscovery, transport, and ingestion of I\textsuperscript{2}C device data.\\
+
+The primary project goals are as follows: \begin{enumerate}
+    \item Peripheral Autodiscovery: automatically detect when a device is
+    physically connected to a microcontroller. Allow a user to provision a
+    device through a configurable web dashboard with minimal effort.
+
+    \item Data Transport: provide a robust, software-defined transport mechanism
+    to allow for real-time, bidirectional communication with
+    I\textsuperscript{2}C devices.
+
+    \item Modular ingestion: create a language-agnostic API for users to
+    translate raw I\textsuperscript{2}C data into usable data.
+\end{enumerate}
+
+The project will be validated through the popular Arduino platform, interfacing
+with numerous, low-cost sensors (e.g. temperature, accelerometer, thermal
+camera).
+
+\end{document}
