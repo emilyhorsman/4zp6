@@ -72,7 +72,32 @@ TBD
 TBD
 
 \subsection{Functional requirements}
-TBD
+
+\subsubsection{Dashboard}
+
+\begin{enumerate}
+\item The dashboard must inform an active user when a sensor is connected.
+\item The dashboard must inform an active user when a sensor is disconnected.
+\item The dashboard must inform the user of the sensor's unique ID.
+\item The dashboard must require the user to configure the type of sensor when connected.
+    \begin{enumerate}
+    \item The dashboard must provide a list of supported sensors for this configuration.
+    \item The list must be based on the information received from the backend.
+    \end{enumerate}
+\item The dashboard must display sensor data with widgets.
+    \begin{enumerate}
+    \item Widgets must present data from one or more sensors.
+    \item Widgets must have a configurable type which changes the presentation of data.
+    \item Widgets must support displaying data across the time domain.
+    \item Widgets must support displaying data as a current value.
+    \item The dashboard must offer any of the following time domain presentation types: scatter plot; line graph.
+    \item The dashboard must offer any of the following current value presentation types: bar chart; text value; map, color.
+        \iffalse
+        Bar chart would have each input across the X-axis and have the Y-axis be the current value for each.
+        \fi
+    \end{enumerate}
+\item The dashboard must allow widgets to be re-arranged resized within the viewport.
+\end{enumerate}
 
 \subsection{Performance requirements}
 TBD
