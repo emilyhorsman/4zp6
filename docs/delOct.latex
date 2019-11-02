@@ -1,0 +1,126 @@
+\documentclass{article}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\pagestyle{fancy}
+\fancyhead[L]{COMPSCI 4ZP6A}
+\fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
+
+\begin{document}
+
+\section*{October Deliverable}
+
+\section{Purpose}
+
+\subsection{Definitions}
+TBD
+
+\subsection{Background}
+TBD
+
+\subsection{System overview}
+TBD
+
+\subsection{References}
+TBD
+
+
+\section{Overall description}
+
+\subsection{Product perspective}
+
+\subsubsection{System interfaces}
+TBD
+
+\subsubsection{User interfaces}
+TBD
+
+\subsubsection{Hardware interfaces}
+TBD
+
+\subsubsection{Software interfaces}
+TBD
+
+\subsubsection{Communication Interfaces}
+TBD
+
+\subsubsection{Memory Constraints}
+TBD
+
+\subsection{Design constraints}
+
+\subsubsection{Operations}
+TBD
+
+\subsubsection{Site Adaptation Requirements}
+TBD
+
+\subsection{Product functions}
+TBD
+
+\subsection{User characteristics}
+TBD
+
+\subsection{Constaints, assumptions and dependencies}
+TBD
+
+
+\section{Specific requirements}
+
+\subsection{External interface requirements}
+TBD
+
+\subsection{Functional requirements}
+TBD
+
+\subsection{Performance requirements}
+TBD
+
+\subsection{Logical database requirement}
+TBD
+
+\subsection{Software System Attributes}
+
+\subsubsection{Reliability}
+TBD
+
+\subsubsection{Availability}
+TBD
+
+\subsubsection{Security}
+TBD
+
+\subsubsection{Maintainability}
+TBD
+
+\subsubsection{Portability}
+TBD
+
+\subsection{Functional requirements}
+
+\subsubsection{Functional Partitioning}
+TBD
+
+\subsubsection{Functional Description}
+TBD
+
+\subsubsection{Control Description}
+TBD
+
+\subsection{Environment characteristics}
+
+\subsubsection{Hardware}
+TBD
+
+\subsubsection{Peripherals}
+TBD
+
+\subsubsection{People}
+TBD
+
+
+\subsection{Others}
+TBD
+
+\end{document}
