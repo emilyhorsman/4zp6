@@ -15,6 +15,8 @@
 \section*{October Deliverable}
 \tableofcontents
 
+
+\newpage
 \section{Purpose}
 
 \subsection{Definitions}
@@ -22,6 +24,8 @@
 \item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware prephreials and microcontrollers.
 \item Microcontroller: Arduino powered, single board computer. Provides an \proto\ bus and IP network connection.
 \item Controller: main controller for \name. Responsible for communication with microcontroller(s), exposing HTTP API service.
+\item Prephreial processor: responsible for translating raw sensor data into usable values; per sensor model.
+\item Prephreial: \proto\ hardware sensors (e.g. temperature, accelerometer, thermal camera).
 \end{enumerate}
 
 \subsection{Background}
@@ -32,10 +36,12 @@ This creates a significant amount of work when interfacing with different device
 \subsection{System overview}
 \name\ will provide three main features:
 \begin{enumerate}
-\item Peripheral Autodiscovery: to automatically detect when a prephreial is physically connected to a microcontroller. Allow a user to provision a device through a configurable web dashboard with minimal effort.
+\item Peripheral Autodiscovery: to automatically detect when a prephreial is physically connected to a microcontroller. Allow the user to provision the device through a configurable web dashboard.
 \item Data Transport: provide a robust, software-defined transport mechanism to allow for real-time, bidirectional communication with \proto\ devices.
 \item Modular ingestion: create a language-agnostic API for users to translate raw \proto\ data into usable data.
 \end{enumerate}
+
+\name\ will support different \proto\ prephreials using a language agnostic prephreial processor.
 
 \subsection{References}
 \begin{enumerate}
@@ -44,6 +50,7 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \end{enumerate}
 
 
+\newpage
 \section{Overall description}
 
 \subsection{Product perspective}
@@ -56,42 +63,33 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \subsubsection{Hardware interfaces}
 \begin{enumerate}
-\item The microcontroller must interface with sensors over an I2C bus.
+\item The microcontroller must interface with sensors over the \proto\ bus.
 \end{enumerate}
 
 \subsubsection{Software interfaces}
 \begin{enumerate}
-\item The microcontroller library must support the Arduino microcontroller platform.
+\item The Arduino library must support the Arduino microcontroller platform.
+\item The prephreial must conform to \name's protocol, translating raw data into usable values.
 \end{enumerate}
 
-\subsubsection{Communication Interfaces}
-TBD
-
 \subsubsection{Memory Constraints}
-TBD
-
-\subsection{Design constraints}
-
-\subsubsection{Operations}
-TBD
-
-\subsubsection{Site Adaptation Requirements}
-TBD
-
-\subsection{Product functions}
-TBD
-
-\subsection{User characteristics}
-TBD
+\begin{enumerate}
+\item The Arduino library must function on a microcontroller with 512KB of RAM.
+\end{enumerate}
 
 \subsection{Constaints, assumptions and dependencies}
-TBD
+\begin{enumerate}
+\item Prephreials must comply with the \proto\ register paradigm.
+\item A Prephreial must have an accompanying processor capable of translating device specific register configurations.
+\end{enumerate}
 
 
 \section{Specific requirements}
 
 \subsection{External interface requirements}
-TBD
+\begin{enumerate}
+\item Not applicable.
+\end{enumerate}
 
 \subsection{Functional requirements}
 
@@ -127,6 +125,21 @@ TBD
     \end{enumerate}
 \item The dashboard must allow the user to load configuration presets from a list of previous presets.
 \item The dashboard must load the most recently used preset by default.
+\end{enumerate}
+
+\subsubsection{Controller}
+\begin{enumerate}
+\item ?
+\end{enumerate}
+
+\subsubsection{Microcontroller}
+\begin{enumerate}
+\item ?
+\end{enumerate}
+
+\subsubsection{Prephreial processor}
+\begin{enumerate}
+\item ?
 \end{enumerate}
 
 \subsection{Performance requirements}
