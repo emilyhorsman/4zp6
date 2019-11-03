@@ -84,6 +84,7 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \end{enumerate}
 
 
+\newpage
 \section{Specific requirements}
 
 \subsection{External interface requirements}
@@ -143,7 +144,9 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \end{enumerate}
 
 \subsection{Performance requirements}
-TBD
+\begin{enumerate}
+\item Upon provisioning a new prephreial, data will be accessible on the dashboard within one (1) second.
+\end{enumerate}
 
 \subsection{Database requirements}
 
