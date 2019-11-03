@@ -131,7 +131,11 @@ TBD
 TBD
 
 \subsubsection{Portability}
-TBD
+
+\begin{enumerate}
+\item Peripheral code shall be supported for Arduino-compatible microcontrollers.
+\item The dashboard shall be supported for modern evergreen browsers on viewports with a dimension of at least 1280x700.
+\end{enumerate}
 
 \subsection{Environment characteristics}
 
