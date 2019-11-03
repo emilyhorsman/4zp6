@@ -2,45 +2,67 @@
 \usepackage[margin=1.5in]{geometry}
 \usepackage{parskip}
 \usepackage{fancyhdr}
-\usepackage{enumerate}
+\usepackage{hyperref}
 \pagestyle{fancy}
 \fancyhead[L]{COMPSCI 4ZP6A}
 \fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
 
+\newcommand{\name}{Telemetry}
+\newcommand{\proto}{I\textsuperscript{2}C}
+
 \begin{document}
 
 \section*{October Deliverable}
+\tableofcontents
 
 \section{Purpose}
 
 \subsection{Definitions}
-TBD
+\begin{enumerate}
+\item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware prephreials and microcontrollers.
+\item Microcontroller: Arduino powered, single board computer. Provides an \proto\ bus and IP network connection.
+\item Controller: main controller for \name. Responsible for communication with microcontroller(s), exposing HTTP API service.
+\end{enumerate}
 
 \subsection{Background}
-TBD
+\proto\ is an existing protocol which enables hardware peripherals to communicate with microcontrollers.
+Currently, application-level interfacing with \proto\ devices requires implementations that are specific to a particular device.
+This creates a significant amount of work when interfacing with different device types.
 
 \subsection{System overview}
-TBD
+\name\ will provide three main features:
+\begin{enumerate}
+\item Peripheral Autodiscovery: to automatically detect when a prephreial is physically connected to a microcontroller. Allow a user to provision a device through a configurable web dashboard with minimal effort.
+\item Data Transport: provide a robust, software-defined transport mechanism to allow for real-time, bidirectional communication with \proto\ devices.
+\item Modular ingestion: create a language-agnostic API for users to translate raw \proto\ data into usable data.
+\end{enumerate}
 
 \subsection{References}
-TBD
+\begin{enumerate}
+\item Texas Instruments (June 2015), Application Report: ``Understanding the \proto\ bus''\\
+http://www.ti.com/lit/an/slva704/slva704.pdf
+\end{enumerate}
 
 
 \section{Overall description}
 
 \subsection{Product perspective}
 
-\subsubsection{System interfaces}
-TBD
-
 \subsubsection{User interfaces}
-TBD
+\begin{enumerate}
+\item The user shall interact with the system through a dashboard, using a web browser.
+\item The dashboard will interface with the controller through an HTTP API. The user may interface with this directly for use with a custom dashboard.
+\end{enumerate}
 
 \subsubsection{Hardware interfaces}
-TBD
+\begin{enumerate}
+\item The microcontroller must interface with sensors over an I2C bus.
+\end{enumerate}
 
 \subsubsection{Software interfaces}
-TBD
+\begin{enumerate}
+\item The microcontroller library must support the Arduino microcontroller platform.
+\end{enumerate}
 
 \subsubsection{Communication Interfaces}
 TBD
