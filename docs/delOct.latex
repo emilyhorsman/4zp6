@@ -110,8 +110,11 @@ TBD
 \subsection{Performance requirements}
 TBD
 
-\subsection{Logical database requirement}
-TBD
+\subsection{Database requirements}
+
+\begin{enumerate}
+\item The database must store all data received from sensors with time and unique ID.
+\end{enumerate}
 
 \subsection{Software System Attributes}
 
