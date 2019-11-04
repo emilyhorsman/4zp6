@@ -130,43 +130,97 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \subsubsection{Controller}
 \begin{enumerate}
-\item ?
+\item The controller must have access to a standard IP network.
+\item The controller must accept an IP connection from a microcontroller.
+\item The controller must interface with an SQL database for persistent storage.
+\item The controller must query the database for a provisioning configuration.
+\item The controller must send a provisioning configuration to a microcontroller. 
+\item The controller must accept \proto\ data originating from a microcontroller, storing the data in the database.
+\item The controller must accept an IP connection from a prephreial controller.
+\item The controller must request prephreial-specific \proto\ commands from a prephreial controller.
+\item The controller must expose an HTTP API, querying the database as required.
+    \begin{enumerate}
+    \item The API must have a route to return a list of unprovisioned prephreials.
+    \item The API must have a route to return a list of provisioned prephreials.
+    \item The API must have a route to provision a prephreial. A record is created with pre-defined fields:
+        \begin{enumerate}
+            \item MAC (Media Access Control) address of microcontroller the prephreial is connected to.
+            \item \proto\ address of connected prephreial.
+            \item Human-readable (common) name of the prephreial.
+            \item Type of prephreial (sensor type).
+        \end{enumerate}
+    \item The API must have a route to return the latest data for a requested prephreial.
+    \item The API must have a route return data for a requested prephreial, within a defined start and stop time.
+    \end{enumerate}
 \end{enumerate}
 
 \subsubsection{Microcontroller}
 \begin{enumerate}
-\item ?
+\item The microcontroller must have enough RAM to load \name's Arduino library.
+\item The microcontroller must establish connectivity to a standard IP network.
+\item The microcontroller must establish an IP connection with the controller.
+\item The microcontroller must re-establish the IP connection in the event the existing connection is interrupted.
+\item The microcontroller must receive a provisioning configuration from the controller.
+\item The microcontroller must perform autodiscovery of prephreials connected to the \proto\ bus.
+\item The microcontroller must parse the provisioning configuration and perform input/output (I/O) commands on the \proto\ bus.
+\item The microcontroller must send obtained \proto\ data over the IP connection.
 \end{enumerate}
 
 \subsubsection{Prephreial processor}
 \begin{enumerate}
-\item ?
+\item A prephreial processor is defined by the end-user.
+\item A prephreial processor is defined per each prephreial type.
+\item The prephreial processor must have access to a standard IP network.
+\item The prephreial processor must establish an IP connection with the controller.
+\item The prephreial processor must re-establish the IP connection in the event the existing connection is interrupted.
+\item The prephreial processor must advertise translation capabilities to the controller.
+\item The prephreial processor must accept requests from the controller, translating pre-defined actions into \proto\ commands for the specific prephreial type. Supported actions include:
+    \begin{enumerate}
+    \item Initalize \proto\ prephreial connection.
+    \item Read data from prephreial.
+    \item Write data from prephreial.
+    \end{enumerate}
+\item The prephreial processor must respond to requests from the controller by providing \proto\ commands.
 \end{enumerate}
 
 \subsection{Performance requirements}
 \begin{enumerate}
 \item Upon provisioning a new prephreial, data will be accessible on the dashboard within one (1) second.
+\item API responses on the controller must be returned within ten (10) seconds.
 \end{enumerate}
 
 \subsection{Database requirements}
 
 \begin{enumerate}
 \item The database must store all data received from sensors with time and unique ID.
+\item The database must store a list of all provisioned prephreials for each microcontroller.
 \end{enumerate}
 
 \subsection{Software System Attributes}
 
 \subsubsection{Reliability}
-TBD
+\begin{enumerate}
+\item The microcontroller must re-establish the IP network connection with the controller upon disconnection.
+\item All payloads sent between microcontrollers and the controller must have delivery reports.
+\end{enumerate}
 
 \subsubsection{Availability}
-TBD
+\begin{enumerate}
+\item Not applicable.
+\end{enumerate}
 
 \subsubsection{Security}
-TBD
+\begin{enumerate}
+\item All payloads sent between microcontrollers and the controller are sent over plaintext.
+\item All payloads sent between microcontrollers and the controller must not contain confidental information.
+\end{enumerate}
 
 \subsubsection{Maintainability}
-TBD
+\begin{enumerate}
+\item The controller must have support for event logging (tracing) for debugging purposes.
+\item The Arduino library must be versioned with change logs.
+\item The controller must be versioned with change logs.
+\end{enumerate}
 
 \subsubsection{Portability}
 
@@ -174,20 +228,5 @@ TBD
 \item Peripheral code shall be supported for Arduino-compatible microcontrollers.
 \item The dashboard shall be supported for modern evergreen browsers on viewports with a dimension of at least 1280x700.
 \end{enumerate}
-
-\subsection{Environment characteristics}
-
-\subsubsection{Hardware}
-TBD
-
-\subsubsection{Peripherals}
-TBD
-
-\subsubsection{People}
-TBD
-
-
-\subsection{Others}
-TBD
 
 \end{document}
