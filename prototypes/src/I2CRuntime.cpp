@@ -57,3 +57,19 @@ void prototype(TwoWire *wire, Peripheral *peripheral) {
         prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs[i]);
     }
 }
+
+OutputRead sht31TempAndHumidity = {
+    0,
+    0x2400,
+    1,
+    6,
+    500,
+};
+
+Peripheral sht31 = {
+    0x44,
+    1,
+    &sht31TempAndHumidity,
+    NULL,
+    0,
+};
