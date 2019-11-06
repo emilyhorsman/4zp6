@@ -39,15 +39,16 @@ This application logic is hard to write in a maintainable, self-documenting way.
 Any modification of the application logic means that firmware updates need to be applied to other devices on the \proto bus (most commonly, the microcontroller serving as the ``master'' device).
 This creates a significant amount of work throughout the prototyping and maintenance stages of a hardware project.
 
-\subsection{System overview}
-\name\ will provide three main features:
+\subsection{System Overview}
+\name\ shall provide four main features:
 \begin{enumerate}
-\item Peripheral Autodiscovery: to automatically detect when a peripheral is physically connected to a microcontroller. Allow the user to provision the device through a configurable web dashboard.
+\item Peripheral Autodiscovery: to automatically detect when a peripheral is physically connected to a microcontroller. Allow the user to provision the device exclusively through a configurable web dashboard without a firmware update on the microcontroller.
 \item Data Transport: provide a robust, software-defined transport mechanism to allow for real-time, bidirectional communication with \proto devices.
-\item Modular ingestion: create a language-agnostic API for users to translate raw \proto data into usable data.
+\item Modular Ingestion: provide a language-agnostic interface for users to translate raw \proto data into usable data.
+\item Data Export: provide an interface to export logged data from sensors to other applications (e.g., machine learning models, alert systems, etc\ldots)
 \end{enumerate}
 
-\name\ will support different \proto peripherals using a language agnostic peripheral processor.
+\name\ shall support different \proto peripherals using a language agnostic peripheral processor.
 
 \subsection{References}
 \begin{enumerate}
