@@ -21,7 +21,7 @@
 
 \subsection{Definitions}
 
-\name is split into a few different products that each have requirements.
+\name\ is split into a few different products that each have requirements.
 The definitions below let us refer to these products and narrow the scope of external terms (such as \proto and `microcontroller').
 
 \begin{enumerate}
