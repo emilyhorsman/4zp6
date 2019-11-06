@@ -33,9 +33,11 @@ The definitions below let us refer to these products and narrow the scope of ext
 \end{enumerate}
 
 \subsection{Background}
-\proto is an existing protocol which enables hardware peripherals to communicate with microcontrollers.
-Currently, application-level interfacing with \proto devices requires implementations that are specific to a particular device.
-This creates a significant amount of work when interfacing with different device types.
+\proto is an existing bus protocol which enables hardware peripherals to communicate with each other and devices such as microcontrollers.
+Currently, repetitive application logic must be written for each \proto device.
+This application logic is hard to write in a maintainable, self-documenting way.
+Any modification of the application logic means that firmware updates need to be applied to other devices on the \proto bus (most commonly, the microcontroller serving as the ``master'' device).
+This creates a significant amount of work throughout the prototyping and maintenance stages of a hardware project.
 
 \subsection{System overview}
 \name\ will provide three main features:
