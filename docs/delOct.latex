@@ -8,7 +8,7 @@
 \fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
 
 \newcommand{\name}{Telemetry}
-\newcommand{\proto}{I\textsuperscript{2}C}
+\newcommand{\proto}{I\textsuperscript{2}C\,}
 
 \begin{document}
 
@@ -20,32 +20,36 @@
 \section{Purpose}
 
 \subsection{Definitions}
+
+\name is split into a few different products that each have requirements.
+The definitions below let us refer to these products and narrow the scope of external terms (such as \proto and `microcontroller').
+
 \begin{enumerate}
-\item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware prephreials and microcontrollers.
-\item Microcontroller: Arduino powered, single board computer. Provides an \proto\ bus and IP network connection.
-\item Controller: main controller for \name. Responsible for communication with microcontroller(s), exposing HTTP API service.
-\item Prephreial processor: responsible for translating raw sensor data into usable values; per sensor model.
-\item Prephreial: \proto\ hardware sensors (e.g. temperature, accelerometer, thermal camera).
+\item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware peripheral and microcontrollers.
+\item Microcontroller: Arduino powered, single board computer. Provides an \proto bus and IP network connection.
+\item Controller: main application server for \name. Responsible for communication with microcontroller(s), exposing HTTP API service, and serving the dashboard.
+\item Peripheral processor: responsible for informing the controller how a sensor model works via \name's external interface.
+\item Peripheral: Any \proto hardware sensor (e.g. temperature, accelerometer, thermal camera) which uses the \proto standard ``register paradigm''.
 \end{enumerate}
 
 \subsection{Background}
-\proto\ is an existing protocol which enables hardware peripherals to communicate with microcontrollers.
-Currently, application-level interfacing with \proto\ devices requires implementations that are specific to a particular device.
+\proto is an existing protocol which enables hardware peripherals to communicate with microcontrollers.
+Currently, application-level interfacing with \proto devices requires implementations that are specific to a particular device.
 This creates a significant amount of work when interfacing with different device types.
 
 \subsection{System overview}
 \name\ will provide three main features:
 \begin{enumerate}
-\item Peripheral Autodiscovery: to automatically detect when a prephreial is physically connected to a microcontroller. Allow the user to provision the device through a configurable web dashboard.
-\item Data Transport: provide a robust, software-defined transport mechanism to allow for real-time, bidirectional communication with \proto\ devices.
-\item Modular ingestion: create a language-agnostic API for users to translate raw \proto\ data into usable data.
+\item Peripheral Autodiscovery: to automatically detect when a peripheral is physically connected to a microcontroller. Allow the user to provision the device through a configurable web dashboard.
+\item Data Transport: provide a robust, software-defined transport mechanism to allow for real-time, bidirectional communication with \proto devices.
+\item Modular ingestion: create a language-agnostic API for users to translate raw \proto data into usable data.
 \end{enumerate}
 
-\name\ will support different \proto\ prephreials using a language agnostic prephreial processor.
+\name\ will support different \proto peripherals using a language agnostic peripheral processor.
 
 \subsection{References}
 \begin{enumerate}
-\item Texas Instruments (June 2015), Application Report: ``Understanding the \proto\ bus''\\
+\item Texas Instruments (June 2015), Application Report: ``Understanding the \proto bus''\\
 http://www.ti.com/lit/an/slva704/slva704.pdf
 \end{enumerate}
 
@@ -63,13 +67,13 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \subsubsection{Hardware interfaces}
 \begin{enumerate}
-\item The microcontroller must interface with sensors over the \proto\ bus.
+\item The microcontroller must interface with sensors over the \proto bus.
 \end{enumerate}
 
 \subsubsection{Software interfaces}
 \begin{enumerate}
 \item The Arduino library must support the Arduino microcontroller platform.
-\item The prephreial must conform to \name's protocol, translating raw data into usable values.
+\item The peripheral must conform to \name's protocol, translating raw data into usable values.
 \end{enumerate}
 
 \subsubsection{Memory Constraints}
@@ -79,8 +83,8 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \subsection{Constaints, assumptions and dependencies}
 \begin{enumerate}
-\item Prephreials must comply with the \proto\ register paradigm.
-\item A Prephreial must have an accompanying processor capable of translating device specific register configurations.
+\item Peripherals must comply with the \proto register paradigm.
+\item A Peripheral must have an accompanying processor capable of translating device specific register configurations.
 \end{enumerate}
 
 
@@ -135,22 +139,22 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \item The controller must interface with an SQL database for persistent storage.
 \item The controller must query the database for a provisioning configuration.
 \item The controller must send a provisioning configuration to a microcontroller. 
-\item The controller must accept \proto\ data originating from a microcontroller, storing the data in the database.
-\item The controller must accept an IP connection from a prephreial controller.
-\item The controller must request prephreial-specific \proto\ commands from a prephreial controller.
+\item The controller must accept \proto data originating from a microcontroller, storing the data in the database.
+\item The controller must accept an IP connection from a peripheral controller.
+\item The controller must request peripheral-specific \proto commands from a peripheral controller.
 \item The controller must expose an HTTP API, querying the database as required.
     \begin{enumerate}
-    \item The API must have a route to return a list of unprovisioned prephreials.
-    \item The API must have a route to return a list of provisioned prephreials.
-    \item The API must have a route to provision a prephreial. A record is created with pre-defined fields:
+    \item The API must have a route to return a list of unprovisioned peripherals.
+    \item The API must have a route to return a list of provisioned peripherals.
+    \item The API must have a route to provision a peripheral. A record is created with pre-defined fields:
         \begin{enumerate}
-            \item MAC (Media Access Control) address of microcontroller the prephreial is connected to.
-            \item \proto\ address of connected prephreial.
-            \item Human-readable (common) name of the prephreial.
-            \item Type of prephreial (sensor type).
+            \item MAC (Media Access Control) address of microcontroller the peripheral is connected to.
+            \item \proto address of connected peripheral.
+            \item Human-readable (common) name of the peripheral.
+            \item Type of peripheral (sensor type).
         \end{enumerate}
-    \item The API must have a route to return the latest data for a requested prephreial.
-    \item The API must have a route return data for a requested prephreial, within a defined start and stop time.
+    \item The API must have a route to return the latest data for a requested peripheral.
+    \item The API must have a route return data for a requested peripheral, within a defined start and stop time.
     \end{enumerate}
 \end{enumerate}
 
@@ -161,31 +165,31 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \item The microcontroller must establish an IP connection with the controller.
 \item The microcontroller must re-establish the IP connection in the event the existing connection is interrupted.
 \item The microcontroller must receive a provisioning configuration from the controller.
-\item The microcontroller must perform autodiscovery of prephreials connected to the \proto\ bus.
-\item The microcontroller must parse the provisioning configuration and perform input/output (I/O) commands on the \proto\ bus.
-\item The microcontroller must send obtained \proto\ data over the IP connection.
+\item The microcontroller must perform autodiscovery of peripherals connected to the \proto bus.
+\item The microcontroller must parse the provisioning configuration and perform input/output (I/O) commands on the \proto bus.
+\item The microcontroller must send obtained \proto data over the IP connection.
 \end{enumerate}
 
-\subsubsection{Prephreial processor}
+\subsubsection{Peripheral processor}
 \begin{enumerate}
-\item A prephreial processor is defined by the end-user.
-\item A prephreial processor is defined per each prephreial type.
-\item The prephreial processor must have access to a standard IP network.
-\item The prephreial processor must establish an IP connection with the controller.
-\item The prephreial processor must re-establish the IP connection in the event the existing connection is interrupted.
-\item The prephreial processor must advertise translation capabilities to the controller.
-\item The prephreial processor must accept requests from the controller, translating pre-defined actions into \proto\ commands for the specific prephreial type. Supported actions include:
+\item A peripheral processor is defined by the end-user.
+\item A peripheral processor is defined per each peripheral type.
+\item The peripheral processor must have access to a standard IP network.
+\item The peripheral processor must establish an IP connection with the controller.
+\item The peripheral processor must re-establish the IP connection in the event the existing connection is interrupted.
+\item The peripheral processor must advertise translation capabilities to the controller.
+\item The peripheral processor must accept requests from the controller, translating pre-defined actions into \proto commands for the specific peripheral type. Supported actions include:
     \begin{enumerate}
-    \item Initalize \proto\ prephreial connection.
-    \item Read data from prephreial.
-    \item Write data from prephreial.
+    \item Initialize \proto peripheral connection.
+    \item Read data from peripheral.
+    \item Write data from peripheral.
     \end{enumerate}
-\item The prephreial processor must respond to requests from the controller by providing \proto\ commands.
+\item The peripheral processor must respond to requests from the controller by providing \proto commands.
 \end{enumerate}
 
 \subsection{Performance requirements}
 \begin{enumerate}
-\item Upon provisioning a new prephreial, data will be accessible on the dashboard within one (1) second.
+\item Upon provisioning a new peripheral, data will be accessible on the dashboard within one (1) second.
 \item API responses on the controller must be returned within ten (10) seconds.
 \end{enumerate}
 
@@ -193,7 +197,7 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \begin{enumerate}
 \item The database must store all data received from sensors with time and unique ID.
-\item The database must store a list of all provisioned prephreials for each microcontroller.
+\item The database must store a list of all provisioned peripherals for each microcontroller.
 \end{enumerate}
 
 \subsection{Software System Attributes}
