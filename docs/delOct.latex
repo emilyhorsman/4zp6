@@ -65,7 +65,8 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 \subsubsection{User interfaces}
 \begin{enumerate}
 \item The user shall interact with the system through a dashboard, using a web browser.
-\item The dashboard will interface with the controller through an HTTP API. The user may interface with this directly for use with a custom dashboard.
+\item The dashboard shall interface with the controller through an HTTP API.
+\item The user shall have the ability to export logged data through an HTTP API.
 \end{enumerate}
 
 \subsubsection{Hardware interfaces}
@@ -75,19 +76,19 @@ http://www.ti.com/lit/an/slva704/slva704.pdf
 
 \subsubsection{Software interfaces}
 \begin{enumerate}
-\item The Arduino library must support the Arduino microcontroller platform.
-\item The peripheral must conform to \name's protocol, translating raw data into usable values.
+\item The hardware library must support any Arduino-compatible microcontroller.
+\item The peripheral must have an available processor conforming to \name's protocol.
 \end{enumerate}
 
 \subsubsection{Memory Constraints}
 \begin{enumerate}
-\item The Arduino library must function on a microcontroller with 512KB of RAM.
+\item The hardware library must function on a microcontroller with at least 512KB of RAM.
 \end{enumerate}
 
-\subsection{Constaints, assumptions and dependencies}
+\subsection{Constraints, assumptions and dependencies}
 \begin{enumerate}
 \item Peripherals must comply with the \proto register paradigm.
-\item A Peripheral must have an accompanying processor capable of translating device specific register configurations.
+\item A peripheral must have an accompanying processor capable of translating device specific register configurations.
 \end{enumerate}
 
 
