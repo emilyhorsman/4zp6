@@ -1,6 +1,7 @@
 #include "Arduino.h"
 
 #define REGISTER_REQ_DELAY_MILLI 20
+#define PERIPHERAL_CONF_DELAY_MILLI 1000
 
 struct OutputRead {
     uint16_t outputId;
@@ -17,6 +18,8 @@ struct Peripheral {
     uint16_t busAddr;
     uint8_t numOutputs;
     OutputRead * outputs;
+    uint8_t * initialWrite;
+    uint8_t numInitialWriteBytes;
 };
 
 typedef struct Peripheral Peripheral;
@@ -43,6 +46,13 @@ void prototypeOutputRead(
 }
 
 void prototype(TwoWire *wire, Peripheral *peripheral) {
+    wire->beginTransmission(peripheral->busAddr);
+    for (uint8_t i = 0; i < numInitialWriteBytes; i++) {
+        wire->write(peripheral->initialWrite[i]);
+    }
+    wire->endTransission();
+    delay(PERIPHERAL_CONF_DELAY_MILLI);
+
     for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
         prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs[i]);
     }
