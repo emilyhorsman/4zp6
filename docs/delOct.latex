@@ -50,6 +50,12 @@ This creates a significant amount of work throughout the prototyping and mainten
 
 \name\ shall support different \proto peripherals using a language agnostic peripheral processor.
 
+\subsection{Users and Environment}
+
+This system will be used by organizations with fleets of remote hardware.
+The system itself is hosted in the cloud.
+The peripherals exist in a number of environments such as soil moisture monitoring, weather stations, data centers, and on robots.
+
 \subsection{References}
 \begin{enumerate}
 \item Texas Instruments (June 2015), Application Report: ``Understanding the \proto bus''\\
