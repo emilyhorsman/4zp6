@@ -1,21 +1,42 @@
-#include "header.h"
-#include <Wire.h>
-
-// Telemetry protobuf
-#include <pb_encode.h>
-#include <pb_decode.h>
-#include <Telemetry.pb.h>
-
-//********** COMMON SETTINGS **********//
-
-#define WIFI_SSID "RYAN"
-#define WIFI_PASS "#RyanHome1!0"
-#define MQTT_HOST "broker.hivemq.com"
-#define MQTT_PORT 1883
-
-//*************************************//
+#include "Arduino.h"
+#include "Wire.h"
+#include "I2CRuntime.h"
 
 TwoWire *wire = &Wire;
+
+OutputRead sht31TempAndHumidity = {
+    0,
+    0x2400,
+    RL16,
+    1,
+    6,
+    500,
+};
+
+Peripheral sht31 = {
+    0x44,
+    1,
+    &sht31TempAndHumidity,
+    NULL,
+    0,
+};
+
+OutputRead amg8833Image = {
+    1,
+    0x80,
+    RL8,
+    128,
+    1,
+    1500,
+};
+
+Peripheral amg8833 = {
+    0x69,
+    1,
+    &amg8833Image,
+    NULL,
+    0,
+};
 
 int count = 0;
 
@@ -25,37 +46,21 @@ void setup()
     Serial.println();
     delay(10);
 
-    pinMode(LED_BUILTIN, OUTPUT);
-
-    // establish connectivity
-    connect_wifi();
-    mqtt.setServer(MQTT_HOST, MQTT_PORT);
-    mqtt.setCallback(mqtt_rx);
-    connect_mqtt();
-
+    
     wire->begin();
     wire->setTimeout(5);
+    /*
     wire->beginTransmission(0x18);
     wire->write(0x20);
     wire->write(0b01110111);
     wire->endTransmission();
+    */
     delay(1000);
+
 }
 
 void loop()
 {
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.println(F("[Wifi] Connection lost"));
-        connect_wifi();
-    }
-    if (!mqtt.connected())
-    {
-        Serial.println(F("[MQTT] Connection lost"));
-        connect_mqtt();
-    }
-    mqtt.loop();
-
     /*
     char buff[6];
     wire->beginTransmission(0x44);
@@ -73,8 +78,10 @@ void loop()
     t *= 175;
     t /= 0xffff;
     t = -45 + t;
-    Serial.printf("Temp: %f\n", t);
+    Serial.printf("Temp : %f\n", t);
     */
+
+   prototype(wire, &amg8833);
 
 
     /*
@@ -159,123 +166,4 @@ void loop()
             Serial.printf("Nothing on %x\n", i);
     }*/
     // delay(1000);
-}
-
-// Establish wifi connection. Called on setup and upon disconnection. Will block
-// until connection is established.
-void connect_wifi()
-{
-    Serial.print(F("[Wifi] Connecting to "));
-    Serial.println(F(WIFI_SSID));
-    WiFi.mode(WIFI_MODE_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASS);
-
-    while (WiFi.waitForConnectResult() != WL_CONNECTED)
-    {
-        Serial.println(F("[Wifi] Connection failed, retrying..."));
-        delay(5000);
-        WiFi.begin(WIFI_SSID, WIFI_PASS);
-    }
-    WiFi.enableIpV6();
-    delay(5000);
-
-    Serial.print(F("[Wifi] Connected\n[Wifi] IPv4: "));
-    Serial.println(WiFi.localIP());
-    Serial.print(F("[Wifi] IPv6: "));
-    Serial.println(WiFi.localIPv6());
-    Serial.print(F("[Wifi] MAC: "));
-    Serial.println(WiFi.macAddress());
-
-    uuid = normalize_mac(WiFi.macAddress());
-}
-
-// Establish MQTT connection. Called on setup and upon disconnection. Will block
-// until connection is established.
-void connect_mqtt()
-{
-    Serial.print(F("[MQTT] Connecting to "));
-    Serial.print(F(MQTT_HOST));
-    Serial.print(F(":"));
-    Serial.println(MQTT_PORT);
-
-    delay(1000);
-
-    mqtt.connect(uuid.c_str());
-    while (!mqtt.connected())
-    {
-        Serial.println(F("[MQTT] Connection failed, retrying..."));
-        delay(5000);
-        mqtt.connect(uuid.c_str());
-    }
-
-    // subscribe to incoming messages (broadcast and specific topic)
-    mqtt.subscribe(MQTT_RX);
-    mqtt.subscribe(String(MQTT_RX + uuid).c_str());
-
-    // send hello message
-    mqtt_tx_hello();
-    Serial.println(F("[MQTT] Connected"));
-}
-
-// Incoming MQTT message handler. Called on incoming MQTT messages.
-void mqtt_rx(char* topic, byte* payload, unsigned int msg_length)
-{
-    bool status;
-
-    Telemetry msg = Telemetry_init_zero;
-    pb_istream_t stream = pb_istream_from_buffer(payload, msg_length);
-    status = pb_decode(&stream, Telemetry_fields, &msg);
-
-    if (!status)
-    {
-        Serial.println(F("[MQTT] Error decoding RX message"));
-    } else
-    {
-        switch (msg.type)
-        {
-            case Telemetry_Type_RX_HELLO:
-                Serial.println(F("[MQTT] Received RX_HELLO message"));
-                mqtt_tx_hello();
-                break;
-
-            case Telemetry_Type_RX_ACTION:
-                Serial.println(F("[MQTT] Received RX_ACTION message"));
-                if (msg.action.type == MsgAction_Action_DIGITAL_LOW)
-                    digitalWrite(msg.action.pin, LOW);
-                else
-                    digitalWrite(msg.action.pin, HIGH);
-                break;
-
-            default:
-                break;
-        }
-    }
-}
-
-// Send MQTT TX_HELLO message.
-void mqtt_tx_hello()
-{
-    uint8_t buffer[Telemetry_size];
-    size_t msg_length;
-    bool status;
-
-    Telemetry msg = Telemetry_init_zero;
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-
-    // message fields
-    msg.type = Telemetry_Type_TX_HELLO;
-    strcpy(msg.hello.ip, String(WiFi.localIP().toString()).c_str());
-    msg.hello.version = 1;
-
-    status = pb_encode(&stream, Telemetry_fields, &msg);
-    msg_length = stream.bytes_written;
-
-    if (!status)
-    {
-        Serial.println(F("[MQTT] Error encoding TX_HELLO"));
-    } else
-    {
-        mqtt.publish(String(MQTT_TX + uuid).c_str(), buffer, msg_length);
-        Serial.println(F("[MQTT] Sent TX_HELLO message"));
-    }
 }

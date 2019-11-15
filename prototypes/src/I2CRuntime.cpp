@@ -1,28 +1,6 @@
 #include "Arduino.h"
-
-#define REGISTER_REQ_DELAY_MILLI 20
-#define PERIPHERAL_CONF_DELAY_MILLI 1000
-
-struct OutputRead {
-    uint16_t outputId;
-    uint16_t registerId;
-    // The "no need" behaviour here is a value of 1.
-    uint16_t manualAdvanceNum;
-    uint8_t numBytesPerAdvance;
-    uint16_t pollIntervalMilli;
-};
-
-typedef struct OutputRead OutputRead;
-
-struct Peripheral {
-    uint16_t busAddr;
-    uint8_t numOutputs;
-    OutputRead * outputs;
-    uint8_t * initialWrite;
-    uint8_t numInitialWriteBytes;
-};
-
-typedef struct Peripheral Peripheral;
+#include "Wire.h"
+#include "I2CRuntime.h"
 
 // Not the way we actually want to do it, this is blocking non-loop code
 // Just a proof of concept for the runtime struct
@@ -34,7 +12,13 @@ void prototypeOutputRead(
     uint8_t *bytes = new uint8_t[conf->numBytesPerAdvance * conf->manualAdvanceNum];
     for (uint16_t i = 0; i < conf->manualAdvanceNum; i++) {
         wire->beginTransmission(busAddr);
-        wire->write(conf->registerId + i);
+        if (conf->registerIdLength == RL16) {
+            uint16_t regId = conf->registerId + i;
+            wire->write(regId >> 8);
+            wire->write(regId & 255);
+        } else {
+            wire->write(conf->registerId + i);
+        }
         wire->endTransmission();
         delay(REGISTER_REQ_DELAY_MILLI);
         wire->requestFrom(busAddr, conf->numBytesPerAdvance);
@@ -43,33 +27,19 @@ void prototypeOutputRead(
             bytes[i * conf->numBytesPerAdvance + j] = wire->read();
         }
     }
+
+    delete bytes;
 }
 
 void prototype(TwoWire *wire, Peripheral *peripheral) {
     wire->beginTransmission(peripheral->busAddr);
-    for (uint8_t i = 0; i < numInitialWriteBytes; i++) {
+    for (uint8_t i = 0; i < peripheral->numInitialWriteBytes; i++) {
         wire->write(peripheral->initialWrite[i]);
     }
-    wire->endTransission();
+    wire->endTransmission();
     delay(PERIPHERAL_CONF_DELAY_MILLI);
 
     for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
-        prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs[i]);
+        prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs + i);
     }
 }
-
-OutputRead sht31TempAndHumidity = {
-    0,
-    0x2400,
-    1,
-    6,
-    500,
-};
-
-Peripheral sht31 = {
-    0x44,
-    1,
-    &sht31TempAndHumidity,
-    NULL,
-    0,
-};
