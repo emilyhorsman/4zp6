@@ -7,9 +7,9 @@
 void prototypeOutputRead(
     TwoWire *wire,
     uint16_t busAddr,
-    OutputRead *conf
+    OutputRead *conf,
+    uint8_t *bytes
 ) {
-    uint8_t *bytes = new uint8_t[conf->numBytesPerAdvance * conf->manualAdvanceNum];
     for (uint16_t i = 0; i < conf->manualAdvanceNum; i++) {
         wire->beginTransmission(busAddr);
         if (conf->registerIdLength == RL16) {
@@ -27,11 +27,9 @@ void prototypeOutputRead(
             bytes[i * conf->numBytesPerAdvance + j] = wire->read();
         }
     }
-
-    delete bytes;
 }
 
-void prototype(TwoWire *wire, Peripheral *peripheral) {
+void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs) {
     wire->beginTransmission(peripheral->busAddr);
     for (uint8_t i = 0; i < peripheral->numInitialWriteBytes; i++) {
         wire->write(peripheral->initialWrite[i]);
@@ -40,6 +38,22 @@ void prototype(TwoWire *wire, Peripheral *peripheral) {
     delay(PERIPHERAL_CONF_DELAY_MILLI);
 
     for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
-        prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs + i);
+        prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs + i, outputs[i]);
     }
+}
+
+uint8_t ** allocateOutputBytes(Peripheral *peripheral) {
+    uint8_t **bytes = new uint8_t * [peripheral->numOutputs];
+    for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
+        OutputRead *conf = &peripheral->outputs[i];
+        bytes[i] = new uint8_t[conf->numBytesPerAdvance * conf->manualAdvanceNum];
+    }
+    return bytes;
+}
+
+void deallocateOutputBytes(Peripheral *peripheral, uint8_t **bytes) {
+    for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
+        delete [] bytes[i];
+    }
+    delete [] bytes;
 }

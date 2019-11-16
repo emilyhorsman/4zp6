@@ -42,7 +42,11 @@ typedef struct Peripheral Peripheral;
 void prototypeOutputRead(
     TwoWire *wire,
     uint16_t busAddr,
-    OutputRead *conf
+    OutputRead *conf,
+    uint8_t *bytes
 );
 
-void prototype(TwoWire *wire, Peripheral *peripheral);
+void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs);
+
+uint8_t ** allocateOutputBytes(Peripheral *peripheral);
+void deallocateOutputBytes(Peripheral *peripheral, uint8_t **bytes);

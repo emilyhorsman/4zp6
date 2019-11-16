@@ -81,8 +81,41 @@ void loop()
     Serial.printf("Temp : %f\n", t);
     */
 
-   prototype(wire, &amg8833);
-
+    uint8_t **bytes = allocateOutputBytes(&amg8833);
+    prototype(wire, &amg8833, bytes);
+    float image[64];
+    for (int i = 0; i < 64; i++) {
+        uint16_t foo = bytes[0][i * 2];
+        foo |= bytes[0][i * 2 + 1] << 8;
+        foo &= 0b0000011111111111;
+        image[i] = (float) foo / 4;
+    }
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            if (image[x * 8 + y] > 20) {
+                Serial.printf("1");
+            } else {
+                Serial.printf("0");
+            }
+        }
+        Serial.println();
+    }
+    deallocateOutputBytes(&amg8833, bytes);
+    delay(500);
+    
+    uint8_t **tempBytes = allocateOutputBytes(&sht31);
+    prototype(wire, &sht31, tempBytes);
+    uint16_t temp;
+    temp = tempBytes[0][0];
+    temp <<= 8;
+    temp |= tempBytes[0][1];
+    double t = temp;
+    t *= 175;
+    t /= 0xffff;
+    t = -45 + t;
+    Serial.printf("Temp : %f\n", t);
+    deallocateOutputBytes(&sht31, tempBytes);
+    delay(500);
 
     /*
     wire->beginTransmission(0x18);
