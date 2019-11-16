@@ -1,6 +1,29 @@
+#include <vector>
 #include "Arduino.h"
 #include "Wire.h"
 #include "I2CRuntime.h"
+
+I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral)
+: mPeripheral(peripheral)
+, mBuffer(NULL)
+{
+    mBuffer = allocateOutputBytes(mPeripheral);
+}
+
+I2CPeripheralManager::~I2CPeripheralManager() {
+    deallocateOutputBytes(mPeripheral, mBuffer);
+}
+
+uint8_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
+    mManagers.push_back(new I2CPeripheralManager(peripheral));
+    return mManagers.size() - 1;
+}
+
+void I2CRuntime::removePeripheral(uint8_t peripheralId) {
+    assert(mManagers.size() > peripheralId);
+    delete mManagers[peripheralId];
+    mManagers.erase(mManagers.begin() + peripheralId);
+}
 
 // Not the way we actually want to do it, this is blocking non-loop code
 // Just a proof of concept for the runtime struct
@@ -10,6 +33,8 @@ void prototypeOutputRead(
     OutputRead *conf,
     uint8_t *bytes
 ) {
+    std::vector<OutputRead *> outputs;
+    outputs.push_back(conf);
     for (uint16_t i = 0; i < conf->manualAdvanceNum; i++) {
         wire->beginTransmission(busAddr);
         if (conf->registerIdLength == RL16) {

@@ -1,3 +1,5 @@
+#include <vector>
+
 #define REGISTER_REQ_DELAY_MILLI 20
 #define PERIPHERAL_CONF_DELAY_MILLI 1000
 
@@ -38,6 +40,26 @@ struct Peripheral {
 };
 
 typedef struct Peripheral Peripheral;
+
+// Only intended to be used by an I2CRuntime instance
+class I2CPeripheralManager {
+    private:
+        Peripheral *mPeripheral;
+        uint8_t **mBuffer;
+
+    public:
+        I2CPeripheralManager(Peripheral *peripheral);
+        ~I2CPeripheralManager();
+};
+
+class I2CRuntime {
+    private:
+        std::vector<I2CPeripheralManager *> mManagers;
+
+    public:
+        uint8_t addPeripheral(Peripheral *peripheral);
+        void removePeripheral(uint8_t peripheralId);
+};
 
 void prototypeOutputRead(
     TwoWire *wire,
