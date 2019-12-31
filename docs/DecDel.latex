@@ -46,7 +46,7 @@ Any modification of the application logic means that firmware updates need to be
 This creates a significant amount of work throughout the prototyping and maintenance stages of a hardware project.
 
 \section{System Overview}
-\name\ is a proposed software solution to abstract the \proto\ protocol.
+\name\ is a proposed software solution to abstract the most common usages of the \proto\ protocol.
 This layer of abstraction allows the end user to rapidly provision microcontrollers for the ingestion of peripheral data.
 \name\ will provide the user with a web dashboard and a HTTP API for the configuration of peripherals and the consumption of peripheral data.
 
@@ -99,7 +99,7 @@ Frame payloads must not contain confidential information.
 \subsection{Assumptions and Dependencies}
 
 \subsubsection{Software and Hardware}
-This version of \name's microcontroller library will only support the Arduino platform.
+This version of \name's microcontroller library will only support Arduino-compatible platforms.
 The Arduino ESP32 microcontroller will have tested hardware support.
 
 \subsubsection{Operating Systems}
