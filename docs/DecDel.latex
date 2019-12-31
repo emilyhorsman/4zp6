@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \pagestyle{fancy}
-\fancyhead[L]{COMPSCI 4ZP6A}
+\fancyhead[L]{COMPSCI 4ZP6}
 \fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
 
 \newcommand{\name}{Telemetry}
@@ -339,5 +339,75 @@ Utilizing Go, \name\ will be lightweight, performant, and reliable.
 \section{Scenarios}
 
 \subsection{New Peripheral Connected}
+
+The following will occur when a new peripheral is connected to a microcontroller.
+
+\begin{enumerate}
+\item User connects new \textbf{peripheral}.
+\item \textbf{Microcontroller} detects new device, sends \textbf{registration frame}.
+\item \textbf{Controller} receives \textbf{registration frame}, creates a new inactive device record in the \textbf{database}.
+\item \textbf{Dashboard} will indicate a new peripheral is ready for activation.
+\item To activate the \textbf{peripheral}, user will be prompted for:
+  \begin{enumerate}
+  \item Unique peripheral identifier (i.e. basementMoisture1)
+  \item Common identifier (i.e. Basement Moisture)
+  \item Polling interval (i.e. 30 seconds)
+  \item Peripheral type (i.e. adafruit\_moisture)
+  \end{enumerate}
+\item After submitting the provisioning form, the \textbf{controller} will update the \textbf{database} entry for that device. The \textbf{controller} will also send a \textbf{provisioning frame} to the corresponding \textbf{microcontroller}, specifying the new schedule.
+\item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
+\item When data from the \textbf{peripheral} becomes available, it will become selectable on the \textbf{dashboard} for data viewing.
+\end{enumerate}
+
+\subsection{User Changes Polling Interval}
+
+The following will occur when the user changes the polling interval of a peripheral.
+
+\begin{enumerate}
+\item User selects \textbf{peripheral} on \textbf{dashboard}, selects modify.
+\item User enters a new polling interval (i.e. 10 seconds) and saves setting.
+\item \textbf{Controller} updates database entry for the device. \textbf{Controller} also sends a new \textbf{provisioning frame} to the \textbf{microcontroller}, specifying a new schedule.
+\item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
+\end{enumerate}
+
+\subsection{User Deprovisions Peripheral}
+
+The following will occur when the user deprovisions a connected peripheral.
+
+\begin{enumerate}
+\item User selects \textbf{peripheral} on \textbf{dashboard}, selects delete.
+\item User agrees to user confirmation, \textbf{peripheral} is removed from dashboard.
+\item \textbf{Controller} deletes database entry for the device. \textbf{Controller} also sends a new \textbf{provisioning frame} to the \textbf{microcontroller}, specifying a new schedule.
+\item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
+\end{enumerate}
+
+\subsection{Normal Scheduling Operation}
+
+The following is the main event loop that occurs under normal operation.
+
+\subsubsection{Microcontroller}
+
+The event loop will be preempted if the \textbf{microcontroller} receives a \textbf{provisioning frame} or \textbf{request frame} sent from the \textbf{controller}.
+
+\begin{enumerate}
+\item \textbf{Microcontroller} reads schedule from volatile memory (RAM).
+\item \textbf{Microcontroller} will iterate over the list of provisioned \textbf{peripherals}:
+  \begin{enumerate}
+  \item If there exists a previous read for an \proto\ address and a new reading is not required yet, skip the \textbf{peripheral}.
+  \item If there exists a previous read for an \proto\ address and a new reading is required, or if a previous reading does not exist, perform collection transaction. After the raw \textbf{peripheral payload} is collected, publish the data over MQTT in a \textbf{payload frame}.
+  \end{enumerate}
+\item Repeat.
+\end{enumerate}
+
+\subsubsection{Controller}
+
+The controller will run this event loop while concurrently responding to HTTP requests for the \textbf{dashboard} and \textbf{API} service.
+
+\begin{enumerate}
+\item \textbf{Controller} receives \textbf{payload frame} from \textbf{microcontroller}, containing raw \textbf{peripheral payload}.
+\item \textbf{Controller} publishes raw \textbf{peripheral payload} over AMQP.
+\item \textbf{Processor} consumes raw \textbf{peripheral payload} over AMQP. \textbf{Processor} parses raw \proto\ data into a list of JSON-encoded key-values (\textbf{peripheral data}). \textbf{Processor} publishes \textbf{peripheral data} over AMQP.
+\item \textbf{Controller} consumes JSON-encoded \textbf{peripheral data} from AMQP. \textbf{Controller} inserts data into database and publishes data over websocket.
+\end{enumerate}
 
 \end{document}
