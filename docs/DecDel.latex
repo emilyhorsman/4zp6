@@ -301,8 +301,11 @@ All data requested and returned by \textbf{API} is to be in valid JSON format.
 \section{Languages and Frameworks}
 
 \subsection{Frontend :: React}
-React is an open source JavaScript framework, allowing for the creation of interactive, modular user interfaces.\\
-\textbf{EMILY}: please write more here about why React was chosen
+React is an open source JavaScript framework, allowing for the creation of interactive, modular user interfaces.
+React allows us to write a lightweight user interface in a declarative fashion with modern functional-style JavaScript.
+Typed JavaScript has good support for React.
+The \textbf{dashboard} includes many state transitions (e.g., \textbf{microcontrollers} and \textbf{peripherals} coming online and offline) which are better handled in a declarative fashion than an imperative one, where synchronization bugs are common.
+The React community offers many well-written open-source ``batteries'' for data visualization that will aide in a rapid development process.
 
 \subsection{Transport Layer :: MQTT}
 MQTT is a low-overhead messaging protocol.
