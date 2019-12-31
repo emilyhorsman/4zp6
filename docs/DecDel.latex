@@ -1,0 +1,343 @@
+\documentclass{article}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhead[L]{COMPSCI 4ZP6A}
+\fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
+
+\newcommand{\name}{Telemetry}
+\newcommand{\proto}{I\textsuperscript{2}C\,}
+
+\begin{document}
+
+\section*{December Deliverable}
+\tableofcontents
+
+
+\newpage
+
+\section{Introduction}
+This document is to describe the system architecture of \name.
+Defined immediately below are terms referenced within this document.
+
+\section{Definitions}
+
+\begin{enumerate}
+\item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware peripheral and microcontrollers.
+\item Microcontroller: Arduino powered, single board computer. Provides an I2Cbus and IP network connection.
+\item Controller: main application server for Telemetry. Responsible for communication with microcontroller(s), exposing HTTP API service, and serving the dashboard.
+\item Peripheral processor: responsible for informing the controller how a sensor model works via Telemetry’s external interface.
+\item Peripheral: Any \proto\ hardware sensor (e.g. temperature, accelerometer, thermal cam- era) which uses the \proto\ standard “register paradigm”.
+\item HTTP API: application programming interface, a publicly exposed HTTP endpoint to provide a defined request-response messaging system. 
+\item Peripheral payload: Raw data originating from a peripheral.
+\item Peripheral data: List of key-values derived from peripheral payload.
+\item Frame payload: Data sent between a microcontroller and a controller.
+\end{enumerate}
+
+\section{Context}
+\proto is an existing bus protocol which enables hardware peripherals to communicate with each other and devices such as microcontrollers.
+Currently, repetitive application logic must be written for each \proto device.
+This application logic is hard to write in a maintainable, self-documenting way.
+Any modification of the application logic means that firmware updates need to be applied to other devices on the \proto bus (most commonly, the microcontroller serving as the ``master'' device).
+This creates a significant amount of work throughout the prototyping and maintenance stages of a hardware project.
+
+\section{System Overview}
+\name\ is a proposed software solution to abstract the \proto\ protocol.
+This layer of abstraction allows the end user to rapidly provision microcontrollers for the ingestion of peripheral data.
+\name\ will provide the user with a web dashboard and a HTTP API for the configuration of peripherals and the consumption of peripheral data.
+
+\section{Project Goals}
+
+This version of \name\ will support the following features.
+
+\subsection{Web Dashboard}
+\name\ will provide the user with a web dashboard.
+The dashboard will list all configured peripherals and inform the user when a new peripheral is connected to a microcontroller.
+The user will be prompted for a name and the type of peripheral connected.
+Upon configuring the peripheral, \name\ will automatically initalize the data collection process.\\
+
+After peripheral configuration, the user can configure a dashboard.
+A dashboard is defined by a composition of user defined widgets.
+Each widget can present data from one or more peripherals, utilizing pre-defined views: line graph, data table, scatter plot, bar chart, map, colour, image, gauge, pie chart.
+The user can save a configured dashboard for later use.\\ 
+
+The user can use the dashboard to view real-time peripheral data. 
+
+\subsection{HTTP API}
+If the user would like to export the peripheral data or use their own dashboard, this is also possible.
+\name\ provides a standard HTTP API for the configuring of peripherals and for querying peripheral data.
+
+\subsection{Microcontroller and Peripheral Autodiscovery}
+\name\ provides the user with an Arduino library and a containerized controller.
+The library will be responsible for:
+\begin{enumerate}
+\item Initializing and re-establishing a connection to the controller.
+\item Autodiscovery of \proto\ peripherals.
+\item Collection and forwarding of peripheral payloads to controller.
+\end{enumerate}
+
+The controller is responsible for providing the Web Dashboard and HTTP API, which the user will interact with.
+
+\section{Non-project Goals}
+
+This version of \name\ will not support the following features.
+
+\subsection{Multitenancy}
+The controller of \name\ is designed around the requirements of an individual or single organization. 
+No user authentication is performed.
+
+\subsection{End-to-End Encryption}
+All frame payloads sent between microcontrollers and the controller are over plaintext.
+Frame payloads must not contain confidential information.
+
+\section{Design Considerations}
+
+\subsection{Assumptions and Dependencies}
+
+\subsubsection{Software and Hardware}
+This version of \name's microcontroller library will only support the Arduino platform.
+The Arduino ESP32 microcontroller will have tested hardware support.
+
+\subsubsection{Operating Systems}
+The controller will be packaged using Docker, a containerization platform.
+Therefore, the controller will be compatible with all operating systems that support Docker.
+Linux and macOS will have tested software support.
+
+\subsection{General Constraints}
+
+\subsubsection{Network Connectivity}
+\name\ will have the ability to work well on low bandwidth, high latency networks.
+Although the microcontrollers are capable of re-establishing a connection with the controller, the network should have minimal packet loss for real-time data consumption.\\
+
+Microcontrollers are not required to be on the same network as the controller, although the controller must be reachable from the microcontroller's network.
+
+\section{System Design}
+
+All \textbf{bold} keywords refer to definitions or architecture components.
+
+\subsection{Architecture}
+
+The following depicts a \name\ setup with two \textbf{microcontrollers} and three \textbf{peripheral processors}.
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{architecture.png}
+  \caption{System Architecture}
+  \label{fig:architecture1}
+\end{figure}
+
+\subsubsection{\proto\ Peripheral}
+A hardware sensor that utilizes the \proto\ ``register paradigm''.
+Connected to the \textbf{microcontroller} through direct hardwired connection.
+
+\subsubsection{Microcontroller}
+An Arduino powered computer.
+Responsible for establishing hardware connection with \textbf{peripheral(s)}.
+The microcontroller will run \name's Arduino library.
+
+\subsubsection{MQTT Broker}
+Responsible for exposing an MQTT server, a lightweight publish/subscribe message transport protocol.
+The \textbf{microcontroller(s)} and the \textbf{processor} are responsible for establishing an MQTT connection.
+The \textbf{microcontroller(s)} will re-establish the MQTT connection in the event that the connection is interrupted.
+
+
+\subsubsection{Controller}
+Main event engine for Telemetry.
+The interfacing is broken down into four categories:\\
+
+\textbf{MQTT Interfacing}:
+\begin{enumerate}
+\item Receive registration messages (\textbf{frame payload}) from \textbf{microcontroller(s)} over MQTT.
+\item Receive \textbf{peripheral payloads} from \textbf{microcontroller(s)} over MQTT.
+\item Publish provisioning message (\textbf{frame payload}) to \textbf{microcontroller(s)} over MQTT.
+\item Publish one-off messages (\textbf{frame payload}) to \textbf{microcontroller(s)} over MQTT (i.e. reboot, manually poll data).
+\end{enumerate}
+
+\textbf{AMQP Interfacing}:
+\begin{enumerate}
+\item Publish raw \textbf{peripheral payloads} over AMQP.
+\item Receive \textbf{peripheral data} over AMQP.
+\end{enumerate}
+
+\textbf{SQL Database Interfacing}:
+\begin{enumerate}
+\item Insert \textbf{peripheral data}.
+\item Insert/update/delete \textbf{microcontroller} configuration.
+\item Insert/update/delete \textbf{dashboard} configuration.
+\item Query \textbf{peripheral data}.
+\end{enumerate}
+
+\textbf{Web Server Interfacing}:
+\begin{enumerate}
+\item Expose HTTP endpoints for \textbf{dashboard}.
+\item Expose HTTP endpoints for REST \textbf{API}.
+\item Expose websocket connection for real-time \textbf{dashboard} updates.
+\end{enumerate}
+
+\subsubsection{SQL Database}
+Responsible for persistent storage of \textbf{peripheral data}, \textbf{dashboard} configuration, and \textbf{microcontroller} provisioning.
+
+\subsubsection{AMQP Broker}
+Akin to MQTT Broker, responsible for exposing AMQP server, a publish/subscribe message transport protocol with queueing capabilities.
+The \textbf{processor(s)} and the \textbf{controller} are responsible for establishing an AMQP connection.
+The \textbf{processor(s)} will re-establish the AMQP connection in the event that the connection is interrupted.
+
+\subsubsection{Peripheral Processor}
+An individual \textbf{peripheral processor} is required per \textbf{peripheral} type (i.e. Adafruit temperature sensor).
+It must establish an AMQP connection with \name's AMQP broker.
+The \textbf{processor} will advertise the type of \textbf{peripheral} that it can process.
+It will then receive raw \textbf{peripheral payloads} over AMQP that match the peripheral type.
+The processor will parse the raw data into value(s), publishing the \textbf{peripheral data} over AMQP.
+
+\subsubsection {Web Server}
+Responsible for performing SSL (TLS) termination for the \textbf{dashboard} and HTTP \textbf{API} services.
+
+\subsubsection{Dashboard}
+Web \textbf{dashboard} that user may interact with, satisfying project goals.
+
+\subsubsection{HTTP API}
+HTTP \textbf{API} that user or scripts may interact with, satisfying project goals. 
+
+\subsection{Transport Protocol}
+All data transmitted over the \textbf{transport layer} will be using a custom wire (binary) format over MQTT.
+The following transactions are supported by \name's protocol.
+
+\subsubsection{Registration Frame}
+A \textbf{microcontroller} must send a registration frame when:
+\begin{enumerate}
+\item MQTT connection is established.
+\item MQTT connection is re-established after disconnection.
+\item A \textbf{peripheral} was connected or disconnected.
+\end{enumerate}
+
+The registration frame contains:
+\begin{enumerate}
+\item \name\ Arduino library version identifier.
+\item \textbf{Microcontroller} unique identifier (MAC address).
+\item \textbf{Microcontroller} network IP address.
+\item List of \textbf{peripherals} (active \proto\ addresses).
+\end{enumerate}
+
+The registration frame is used for provisioning of \textbf{microcontrollers}.
+This provisioning builds a registry of all \textbf{microcontrollers} and \textbf{peripherals} connected to \name.
+
+\subsubsection{Payload Frame}
+A \textbf{microcontroller} must send a payload frame when:
+\begin{enumerate}
+\item Raw data is collected from \textbf{peripheral}.
+\end{enumerate}
+
+The payload frame contains:
+\begin{enumerate}
+\item \textbf{\proto} address of data collection.
+\item Raw \textbf{peripheral payload}.
+\end{enumerate}
+
+The payload frame is used for sending raw data from \textbf{peripheral(s)} to the \textbf{controller}.
+
+\subsubsection{Provisioning Frame}
+A \textbf{controller} must send a provisioning frame when:
+\begin{enumerate}
+\item A \textbf{registration frame} is received.
+\item The provisioning of a \textbf{microcontroller} has been modified.
+\end{enumerate}
+
+The provisioning frame contains:
+\begin{enumerate}
+\item \textbf{Microcontroller} schedule.
+\end{enumerate}
+
+The provisioning frame is used for dynamically assigning the \textbf{microcontroller} a schedule.
+This schedule identifies \textbf{\proto} addresses to poll, the polling format, and the polling interval.
+The \textbf{microcontroller} will continuously run this schedule, publishing \textbf{payload frames} as data is collected.
+If a new \textbf{provisioning frame} is received by a \textbf{microcontroller}, the new schedule is to be utilized.
+
+\subsubsection{Request Frame}
+
+A \textbf{controller} must send a request frame when:
+\begin{enumerate}
+\item The user requests the \textbf{microcontroller} to reboot.
+\item The user requests the \textbf{microcontroller} to manually perform one iteration of the \textbf{schedule}.
+\end{enumerate}
+
+The request frame contains:
+\begin{enumerate}
+\item Action for \textbf{microcontroller} to perform.
+\end{enumerate}
+
+The request frame is used for notifying the \textbf{microcontroller} to perform one-off events.
+The requests are activated by the user.
+This is for debugging purposes.
+
+\subsection{Processor Protocol}
+All data transmitted over the \textbf{processor layer} will be JSON over AMQP.
+
+\subsubsection{AMQP Initialization}
+A \textbf{peripheral processor} will interface with \name\ by initializing an AMQP connection with the \textbf{AMQP broker}.
+When the connection is established, the \textbf{peripheral processor} must subscribe to the \texttt{process.type} route, where \texttt{type} is replaced with the \textbf{peripheral} type which this processor is capable of parsing.
+
+\textbf{Peripheral payloads} matching the \textbf{peripheral} type will be pushed to this processor.
+If multiple \textbf{peripheral processors} of the same type are connected, \textbf{peripheral payloads} will be distributed in a round-robin fashion.
+
+\subsubsection{Consume Peripheral Payload}
+When new data is collected from a \textbf{peripheral} with type \texttt{x}, the raw \textbf{peripheral payload} will be received on a \textbf{peripheral processor} subscribed to \texttt{process.x}.
+The \textbf{peripheral processor} must convert the raw, often proprietary, \textbf{\proto} data into a list of key and values, that can be ingested by \name.\\
+
+The \textbf{peripheral processor} may be written in any language.
+The only requirement is that the language must have support for AMQP and JSON.
+
+\subsubsection{Publish Peripheral Data}
+When the \textbf{peripheral processor} has generated a JSON object of keys and values, the JSON data will be published over AMQP with a routing key of \texttt{processed.type}, where \texttt{type} is replaced with the incoming \textbf{peripheral} type.\\
+
+\name\ will insert this data into the database, making it available on the \textbf{dashboard} and HTTP \textbf{API} service.
+
+\subsection{Application Protocol}
+The standard REST API pattern is to be utilized for the HTTP \textbf{API} service. 
+All data requested and returned by \textbf{API} is to be in valid JSON format.
+
+\section{Languages and Frameworks}
+
+\subsection{Frontend :: React}
+React is an open source JavaScript framework, allowing for the creation of interactive, modular user interfaces.\\
+\textbf{EMILY}: please write more here about why React was chosen
+
+\subsection{Transport Layer :: MQTT}
+MQTT is a low-overhead messaging protocol.
+MQTT enables \name\ to reliably and efficiently collected data from remote Arduino \textbf{microcontrollers}.
+It ensures that data sent between \textbf{microcontroller(s)} and the \textbf{controller} is delivered.
+Such delivery reports are essential on networks that contain packet loss.\\
+
+VerneMQ is an open source, industry standard MQTT broker.
+
+\subsection{Processor Layer :: AMQP}
+AMQP is very similar to MQTT, except for the addition of queuing capabilities.
+Message queuing is used for \name\ to process \textbf{peripheral payloads} in a distrbuted manner.
+AMQP also allows \name\ to have interoperability with many programming languages, allowing for \textbf{peripheral processors} to be language agnostic.\\
+
+RabbitMQ is an open source, industry standard AMQP broker.
+
+\subsection{Application Layer :: JSON}
+JSON is a human-readable, object encoding format.
+It is an industry standard format utilized in web applications.
+
+\subsection{Controller :: Go}
+Go is statically typed, memory safe programming language.
+Go was chosen for the following features:
+\begin{enumerate}
+\item Type checking.
+\item Memory safety.
+\item Low-overhead runtime.
+\item High performance networking.
+\item Concurrency via message passing.
+\end{enumerate}
+
+Utilizing Go, \name\ will be lightweight, performant, and reliable.
+
+\section{Scenarios}
+
+\subsection{New Peripheral Connected}
+
+\end{document}
