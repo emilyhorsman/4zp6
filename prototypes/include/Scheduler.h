@@ -1,6 +1,7 @@
 #ifndef SCHEDULER_H_
 #define SCHEDULAR_H_
 
+#include <functional>
 #include <vector>
 
 class Scheduler {
@@ -10,11 +11,12 @@ class Scheduler {
         std::vector<uint32_t> mIntervalTimeMilli;
         std::size_t mCursor;
 
+        bool timeHasElapsed();
+
     public:
         Scheduler();
         void loop();
-        std::size_t addSchedule(std::function<void ()> *, uint32_t);
-        void removeSchedule(std::size_t);
+        void addSchedule(std::function<void ()> *, uint32_t);
 };
 
 #endif
