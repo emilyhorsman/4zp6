@@ -1,6 +1,10 @@
+#include <functional>
+#include <memory>
+
 #include "Arduino.h"
 #include "Wire.h"
 #include "I2CRuntime.h"
+#include "Scheduler.h"
 
 TwoWire *wire = &Wire;
 
@@ -38,6 +42,8 @@ Peripheral amg8833 = {
     0,
 };
 
+Scheduler scheduler;
+
 int count = 0;
 
 void setup()
@@ -46,21 +52,29 @@ void setup()
     Serial.println();
     delay(10);
 
+    scheduler.addSchedule(
+        std::make_shared<Func>(
+            []() { Serial.println(millis()); }
+        ),
+        1000
+    );
     
-    wire->begin();
-    wire->setTimeout(5);
+    //wire->begin();
+    //wire->setTimeout(5);
     /*
     wire->beginTransmission(0x18);
     wire->write(0x20);
     wire->write(0b01110111);
     wire->endTransmission();
     */
-    delay(1000);
+    //delay(1000);
 
 }
 
 void loop()
 {
+    scheduler.loop();
+
     /*
     char buff[6];
     wire->beginTransmission(0x44);
@@ -81,6 +95,7 @@ void loop()
     Serial.printf("Temp : %f\n", t);
     */
 
+   /*
     uint8_t **bytes = allocateOutputBytes(&amg8833);
     prototype(wire, &amg8833, bytes);
     float image[64];
@@ -116,6 +131,7 @@ void loop()
     Serial.printf("Temp : %f\n", t);
     deallocateOutputBytes(&sht31, tempBytes);
     delay(500);
+    */
 
     /*
     wire->beginTransmission(0x18);

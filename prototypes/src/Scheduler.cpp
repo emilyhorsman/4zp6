@@ -1,40 +1,61 @@
 #include <Arduino.h>
 #include <functional>
+#include <memory>
+#include <vector>
 
 #include "Scheduler.h"
 
-Scheduler::Scheduler()
-: mFuncs()
-, mLastCallTimeMilli()
-, mIntervalTimeMilli()
-, mCursor(0)
-{}
+ScheduleId Scheduler::addSchedule(
+    std::shared_ptr<Func> f,
+    Duration period
+) {
+    mSchedules.push_back(Schedule {
+        f, period, HAS_NEVER_RAN_TIMESTAMP, true
+    });
 
-void Scheduler::loop() {
-    if (mFuncs.size() == 0) {
-        return;
-    }
+    // This is not ideal: the cursor could be half-way through the
+    // container when we add a new schedule. But, `loop` is meant to be
+    // executed in little time so we'll advance through everything quickly
+    // anyway.
+    mCursor = mSchedules.begin();
 
-    if (this->timeHasElapsed()) {
-        (*mFuncs[mCursor])();
-    }
-
-    mCursor = (mCursor + 1) % mFuncs.size();
+    return mSchedules.size() - 1;
 }
 
-bool Scheduler::timeHasElapsed() {
-    uint32_t time = millis();
+void Scheduler::advanceCursor() {
+    mCursor++;
+    if (mCursor == mSchedules.end()) {
+        mCursor = mSchedules.begin();
+    }
+}
+
+bool Scheduler::canExecuteCursor() {
+    if (mSchedules.empty() || !mCursor->isEnabled) {
+        return false;
+    }
+
     return (
-        mLastCallTimeMilli[mCursor] == 0 ||
-        time - mIntervalTimeMilli[mCursor] >= mLastCallTimeMilli[mCursor]
+        mCursor->previousCall == HAS_NEVER_RAN_TIMESTAMP ||
+        millis() - mCursor->period >= mCursor->previousCall
     );
 }
 
-void Scheduler::addSchedule(
-    std::function<void ()> *func,
-    uint32_t interval
-) {
-    mFuncs.push_back(func);
-    mLastCallTimeMilli.push_back(0);
-    mIntervalTimeMilli.push_back(interval);
+void Scheduler::disableSchedule(ScheduleId id) {
+    if (id >= mSchedules.size()) {
+        return;
+    }
+
+    mSchedules[id].isEnabled = false;
+}
+
+void Scheduler::loop() {
+    if (mSchedules.empty()) {
+        return;
+    }
+
+    if (this->canExecuteCursor()) {
+        mCursor->callAndUpdate();
+    }
+
+    advanceCursor();
 }
