@@ -5,6 +5,15 @@
 
 #include "Scheduler.h"
 
+void Schedule::callAndUpdate() {
+    if (!isEnabled) {
+        return;
+    }
+
+    previousCall = millis();
+    (*f)();
+}
+
 ScheduleId Scheduler::addSchedule(
     std::shared_ptr<Func> f,
     Duration period

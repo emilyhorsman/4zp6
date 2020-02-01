@@ -22,14 +22,7 @@ struct Schedule {
     Timestamp previousCall;
     bool isEnabled;
 
-    void callAndUpdate() {
-        if (!isEnabled) {
-            return;
-        }
-
-        previousCall = millis();
-        (*f)();
-    }
+    void callAndUpdate();
 };
 
 class Scheduler {
