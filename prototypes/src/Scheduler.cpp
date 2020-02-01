@@ -13,10 +13,11 @@ void Schedule::callAndUpdate() {
 
 ScheduleId Scheduler::addSchedule(
     std::shared_ptr<Func> f,
-    Duration period
+    Duration period,
+    bool isEnabled
 ) {
     mSchedules.push_back(Schedule {
-        f, period, HAS_NEVER_RAN_TIMESTAMP, true
+        f, period, HAS_NEVER_RAN_TIMESTAMP, isEnabled
     });
 
     // This is not ideal: the cursor could be half-way through the
@@ -52,6 +53,22 @@ void Scheduler::disableSchedule(ScheduleId id) {
     }
 
     mSchedules[id].isEnabled = false;
+}
+
+void Scheduler::enableSchedule(ScheduleId id) {
+    if (id >= mSchedules.size()) {
+        return;
+    }
+
+    mSchedules[id].isEnabled = true;
+}
+
+void Scheduler::kickSchedule(ScheduleId id) {
+    if (id >= mSchedules.size()) {
+        return;
+    }
+
+    mSchedules[id].previousCall = millis();
 }
 
 /**

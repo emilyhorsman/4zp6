@@ -41,8 +41,20 @@ class Scheduler {
         bool canExecuteCursor();
 
     public:
-        ScheduleId addSchedule(std::shared_ptr<Func>, Duration);
+        ScheduleId addSchedule(
+            std::shared_ptr<Func>,
+            Duration,
+            bool isEnabled = true
+        );
         void disableSchedule(ScheduleId);
+        void enableSchedule(ScheduleId);
+        /**
+         * Update the schedule such that it will run after its period relative
+         * to the call of `kickSchedule`. e.g., if `kickSchedule` is called at
+         * t = 40 with a period of 500 then the schedule will be executed at
+         * t = 540.
+         */
+        void kickSchedule(ScheduleId);
         void loop();
 };
 
