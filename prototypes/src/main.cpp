@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Wire.h"
+#include "I2CManager.h"
 #include "I2CRuntime.h"
 #include "Scheduler.h"
 
@@ -44,6 +45,8 @@ Peripheral amg8833 = {
 
 Scheduler scheduler;
 
+I2CManager manager(wire);
+
 int count = 0;
 
 void setup()
@@ -74,6 +77,7 @@ void setup()
 void loop()
 {
     scheduler.loop();
+    manager.loop();
 
     /*
     char buff[6];

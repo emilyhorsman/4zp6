@@ -1,39 +1,47 @@
 #include <Arduino.h>
-#include "I2CManager.h"
+#include <functional>
+#include <memory>
 
-I2CManager::I2CManager(TwoWire *wire, uint32_t pollingInterval, uint32_t scanInterval)
+#include "I2CManager.h"
+#include "Scheduler.h"
+
+I2CManager::I2CManager(TwoWire *wire, Duration interScanPeriod, Duration intraScanPeriod)
 : mAddressStatus()
-, mLastPollTimeMilli(0)
-, mPollingIntervalMilli(pollingInterval)
-, mScanIntervalMilli(scanInterval)
+, mScheduler()
+, mInterScanScheduleId(0)
+, mIntraScanScheduleId(0)
 , mCurPollingAddress(0)
 , mWire(wire)
-{}
+{
+    mInterScanScheduleId = mScheduler.addSchedule(
+        std::make_shared<Func>(
+            [this]() {
+                mScheduler.disableSchedule(mInterScanScheduleId);
+                mScheduler.enableSchedule(mIntraScanScheduleId);
+            }
+        ),
+        interScanPeriod
+    );
+
+    mIntraScanScheduleId = mScheduler.addSchedule(
+        std::make_shared<Func>(std::bind(&I2CManager::poll, this)),
+        intraScanPeriod,
+        false
+    );
+}
 
 void I2CManager::loop()
 {
-    if (this->shouldPoll()) {
-        this->poll();
-    }
-}
-
-bool I2CManager::shouldPoll()
-{
-    uint32_t time = millis();
-    if (mCurPollingAddress > 127) {
-        return (
-            mLastPollTimeMilli == 0 ||
-            time - mPollingIntervalMilli >= mLastPollTimeMilli
-        );
-    }
-
-    return time - mScanIntervalMilli >= mLastPollTimeMilli;
+    mScheduler.loop();
 }
 
 void I2CManager::poll()
 {
     if (mCurPollingAddress == 128) {
         mCurPollingAddress = 0;
+        mScheduler.kickSchedule(mInterScanScheduleId);
+        mScheduler.disableSchedule(mIntraScanScheduleId);
+        mScheduler.enableSchedule(mInterScanScheduleId);
         this->printReport(&Serial);
     }
 
@@ -50,7 +58,6 @@ void I2CManager::poll()
         mWire->read();
     }
 
-    mLastPollTimeMilli = millis();
     mCurPollingAddress++;
 }
 
