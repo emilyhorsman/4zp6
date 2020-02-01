@@ -7,8 +7,8 @@
 
 #define HAS_NEVER_RAN_TIMESTAMP 0
 
-typedef uint32_t Milli;
 // Some aliases for semantic richness/readability.
+typedef uint32_t Milli;
 typedef Milli Duration;
 typedef Milli Timestamp;
 
@@ -18,7 +18,14 @@ typedef std::size_t ScheduleId;
 
 struct Schedule {
     std::shared_ptr<Func> f;
+    /**
+     * How many milliseconds between executions of `f`?
+     */
     Duration period;
+    /**
+     * When was the previous call of `f`? If `f` has never been called then
+     * this will be `HAS_NEVER_RAN_TIMESTAMP`.
+     */
     Timestamp previousCall;
     bool isEnabled;
 

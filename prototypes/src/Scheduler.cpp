@@ -6,10 +6,7 @@
 #include "Scheduler.h"
 
 void Schedule::callAndUpdate() {
-    if (!isEnabled) {
-        return;
-    }
-
+    assert(isEnabled);
     previousCall = millis();
     (*f)();
 }
@@ -57,11 +54,12 @@ void Scheduler::disableSchedule(ScheduleId id) {
     mSchedules[id].isEnabled = false;
 }
 
+/**
+ * This call should be non-blocking and consume as little CPU time as possible
+ * per execution. `mCursor` is used to cycle through the schedules and check
+ * one schedule for execution per call. 
+ */
 void Scheduler::loop() {
-    if (mSchedules.empty()) {
-        return;
-    }
-
     if (this->canExecuteCursor()) {
         mCursor->callAndUpdate();
     }
