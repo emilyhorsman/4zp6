@@ -1,4 +1,9 @@
+#ifndef I2CRUNTIME_H_
+#define I2CRUNTIME_H_
+
 #include <vector>
+
+#include "Scheduler.h"
 
 #define REGISTER_REQ_DELAY_MILLI 20
 #define PERIPHERAL_CONF_DELAY_MILLI 1000
@@ -117,3 +122,5 @@ void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs);
 
 uint8_t ** allocateOutputBytes(Peripheral *peripheral);
 void deallocateOutputBytes(Peripheral *peripheral, uint8_t **bytes);
+
+#endif

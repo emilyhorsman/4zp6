@@ -1,3 +1,6 @@
+#ifndef I2CMANAGER_H_
+#define I2CMANAGER_H_
+
 #include <bitset>
 #include <Wire.h>
 
@@ -52,3 +55,5 @@ class I2CManager {
          */
         void loop();
 };
+
+#endif
