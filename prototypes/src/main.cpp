@@ -9,10 +9,10 @@
 
 TwoWire *wire = &Wire;
 
-OutputRead sht31TempAndHumidity = {
+ReadDefinition sht31TempAndHumidity = {
     0,
-    0x2400,
     RL16,
+    0x2400,
     1,
     6,
     500,
@@ -20,16 +20,15 @@ OutputRead sht31TempAndHumidity = {
 
 Peripheral sht31 = {
     0x44,
+    NULL,
     1,
     &sht31TempAndHumidity,
-    NULL,
-    0,
 };
 
-OutputRead amg8833Image = {
+ReadDefinition amg8833Image = {
     1,
-    0x80,
     RL8,
+    0x80,
     128,
     1,
     1500,
@@ -37,10 +36,9 @@ OutputRead amg8833Image = {
 
 Peripheral amg8833 = {
     0x69,
+    NULL,
     1,
     &amg8833Image,
-    NULL,
-    0,
 };
 
 Scheduler scheduler;
