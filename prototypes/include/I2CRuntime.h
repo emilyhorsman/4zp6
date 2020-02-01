@@ -40,7 +40,7 @@ struct ReadDefinition {
      * and then advance to the next register. For many peripherals this value is
      * simple 1 (i.e., there is no need to advance).
      */
-    uint16_t registerBlockLength;
+    uint8_t registerBlockLength;
 
     /**
      * The number of bytes that will be read at each register ID in the
@@ -56,6 +56,8 @@ struct ReadDefinition {
      * registers?
      */
     Duration readPeriod;
+
+    uint16_t getNumBlockBytes();
 };
 
 typedef struct ReadDefinition ReadDefinition;
@@ -84,7 +86,7 @@ struct Peripheral {
      * provide accelerometer and gyroscope data at non-contiguous register IDs.
      */
     uint8_t numReadDefinitions;
-    ReadDefinition * readDefinitions;
+    ReadDefinition ** readDefinitions;
 };
 
 typedef struct Peripheral Peripheral;
@@ -94,8 +96,12 @@ typedef struct Peripheral Peripheral;
  */
 class I2CPeripheralManager {
     private:
-        Peripheral *mPeripheral;
-        uint8_t **mBuffer;
+        Peripheral * mPeripheral;
+        uint8_t ** mBuffer;
+        bool mIsWriting;
+
+        static uint8_t ** allocateBytes(Peripheral *);
+        static void deallocateBytes(Peripheral *, uint8_t **);
 
     public:
         I2CPeripheralManager(Peripheral *peripheral);
@@ -108,9 +114,9 @@ class I2CRuntime {
 
     public:
         uint8_t addPeripheral(Peripheral *peripheral);
-        void removePeripheral(uint8_t peripheralId);
 };
 
+/*
 void prototypeOutputRead(
     TwoWire *wire,
     uint16_t busAddr,
@@ -119,8 +125,6 @@ void prototypeOutputRead(
 );
 
 void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs);
-
-uint8_t ** allocateOutputBytes(Peripheral *peripheral);
-void deallocateOutputBytes(Peripheral *peripheral, uint8_t **bytes);
+*/
 
 #endif

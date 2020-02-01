@@ -18,11 +18,13 @@ ReadDefinition sht31TempAndHumidity = {
     500,
 };
 
+ReadDefinition * sht31defs[1] = { &sht31TempAndHumidity };
+
 Peripheral sht31 = {
     0x44,
     NULL,
     1,
-    &sht31TempAndHumidity,
+    sht31defs,
 };
 
 ReadDefinition amg8833Image = {
@@ -34,11 +36,13 @@ ReadDefinition amg8833Image = {
     1500,
 };
 
+ReadDefinition * amg8833defs[1] = { &amg8833Image };
+
 Peripheral amg8833 = {
     0x69,
     NULL,
     1,
-    &amg8833Image,
+    amg8833defs,
 };
 
 Scheduler scheduler;

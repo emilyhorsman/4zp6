@@ -3,15 +3,35 @@
 #include "Wire.h"
 #include "I2CRuntime.h"
 
+uint16_t ReadDefinition::getNumBlockBytes() {
+    return registerBlockLength * numBytesPerRegister;
+}
+
 I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral)
 : mPeripheral(peripheral)
 , mBuffer(NULL)
+, mIsWriting(false)
 {
-    mBuffer = allocateOutputBytes(mPeripheral);
+    mBuffer = I2CPeripheralManager::allocateBytes(mPeripheral);
 }
 
 I2CPeripheralManager::~I2CPeripheralManager() {
-    deallocateOutputBytes(mPeripheral, mBuffer);
+    I2CPeripheralManager::deallocateBytes(mPeripheral, mBuffer);
+}
+
+uint8_t ** I2CPeripheralManager::allocateBytes(Peripheral *peripheral) {
+    uint8_t **bytes = new uint8_t * [peripheral->numReadDefinitions];
+    for (uint8_t i = 0; i < peripheral->numReadDefinitions; i++) {
+        bytes[i] = new uint8_t[peripheral->readDefinitions[i]->getNumBlockBytes()];
+    }
+    return bytes;
+}
+
+void I2CPeripheralManager::deallocateBytes(Peripheral *peripheral, uint8_t **bytes) {
+    for (uint8_t i = 0; i < peripheral->numReadDefinitions; i++) {
+        delete [] bytes[i];
+    }
+    delete [] bytes;
 }
 
 uint8_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
@@ -19,12 +39,7 @@ uint8_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
     return mManagers.size() - 1;
 }
 
-void I2CRuntime::removePeripheral(uint8_t peripheralId) {
-    assert(mManagers.size() > peripheralId);
-    delete mManagers[peripheralId];
-    mManagers.erase(mManagers.begin() + peripheralId);
-}
-
+/*
 // Not the way we actually want to do it, this is blocking non-loop code
 // Just a proof of concept for the runtime struct
 void prototypeOutputRead(
@@ -66,19 +81,4 @@ void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs) {
         prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs + i, outputs[i]);
     }
 }
-
-uint8_t ** allocateOutputBytes(Peripheral *peripheral) {
-    uint8_t **bytes = new uint8_t * [peripheral->numOutputs];
-    for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
-        OutputRead *conf = &peripheral->outputs[i];
-        bytes[i] = new uint8_t[conf->numBytesPerAdvance * conf->manualAdvanceNum];
-    }
-    return bytes;
-}
-
-void deallocateOutputBytes(Peripheral *peripheral, uint8_t **bytes) {
-    for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
-        delete [] bytes[i];
-    }
-    delete [] bytes;
-}
+*/
