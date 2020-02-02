@@ -1,57 +1,78 @@
 #include <Arduino.h>
-#include "I2CManager.h"
+#include <functional>
+#include <memory>
 
-I2CManager::I2CManager(TwoWire *wire, uint32_t pollingInterval, uint32_t scanInterval)
+#include "I2CManager.h"
+#include "Scheduler.h"
+
+I2CManager::I2CManager(TwoWire *wire, Duration interScanPeriod, Duration intraScanPeriod)
 : mAddressStatus()
-, mLastPollTimeMilli(0)
-, mPollingIntervalMilli(pollingInterval)
-, mScanIntervalMilli(scanInterval)
+, mScheduler()
+, mInterScanScheduleId(0)
+, mIntraScanScheduleId(0)
 , mCurPollingAddress(0)
 , mWire(wire)
-{}
+, mDidTransmit(false)
+{
+    mInterScanScheduleId = mScheduler.addSchedule(
+        std::make_shared<Func>(
+            [this]() {
+                mScheduler.disableSchedule(mInterScanScheduleId);
+                mScheduler.enableSchedule(mIntraScanScheduleId);
+            }
+        ),
+        interScanPeriod
+    );
+
+    mIntraScanScheduleId = mScheduler.addSchedule(
+        std::make_shared<Func>(std::bind(&I2CManager::poll, this)),
+        intraScanPeriod,
+        false
+    );
+}
 
 void I2CManager::loop()
 {
-    if (this->shouldPoll()) {
-        this->poll();
-    }
-}
-
-bool I2CManager::shouldPoll()
-{
-    uint32_t time = millis();
-    if (mCurPollingAddress > 127) {
-        return (
-            mLastPollTimeMilli == 0 ||
-            time - mPollingIntervalMilli >= mLastPollTimeMilli
-        );
-    }
-
-    return time - mScanIntervalMilli >= mLastPollTimeMilli;
+    mScheduler.loop();
 }
 
 void I2CManager::poll()
 {
+    // If we've reached the end then we should switch over the inter-scanning
+    // period.
     if (mCurPollingAddress == 128) {
         mCurPollingAddress = 0;
+        mScheduler.kickSchedule(mInterScanScheduleId);
+        mScheduler.disableSchedule(mIntraScanScheduleId);
+        mScheduler.enableSchedule(mInterScanScheduleId);
         this->printReport(&Serial);
+        return;
+    }
+
+    if (mDidTransmit) {
+        mWire->requestFrom(mCurPollingAddress, 1u);
+        bool status = mWire->available() == 1;
+        mAddressStatus[mCurPollingAddress] = status;
+        if (status) {
+            // Anything the device sent back won't be relevant and we want to avoid
+            // reading it in the future.
+            mWire->read();
+        }
+        
+        mCurPollingAddress++;
+
+        // Some peripherals need a delay between the initial transmission and
+        // the requestFrom/read.
+        mDidTransmit = false;
+        return;
     }
 
     // Just send the START/END sequence to the address and see if it gives
     // anything back.
     mWire->beginTransmission(mCurPollingAddress);
+    mWire->write(0x0);
     mWire->endTransmission();
-    mWire->requestFrom(mCurPollingAddress, 1u);
-    bool status = mWire->available() == 1;
-    mAddressStatus[mCurPollingAddress] = status;
-    if (status) {
-        // Anything the device sent back won't be relevant and we want to avoid
-        // reading it in the future.
-        mWire->read();
-    }
-
-    mLastPollTimeMilli = millis();
-    mCurPollingAddress++;
+    mDidTransmit = true;
 }
 
 void I2CManager::printReport(Stream *stream)

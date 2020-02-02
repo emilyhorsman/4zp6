@@ -1,19 +1,37 @@
+#ifndef I2CMANAGER_H_
+#define I2CMANAGER_H_
+
 #include <bitset>
 #include <Wire.h>
 
-#define I2CMANAGER_DEFAULT_POLL_INTERVAL_MILLI 1000
-#define I2CMANAGER_DEFAULT_SCAN_INTERVAL_MILLI 5
+#include "Scheduler.h"
 
+#define I2CMANAGER_DEFAULT_INTER_SCAN_PERIOD 1000
+#define I2CMANAGER_DEFAULT_INTRA_SCAN_PERIOD 10
+
+/**
+ *        @@ <- Intra Scan Period
+ *           @@          &&&&&&&&&&&&&& <- Inter Scan Period
+ *                                      @@
+ *       |  |  | ...... | ............ |  | ....
+ * Start ^  |  |        |              |  |
+ *   Poll 1 ^  |        |              |  |
+ *      Poll 2 ^        |              |  |
+ * Finish address range ^              |  |
+ *                               Start ^  |
+ *                                 Poll 1 ^
+ *                                          continues...
+ */
 class I2CManager {
     private:
         std::bitset<128> mAddressStatus;
-        uint32_t mLastPollTimeMilli;
-        uint32_t mPollingIntervalMilli;
-        uint32_t mScanIntervalMilli;
+        Scheduler mScheduler;
+        ScheduleId mInterScanScheduleId;
+        ScheduleId mIntraScanScheduleId;
         uint8_t mCurPollingAddress;
         TwoWire *mWire;
+        bool mDidTransmit;
 
-        bool shouldPoll();
         void poll();
 
     public:
@@ -23,11 +41,11 @@ class I2CManager {
              * Time betweeen the start and end of a full poll across the address
              * range.
              */
-            uint32_t pollingInterval = I2CMANAGER_DEFAULT_POLL_INTERVAL_MILLI,
+            Duration interScanPeriod = I2CMANAGER_DEFAULT_INTER_SCAN_PERIOD,
             /**
              * Time between scanning single addresses within a full poll.
              */
-            uint32_t scanInterval = I2CMANAGER_DEFAULT_SCAN_INTERVAL_MILLI
+            Duration intraScanPeriod = I2CMANAGER_DEFAULT_INTRA_SCAN_PERIOD
         );
         void printReport(Stream *stream);
         /**
@@ -38,3 +56,5 @@ class I2CManager {
          */
         void loop();
 };
+
+#endif
