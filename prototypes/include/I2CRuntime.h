@@ -119,6 +119,8 @@ class I2CReadManager {
 
     public:
         I2CReadManager(ReadDefinition *, Peripheral *, uint8_t *, TwoWire *);
+        void loop();
+        bool isWriting();
 };
 
 /**
@@ -137,6 +139,8 @@ class I2CPeripheralManager {
     public:
         I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire);
         ~I2CPeripheralManager();
+        void loop();
+        uint8_t ** getBuffer();
 };
 
 class I2CRuntime {
@@ -146,8 +150,9 @@ class I2CRuntime {
 
     public:
         I2CRuntime(TwoWire *);
-
         std::size_t addPeripheral(Peripheral *peripheral);
+        uint8_t ** getPeripheralBuffer(std::size_t);
+        void loop();
 };
 
 /*

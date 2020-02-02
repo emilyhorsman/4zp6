@@ -67,6 +67,7 @@ void I2CReadManager::read() {
 void I2CReadManager::advanceCursor() {
     if (mCursor == mDefinition->registerBlockLength - 1) {
         mCursor = 0;
+        Serial.println("completed a block read");
         this->finishBlockRead();
         return;
     }
@@ -102,6 +103,14 @@ void I2CReadManager::readAtCursor() {
     for (uint8_t i = 0; i < mDefinition->numBytesPerRegister; i++) {
         mBuffer[mCursor * mDefinition->numBytesPerRegister + i] = mWire->read();
     }
+}
+
+void I2CReadManager::loop() {
+    mScheduler.loop();
+}
+
+bool I2CReadManager::isWriting() {
+    return mState != NOT_READING_BLOCK;
 }
 
 I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire)
@@ -140,6 +149,24 @@ void I2CPeripheralManager::deallocateBytes(Peripheral *peripheral, uint8_t **byt
     delete [] bytes;
 }
 
+void I2CPeripheralManager::loop() {
+    // We can break this up to use a cursor and call one loop per call if
+    // needed.
+    for (auto readManager : mReadManagers) {
+        readManager->loop();
+    }
+}
+
+uint8_t ** I2CPeripheralManager::getBuffer() {
+    for (auto readManager : mReadManagers) {
+        if (readManager->isWriting()) {
+            return NULL;
+        }
+    }
+
+    return mBuffer;
+}
+
 I2CRuntime::I2CRuntime(TwoWire *wire)
 : mManagers()
 , mWire(wire)
@@ -148,6 +175,19 @@ I2CRuntime::I2CRuntime(TwoWire *wire)
 std::size_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
     mManagers.push_back(new I2CPeripheralManager(peripheral, mWire));
     return mManagers.size() - 1;
+}
+
+void I2CRuntime::loop() {
+    // We can break this up to use a cursor and call one loop per call if
+    // needed.
+    for (auto manager : mManagers) {
+        manager->loop();
+    }
+}
+
+uint8_t ** I2CRuntime::getPeripheralBuffer(std::size_t peripheralId) {
+    assert(peripheralId < mManagers.size());
+    return mManagers[peripheralId]->getBuffer();
 }
 
 /*

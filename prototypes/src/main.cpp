@@ -15,7 +15,7 @@ ReadDefinition sht31TempAndHumidity = {
     0x2400,
     1,
     6,
-    500,
+    2000,
 };
 
 ReadDefinition * sht31defs[1] = { &sht31TempAndHumidity };
@@ -48,6 +48,7 @@ Peripheral amg8833 = {
 Scheduler scheduler;
 
 I2CManager manager(wire);
+I2CRuntime runtime(wire);
 
 int count = 0;
 
@@ -63,25 +64,50 @@ void setup()
         ),
         1000
     );
+
+    runtime.addPeripheral(&sht31);
     
-    //wire->begin();
-    //wire->setTimeout(5);
+    wire->begin();
+    wire->setTimeout(5);
     /*
     wire->beginTransmission(0x18);
     wire->write(0x20);
     wire->write(0b01110111);
     wire->endTransmission();
     */
-    //delay(1000);
+    delay(1000);
 
 }
 
 void loop()
 {
+    /*
     scheduler.loop();
     manager.loop();
+    runtime.loop();
 
-    /*
+    uint8_t **shtBuffer = runtime.getPeripheralBuffer(0);
+    if (shtBuffer != NULL) {
+        Serial.printf(
+            "%x %x %x %x %x %x\n",
+            shtBuffer[0][0],
+            shtBuffer[0][1],
+            shtBuffer[0][2],
+            shtBuffer[0][3],
+            shtBuffer[0][4],
+            shtBuffer[0][5]
+        );
+        uint16_t temp;
+        temp = shtBuffer[0][0];
+        temp <<= 8;
+        temp |= shtBuffer[0][1];
+        double t = temp;
+        t *= 175;
+        t /= 0xffff;
+        t = -45 + t;
+        Serial.printf("Temp: %f\n", t);
+    }*/
+
     char buff[6];
     wire->beginTransmission(0x44);
     wire->write(0x24);
@@ -99,7 +125,7 @@ void loop()
     t /= 0xffff;
     t = -45 + t;
     Serial.printf("Temp : %f\n", t);
-    */
+    delay(1000);
 
    /*
     uint8_t **bytes = allocateOutputBytes(&amg8833);
