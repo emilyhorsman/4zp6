@@ -7,7 +7,7 @@
 #include "Scheduler.h"
 
 #define I2CMANAGER_DEFAULT_INTER_SCAN_PERIOD 1000
-#define I2CMANAGER_DEFAULT_INTRA_SCAN_PERIOD 5
+#define I2CMANAGER_DEFAULT_INTRA_SCAN_PERIOD 10
 
 /**
  *        @@ <- Intra Scan Period
@@ -30,6 +30,7 @@ class I2CManager {
         ScheduleId mIntraScanScheduleId;
         uint8_t mCurPollingAddress;
         TwoWire *mWire;
+        bool mDidTransmit;
 
         void poll();
 
