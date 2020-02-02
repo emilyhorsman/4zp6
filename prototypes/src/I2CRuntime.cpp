@@ -67,11 +67,9 @@ void I2CReadManager::read() {
 void I2CReadManager::advanceCursor() {
     if (mCursor == mDefinition->registerBlockLength - 1) {
         mCursor = 0;
+#ifdef READ_MANAGER_DEBUG
         Serial.printf("%lu Completed a block read, disabling schedules\n", millis());
-        // TODO
-        /*mScheduler.disableSchedule(mInterReadScheduleId);
-        mScheduler.disableSchedule(mIntraReadScheduleId);
-        mState = NOT_READING_BLOCK;*/
+#endif
         this->finishBlockRead();
         return;
     }
@@ -83,19 +81,28 @@ void I2CReadManager::advanceCursor() {
 void I2CReadManager::requestReadAtCursor() {
     assert(mState == REQUESTING_SINGLE_READ);
 
+#ifdef READ_MANAGER_DEBUG
     Serial.printf("%lu Transmitting bytes to %x\n", millis(), mPeripheral->busAddress);
+#endif
     mWire->beginTransmission(mPeripheral->busAddress);
     if (mDefinition->registerIdLength == RL16) {
         uint16_t regId = mDefinition->registerId + mCursor;
+#ifdef READ_MANAGER_DEBUG
         Serial.printf("%lu %x %x %x\n", millis(), regId, regId >> 8, regId & 255);
+#endif
         mWire->write(regId >> 8);
         mWire->write(regId & 255);
+#ifdef READ_MANAGER_DEBUG
         Serial.printf("%lu Error after write? %d %s\n", millis(), mWire->lastError(), mWire->getErrorText(mWire->lastError()));
+#endif
     } else {
         mWire->write(mDefinition->registerId + mCursor);
     }
     mWire->endTransmission();
+
+#ifdef READ_MANAGER_DEBUG
     Serial.printf("%lu Error after endTrans? %d %s\n", millis(), mWire->lastError(), mWire->getErrorText(mWire->lastError()));
+#endif
 }
 
 void I2CReadManager::readAtCursor() {
@@ -105,13 +112,17 @@ void I2CReadManager::readAtCursor() {
         mPeripheral->busAddress,
         mDefinition->numBytesPerRegister
     );
+#ifdef READ_MANAGER_DEBUG
     Serial.printf("%lu Requested %d from %x, %d available\n", millis(), mDefinition->numBytesPerRegister, mPeripheral->busAddress, mWire->available());
+#endif
 
     // We don't typically want a loop like this in a non-blocking call but
     // I'm fairly certain this is okay since `TwoWire::read` is buffered.
     for (uint8_t i = 0; i < mDefinition->numBytesPerRegister; i++) {
         mBuffer[mCursor * mDefinition->numBytesPerRegister + i] = mWire->read();
+#ifdef READ_MANAGER_DEBUG
         Serial.printf("%lu Read byte %d: %x\n", millis(), mCursor * mDefinition->numBytesPerRegister + i, mBuffer[mCursor * mDefinition->numBytesPerRegister + i]);
+#endif
     }
 }
 

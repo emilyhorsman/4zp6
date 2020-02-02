@@ -68,6 +68,9 @@ void setup()
                 if (shtBuffer == NULL) {
                     return;
                 }
+
+                // Sample application logic that a peripheral processor might
+                // implement outside the microcontroller.
                 Serial.printf(
                     "%x %x %x %x %x %x\n",
                     shtBuffer[0][0],
@@ -94,7 +97,7 @@ void setup()
     
     wire->begin();
     delay(3000);
-    Serial.println("%lu Setup completed", millis());
+    Serial.printf("%lu Setup completed\n", millis());
 }
 
 void loop()
