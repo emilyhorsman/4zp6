@@ -9,7 +9,10 @@
 #include "Scheduler.h"
 
 /**
- * Only intended to be used by an I2CRuntime instance
+ * Only intended to be used by an I2CRuntime instance.
+ * 
+ * A peripheral manager will manage the read managers for each read definition
+ * on a single peripheral.
  */
 class I2CPeripheralManager {
     private:

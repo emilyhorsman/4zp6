@@ -38,6 +38,10 @@ void I2CReadManager::startBlockRead() {
     mScheduler.enableSchedule(mIntraReadScheduleId);
 }
 
+/**
+ * We've finished reading a from a contiguous block of register IDs and can
+ * disable the intra-read schedule and switch back to the inter-read schedule.
+ */
 void I2CReadManager::finishBlockRead() {
     mScheduler.disableSchedule(mIntraReadScheduleId);
     mState = NOT_READING_BLOCK;
@@ -69,6 +73,8 @@ void I2CReadManager::advanceCursor() {
         return;
     }
 
+    // A block of register IDs is always contiguous, so we simply increment the
+    // cursor.
     mCursor++;
     mState = REQUESTING_SINGLE_READ;
 }

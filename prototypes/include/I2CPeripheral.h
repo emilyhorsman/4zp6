@@ -3,8 +3,17 @@
 
 #include "Scheduler.h"
 
+/**
+ * This value can be very important.
+ * 
+ * Too low: Insufficient time between the register ID transmission and a request
+ *          to read bytes. No data will be read.
+ * 
+ * Too high: Performance will suffer for read definitions that have a long
+ *           contiguous register block length. (e.g., something like the thermal
+ *           camera that reads from 128 different registers.)
+ */
 #define REGISTER_REQ_DELAY_MILLI 15
-#define PERIPHERAL_CONF_DELAY_MILLI 1000
 
 enum RegisterLength {
     RL16,
