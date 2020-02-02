@@ -93,24 +93,12 @@ void setup()
     );
     
     wire->begin();
-    delay(5000);
-    Serial.println("starting");
-    wire->beginTransmission(0x44);
-    wire->write(0);
-    //wire->write(0xA2);
-    //wire->write(0x30);
-    wire->endTransmission();
-    delay(10);
-    Serial.println(wire->getErrorText(wire->lastError()));
-    wire->requestFrom(0x44, 1u);
-    Serial.println(wire->available());
-    Serial.println(wire->getErrorText(wire->lastError()));
-    delay(10);
+    delay(3000);
+    Serial.println("%lu Setup completed", millis());
 }
 
 void loop()
 {
-    manager.loop();
-    //runtime.loop();
+    runtime.loop();
     scheduler.loop();
 }

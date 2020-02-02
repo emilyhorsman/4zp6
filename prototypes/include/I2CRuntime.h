@@ -6,7 +6,7 @@
 
 #include "Scheduler.h"
 
-#define REGISTER_REQ_DELAY_MILLI 10
+#define REGISTER_REQ_DELAY_MILLI 15
 #define PERIPHERAL_CONF_DELAY_MILLI 1000
 
 enum RegisterLength {

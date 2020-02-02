@@ -67,7 +67,11 @@ void I2CReadManager::read() {
 void I2CReadManager::advanceCursor() {
     if (mCursor == mDefinition->registerBlockLength - 1) {
         mCursor = 0;
-        Serial.println("completed a block read");
+        Serial.printf("%lu Completed a block read, disabling schedules\n", millis());
+        // TODO
+        /*mScheduler.disableSchedule(mInterReadScheduleId);
+        mScheduler.disableSchedule(mIntraReadScheduleId);
+        mState = NOT_READING_BLOCK;*/
         this->finishBlockRead();
         return;
     }
@@ -79,16 +83,19 @@ void I2CReadManager::advanceCursor() {
 void I2CReadManager::requestReadAtCursor() {
     assert(mState == REQUESTING_SINGLE_READ);
 
-    Serial.printf("%d transmitting bytes to %x\n", millis(), mPeripheral->busAddress);
+    Serial.printf("%lu Transmitting bytes to %x\n", millis(), mPeripheral->busAddress);
     mWire->beginTransmission(mPeripheral->busAddress);
     if (mDefinition->registerIdLength == RL16) {
         uint16_t regId = mDefinition->registerId + mCursor;
+        Serial.printf("%lu %x %x %x\n", millis(), regId, regId >> 8, regId & 255);
         mWire->write(regId >> 8);
         mWire->write(regId & 255);
+        Serial.printf("%lu Error after write? %d %s\n", millis(), mWire->lastError(), mWire->getErrorText(mWire->lastError()));
     } else {
         mWire->write(mDefinition->registerId + mCursor);
     }
     mWire->endTransmission();
+    Serial.printf("%lu Error after endTrans? %d %s\n", millis(), mWire->lastError(), mWire->getErrorText(mWire->lastError()));
 }
 
 void I2CReadManager::readAtCursor() {
@@ -98,13 +105,13 @@ void I2CReadManager::readAtCursor() {
         mPeripheral->busAddress,
         mDefinition->numBytesPerRegister
     );
-    Serial.printf("%d Requested %d from %x\n", millis(), mDefinition->numBytesPerRegister, mPeripheral->busAddress);
-    Serial.println(mWire->available());
+    Serial.printf("%lu Requested %d from %x, %d available\n", millis(), mDefinition->numBytesPerRegister, mPeripheral->busAddress, mWire->available());
 
     // We don't typically want a loop like this in a non-blocking call but
     // I'm fairly certain this is okay since `TwoWire::read` is buffered.
     for (uint8_t i = 0; i < mDefinition->numBytesPerRegister; i++) {
         mBuffer[mCursor * mDefinition->numBytesPerRegister + i] = mWire->read();
+        Serial.printf("%lu Read byte %d: %x\n", millis(), mCursor * mDefinition->numBytesPerRegister + i, mBuffer[mCursor * mDefinition->numBytesPerRegister + i]);
     }
 }
 
@@ -192,47 +199,3 @@ uint8_t ** I2CRuntime::getPeripheralBuffer(std::size_t peripheralId) {
     assert(peripheralId < mManagers.size());
     return mManagers[peripheralId]->getBuffer();
 }
-
-/*
-// Not the way we actually want to do it, this is blocking non-loop code
-// Just a proof of concept for the runtime struct
-void prototypeOutputRead(
-    TwoWire *wire,
-    uint16_t busAddr,
-    OutputRead *conf,
-    uint8_t *bytes
-) {
-    std::vector<OutputRead *> outputs;
-    outputs.push_back(conf);
-    for (uint16_t i = 0; i < conf->manualAdvanceNum; i++) {
-        wire->beginTransmission(busAddr);
-        if (conf->registerIdLength == RL16) {
-            uint16_t regId = conf->registerId + i;
-            wire->write(regId >> 8);
-            wire->write(regId & 255);
-        } else {
-            wire->write(conf->registerId + i);
-        }
-        wire->endTransmission();
-        delay(REGISTER_REQ_DELAY_MILLI);
-        wire->requestFrom(busAddr, conf->numBytesPerAdvance);
-
-        for (uint8_t j = 0; j < conf->numBytesPerAdvance; j++) {
-            bytes[i * conf->numBytesPerAdvance + j] = wire->read();
-        }
-    }
-}
-
-void prototype(TwoWire *wire, Peripheral *peripheral, uint8_t **outputs) {
-    wire->beginTransmission(peripheral->busAddr);
-    for (uint8_t i = 0; i < peripheral->numInitialWriteBytes; i++) {
-        wire->write(peripheral->initialWrite[i]);
-    }
-    wire->endTransmission();
-    delay(PERIPHERAL_CONF_DELAY_MILLI);
-
-    for (uint8_t i = 0; i < peripheral->numOutputs; i++) {
-        prototypeOutputRead(wire, peripheral->busAddr, peripheral->outputs + i, outputs[i]);
-    }
-}
-*/
