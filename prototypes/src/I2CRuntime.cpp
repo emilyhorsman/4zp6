@@ -79,6 +79,7 @@ void I2CReadManager::advanceCursor() {
 void I2CReadManager::requestReadAtCursor() {
     assert(mState == REQUESTING_SINGLE_READ);
 
+    Serial.printf("%d transmitting bytes to %x\n", millis(), mPeripheral->busAddress);
     mWire->beginTransmission(mPeripheral->busAddress);
     if (mDefinition->registerIdLength == RL16) {
         uint16_t regId = mDefinition->registerId + mCursor;
@@ -97,6 +98,8 @@ void I2CReadManager::readAtCursor() {
         mPeripheral->busAddress,
         mDefinition->numBytesPerRegister
     );
+    Serial.printf("%d Requested %d from %x\n", millis(), mDefinition->numBytesPerRegister, mPeripheral->busAddress);
+    Serial.println(mWire->available());
 
     // We don't typically want a loop like this in a non-blocking call but
     // I'm fairly certain this is okay since `TwoWire::read` is buffered.

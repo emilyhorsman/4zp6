@@ -57,6 +57,7 @@ void I2CManager::poll()
             // Anything the device sent back won't be relevant and we want to avoid
             // reading it in the future.
             mWire->read();
+            Serial.printf("connected on %x\n", mCurPollingAddress);
         }
         
         mCurPollingAddress++;

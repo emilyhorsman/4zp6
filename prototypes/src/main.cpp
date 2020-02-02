@@ -4,13 +4,10 @@
 #include <Wire.h>
 
 #include "I2CManager.h"
-
-TwoWire *wire = &Wire;
-
-/*
 #include "I2CRuntime.h"
 #include "Scheduler.h"
 
+TwoWire *wire = &Wire;
 
 ReadDefinition sht31TempAndHumidity = {
     0,
@@ -50,10 +47,9 @@ Peripheral amg8833 = {
 
 
 Scheduler scheduler;
-
 I2CRuntime runtime(wire);
-*/
 I2CManager manager(wire);
+uint8_t **shtBuffer = NULL;
 
 void setup()
 {
@@ -64,38 +60,57 @@ void setup()
     Serial.println("Start");
     delay(10);
 
-    //runtime.addPeripheral(&sht31);
+    runtime.addPeripheral(&sht31);
+    scheduler.addSchedule(
+        std::make_shared<Func>(
+            []() {
+                shtBuffer = runtime.getPeripheralBuffer(0);
+                if (shtBuffer == NULL) {
+                    return;
+                }
+                Serial.printf(
+                    "%x %x %x %x %x %x\n",
+                    shtBuffer[0][0],
+                    shtBuffer[0][1],
+                    shtBuffer[0][2],
+                    shtBuffer[0][3],
+                    shtBuffer[0][4],
+                    shtBuffer[0][5]
+                );
+
+                uint16_t temp;
+                temp = shtBuffer[0][0];
+                temp <<= 8;
+                temp |= shtBuffer[0][1];
+                double t = temp;
+                t *= 175;
+                t /= 0xffff;
+                t = -45 + t;
+                Serial.printf("Temp: %f\n", t);
+            }
+        ),
+        1000
+    );
     
     wire->begin();
-    /*
-    wire->beginTransmission(0x18);
-    wire->write(0x20);
-    wire->write(0b01110111);
+    delay(5000);
+    Serial.println("starting");
+    wire->beginTransmission(0x44);
+    wire->write(0);
+    //wire->write(0xA2);
+    //wire->write(0x30);
     wire->endTransmission();
-    */
-    delay(1000);
-
-    /*wire->beginTransmission(0x44);
-    wire->write(0x30A2 >> 8);
-    wire->write(0x30A2 & 0xFF);
-    wire->endTransmission();
-    delay(10);*/
-
+    delay(10);
+    Serial.println(wire->getErrorText(wire->lastError()));
+    wire->requestFrom(0x44, 1u);
+    Serial.println(wire->available());
+    Serial.println(wire->getErrorText(wire->lastError()));
+    delay(10);
 }
 
 void loop()
 {
-    //Serial.println("loop");
     manager.loop();
-    /*wire->beginTransmission(0x44);
-    wire->write(0x00);
-    wire->write(0x06);
-    wire->endTransmission();
-    delay(10);
-    wire->requestFrom(0x44, 1);
-    Serial.println(wire->getErrorText(wire->lastError()));
-    Serial.println(wire->available());
-    delay(1000);*/
     //runtime.loop();
-
+    scheduler.loop();
 }
