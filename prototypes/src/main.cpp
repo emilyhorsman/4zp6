@@ -1,11 +1,15 @@
 #include <Arduino.h>
 #include <functional>
 #include <memory>
+#include <WiFi.h>
 #include <Wire.h>
+
+#define ENABLE_PROVISIONING
 
 #include "I2CManager.h"
 #include "I2CRuntime.h"
 #include "Scheduler.h"
+#include "WiFiProvisioning.h"
 
 TwoWire *wire = &Wire;
 
@@ -50,6 +54,9 @@ Scheduler scheduler;
 I2CRuntime runtime(wire);
 I2CManager manager(wire);
 uint8_t **shtBuffer = NULL;
+#ifdef ENABLE_PROVISIONING
+WiFiProvisioning provisioning;
+#endif
 
 void setup()
 {
@@ -60,6 +67,7 @@ void setup()
     Serial.println("Start");
     delay(10);
 
+#ifdef ENABLE_PERIPHERALS
     runtime.addPeripheral(&sht31);
     scheduler.addSchedule(
         std::make_shared<Func>(
@@ -94,14 +102,26 @@ void setup()
         ),
         1000
     );
+#endif
     
     wire->begin();
     delay(3000);
+
+#ifdef ENABLE_PROVISIONING
+    provisioning.setup();
+#endif
+
     Serial.printf("%lu Setup completed\n", millis());
 }
 
 void loop()
 {
+#ifdef ENABLE_PERIPHERALS
     runtime.loop();
     scheduler.loop();
+#endif
+
+#ifdef ENABLE_PROVISIONING
+    provisioning.loop();
+#endif
 }
