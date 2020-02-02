@@ -2,6 +2,7 @@
 #define I2CRUNTIME_H_
 
 #include <vector>
+#include <Wire.h>
 
 #include "Scheduler.h"
 
@@ -91,6 +92,35 @@ struct Peripheral {
 
 typedef struct Peripheral Peripheral;
 
+enum ReadManagerState {
+    NOT_READING_BLOCK,
+    REQUESTING_SINGLE_READ,
+    REQUESTED_SINGLE_READ,
+};
+
+class I2CReadManager {
+    private:
+        ReadDefinition *mDefinition;
+        Peripheral *mPeripheral;
+        Scheduler mScheduler;
+        ScheduleId mInterReadScheduleId;
+        ScheduleId mIntraReadScheduleId;
+        uint8_t * mBuffer;
+        ReadManagerState mState;
+        uint16_t mCursor;
+        TwoWire * mWire;
+
+        void startBlockRead();
+        void finishBlockRead();
+        void requestReadAtCursor();
+        void readAtCursor();
+        void advanceCursor();
+        void read();
+
+    public:
+        I2CReadManager(ReadDefinition *, Peripheral *, uint8_t *, TwoWire *);
+};
+
 /**
  * Only intended to be used by an I2CRuntime instance
  */
@@ -98,22 +128,26 @@ class I2CPeripheralManager {
     private:
         Peripheral * mPeripheral;
         uint8_t ** mBuffer;
-        bool mIsWriting;
+        std::vector<I2CReadManager *> mReadManagers;
+        TwoWire * mWire;
 
         static uint8_t ** allocateBytes(Peripheral *);
         static void deallocateBytes(Peripheral *, uint8_t **);
 
     public:
-        I2CPeripheralManager(Peripheral *peripheral);
+        I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire);
         ~I2CPeripheralManager();
 };
 
 class I2CRuntime {
     private:
         std::vector<I2CPeripheralManager *> mManagers;
+        TwoWire * mWire;
 
     public:
-        uint8_t addPeripheral(Peripheral *peripheral);
+        I2CRuntime(TwoWire *);
+
+        std::size_t addPeripheral(Peripheral *peripheral);
 };
 
 /*
