@@ -6,6 +6,8 @@
 
 WiFiProvisioning::WiFiProvisioning()
 : mServer(PROVISIONING_PORT)
+, mClient()
+, mHasConnectedClient(false)
 {}
 
 void WiFiProvisioning::setup() {
@@ -21,30 +23,41 @@ void WiFiProvisioning::setup() {
     mServer.begin();
 }
 
+void WiFiProvisioning::stopClient() {
+    Serial.printf("%lu Closing client connection\n", millis());
+    mClient.stop();
+    mHasConnectedClient = false;
+}
+
 void WiFiProvisioning::loop() {
-    WiFiClient client = mServer.available();
-    if (!client) {
+    if (!mHasConnectedClient) {
+        // Why does WiFiServer::available not return a pointer?? Its internal
+        // members that are expensive are pointers at least.
+        mClient = mServer.available();
+        if (!mClient) {
+            return;
+        }
+        Serial.printf("%lu Client connected: %s\n", millis(), mClient.remoteIP().toString().c_str());
+        mHasConnectedClient = true;
+    }
+
+    if (!mClient.connected()) {
+        this->stopClient();
         return;
     }
 
-    Serial.printf("%lu Client connected: %s\n", millis(), client.localIP().toString().c_str());
-
-    while (client.connected()) {
-        if (!client.available()) {
-            continue;
-        }
-        char c = client.read();
-        if (c != '\n') {
-            continue;
-        }
-
-        client.println("HTTP/1.1 200 OK");
-        client.println("Content-Type: text/html");
-        client.println();
-        client.println("hello");
-        client.println();
-        break;
+    if (!mClient.available()) {
+        return;
     }
 
-    client.stop();
+    char c = mClient.read();
+    Serial.printf("%c", c);
+    if (c == '\n') {
+        mClient.println("HTTP/1.1 200 OK");
+        mClient.println("Content-Type: text/html");
+        mClient.println();
+        mClient.println("hello");
+        mClient.println();
+        this->stopClient();
+    }
 }
