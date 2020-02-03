@@ -8,6 +8,10 @@
 class WiFiProvisioning {
     private:
         WiFiServer mServer;
+        WiFiClient mClient;
+        bool mHasConnectedClient;
+
+        void stopClient();
 
     public:
         WiFiProvisioning();
