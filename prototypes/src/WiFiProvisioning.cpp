@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <string>
 #include <WiFi.h>
 #include <WiFiAP.h>
 
@@ -8,6 +9,7 @@ WiFiProvisioning::WiFiProvisioning()
 : mServer(PROVISIONING_PORT)
 , mClient()
 , mHasConnectedClient(false)
+, mRequestBuffer()
 {}
 
 void WiFiProvisioning::setup() {
@@ -27,6 +29,7 @@ void WiFiProvisioning::stopClient() {
     Serial.printf("%lu Closing client connection\n", millis());
     mClient.stop();
     mHasConnectedClient = false;
+    mRequestBuffer.clear();
 }
 
 void WiFiProvisioning::loop() {
@@ -39,6 +42,7 @@ void WiFiProvisioning::loop() {
         }
         Serial.printf("%lu Client connected: %s\n", millis(), mClient.remoteIP().toString().c_str());
         mHasConnectedClient = true;
+        mRequestBuffer.clear();
     }
 
     if (!mClient.connected()) {
@@ -50,14 +54,31 @@ void WiFiProvisioning::loop() {
         return;
     }
 
-    char c = mClient.read();
-    Serial.printf("%c", c);
-    if (c == '\n') {
-        mClient.println("HTTP/1.1 200 OK");
-        mClient.println("Content-Type: text/html");
-        mClient.println();
-        mClient.println("hello");
-        mClient.println();
+    mRequestBuffer += mClient.read();
+    this->controller();
+}
+
+void WiFiProvisioning::controller() {
+    if (mRequestBuffer.find("GET / HTTP/1.1\r\n", 0, 16) == 0) {
+        this->viewGet();
         this->stopClient();
     }
+
+    if (mRequestBuffer.find("POST / HTTP/1.1", 0, 17) == 0) {
+        this->viewPost();
+        return;
+    }
+}
+
+void WiFiProvisioning::viewGet() {
+    mClient.println("HTTP/1.1 200 OK");
+    mClient.println("Content-Type: text/html");
+    mClient.println();
+    mClient.println(
+#include "index.html._cc"
+    );
+    mClient.println();
+}
+
+void WiFiProvisioning::viewPost() {
 }

@@ -1,0 +1,7 @@
+"<style type=\"text/css\">label { display: block; }</style>"
+"<form method=\"POST\">"
+"<label>SSID <input type=\"text\" name=\"ssid\"></label>"
+"<label>Pass <input type=\"password\" name=\"password\"></label>"
+"<label>MQTT Host <input type=\"text\" name=\"host\"></label>"
+"<label>MQTT Port <input type=\"number\" name=\"port\"></label>"
+"</form>"
