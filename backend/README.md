@@ -8,3 +8,6 @@ docker-compose up -d --build
 ```
 
 To teardown, run `docker-compose down`.
+```sh
+docker-compose up -d --build
+```
