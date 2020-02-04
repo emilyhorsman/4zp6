@@ -1,0 +1,21 @@
+# github.com/eclipse/paho.mqtt.golang v1.2.0
+github.com/eclipse/paho.mqtt.golang
+github.com/eclipse/paho.mqtt.golang/packets
+# github.com/joho/godotenv v1.3.0
+github.com/joho/godotenv
+# github.com/konsorten/go-windows-terminal-sequences v1.0.1
+github.com/konsorten/go-windows-terminal-sequences
+# github.com/lib/pq v1.3.0
+github.com/lib/pq
+github.com/lib/pq/oid
+github.com/lib/pq/scram
+# github.com/sirupsen/logrus v1.4.2
+github.com/sirupsen/logrus
+# github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
+github.com/streadway/amqp
+# golang.org/x/net v0.0.0-20200202094626-16171245cfb2
+golang.org/x/net/internal/socks
+golang.org/x/net/proxy
+golang.org/x/net/websocket
+# golang.org/x/sys v0.0.0-20190502145724-3ef323f4f1fd
+golang.org/x/sys/unix
