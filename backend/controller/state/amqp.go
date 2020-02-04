@@ -227,7 +227,5 @@ func (a *AMQP) recover(conn *amqp.Connection) {
 		a.log.Warnf("[%s] failed to reprovision connection, retrying ...", a.id)
 		time.Sleep(10 * time.Second)
 		a.recover(conn)
-		return
 	}
-	return
 }
