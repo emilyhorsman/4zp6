@@ -1,0 +1,137 @@
+version: "3.7"
+services:
+  rabbitmq:
+    image: rabbitmq:3.7.20-management-alpine
+    container_name: rabbitmq
+    env_file:
+      - config/config.env
+      - config/secret.env
+    expose:
+      - 5672 # internal AMQP port
+      - 15672 # internal web interface
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "5"
+    networks:
+      - vlan
+    ports:
+      - 5672:5672 # external AMQP port
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  vernemq:
+    image: erlio/docker-vernemq
+    container_name: vernemq
+    env_file:
+      - config/config.env
+      - config/secret.env
+    expose:
+      - 1883 # internal MQTT port
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "5"
+    networks:
+      - vlan
+    ports:
+      - 1883:1883 # external MQTT port
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  postgres:
+    image: postgres:12.1-alpine
+    container_name: postgres
+    env_file:
+      - config/config.env
+      - config/secret.env
+    expose:
+      - 5432 # internal Postgres port
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "5"
+    networks:
+      - vlan
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  engine:
+    build:
+      context: ../
+      dockerfile: backend/Dockerfile
+    image: emilyhorsman/4zp6engine
+    container_name: engine
+    depends_on:
+      - rabbitmq
+      - vernemq
+      - postgres
+    env_file:
+      - config/config.env
+      - config/secret.env
+    expose:
+      - 6060 # internal HTTP port
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "5"
+    networks:
+      - vlan
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+
+  caddy:
+    image: abiosoft/caddy:1.0.3-no-stats
+    container_name: caddy
+    depends_on:
+      - engine
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "5"
+    networks:
+      - vlan
+    ports:
+      - 80:80 # external HTTP port
+      - 443:443 # external HTTPS port
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile
+      - caddy:/root/.caddy
+      - ./assets:/assets
+
+networks:
+  vlan:
+
+volumes:
+  postgres:
+  caddy:
