@@ -1,25 +1,27 @@
 package state
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq" // postgres SQL driver
 	log "github.com/sirupsen/logrus"
 )
 
 // State is the global state for the controller.
 type State struct {
-	Log      *log.Logger // Log is a structured event logger
-	IsDocker bool        // IsDocker indicates if running inside Docker
-	Config   *Config     // Config contains global configuration
-	MQTT     *MQTT
-	MQTTCh   chan MQTTMessage
-	AMQP     [2]*AMQP
-	AMQPCh   [2]chan AMQPMessage
-	SQL      bool
+	Log      *log.Logger         // Log is a structured event logger
+	IsDocker bool                // IsDocker indicates if running inside Docker
+	Config   *Config             // Config contains global configuration
+	MQTT     *MQTT               // MQTT is the MQTT client
+	MQTTCh   chan MQTTMessage    // MQTTCh is the MQTT output channel
+	AMQP     [2]*AMQP            // AMQP is the AMQP client (two for duplex)
+	AMQPCh   [2]chan AMQPMessage // AMQPCh is the AMQP output channel
+	SQL      *sql.DB             // SQL is the SQL client
 }
 
 // Provision generates a global state for the controller. It
@@ -49,7 +51,7 @@ func Provision() (*State, error) {
 	}
 
 	s.Log.Info("initializing SQL in state")
-	err = s.postgres()
+	err = s.sql()
 	if err != nil {
 		return &s, err
 	}
@@ -86,7 +88,8 @@ func (s *State) config() error {
 	return s.Config.load()
 }
 
-// mqtt attempts to populate the MQTT field in State.
+// mqtt attempts to populate the MQTT and MQTTCh fields in
+// State.
 func (s *State) mqtt() error {
 	s.MQTT = &MQTT{}
 
@@ -109,6 +112,8 @@ func (s *State) mqtt() error {
 	return nil
 }
 
+// amqp attempts to populate the AMQP and AMQPCh fields in
+// State.
 func (s *State) amqp() error {
 	s.AMQP[0] = &AMQP{}
 	s.AMQP[1] = &AMQP{}
@@ -134,6 +139,23 @@ func (s *State) amqp() error {
 	return nil
 }
 
-func (s *State) postgres() error {
-	return nil
+func (s *State) sql() error {
+	// use vlan inside Docker, localhost when outside
+	sqlHost := "postgres"
+	if !s.IsDocker {
+		s.Log.Info("controller not connected to Docker network, using loopback interface for AMQP")
+		sqlHost = "127.0.0.1"
+	}
+	sqlConn := fmt.Sprintf("host=%s user=%s password=%s sslmode=disable",
+		sqlHost, s.Config.SQLUser, s.Config.SQLPass)
+
+	// open connection with database
+	db, err := sql.Open("postgres", sqlConn)
+	if err != nil {
+		return err
+	}
+	s.SQL = db
+
+	// test transaction to test connectivity
+	return db.Ping()
 }

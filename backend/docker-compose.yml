@@ -66,6 +66,8 @@ services:
         max-file: "5"
     networks:
       - vlan
+    ports:
+      - 5432:5432 # external Postgres port (disabled at firewall, for testing)
     restart: unless-stopped
     security_opt:
       - apparmor:unconfined
