@@ -27,7 +27,8 @@ instance ToJSON Reading where
 parse :: [Word8] -> Maybe Reading
 parse [defId, tMsb, tLsb, _, hMsb, hLsb, _] =
     Just $ Reading
-        { temp = fromIntegral $ shiftR (4375 * (shiftL tMsb32 8 .|. tLsb32)) 14 - 4500
+        { temp = fromIntegral $
+            (4375 * ((tMsb32 `shiftL` 8) .|. tLsb32)) `shiftR` 14 - 4500
         , humidity = shiftR (625 * (shiftL hMsb32 8 .|. hLsb32)) 12
         , denominator = 100
         , defId = fromIntegral defId
