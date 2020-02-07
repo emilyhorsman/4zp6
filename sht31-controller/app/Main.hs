@@ -8,10 +8,11 @@ import qualified Data.Text as T
 import Network.AMQP as AMQP
 import System.Environment (getEnv)
 import Data.Int (Int32)
-import Data.Word (Word8, Word32)
+import Data.Word (Word8, Word16, Word32)
 import Data.Bits
 import GHC.Generics
 import Data.Aeson
+import qualified Data.Map as Map
 
 data Reading = Reading { defId :: Word32, temp :: Int32, humidity :: Word32, denominator :: Word32 }
     deriving (Generic, Show)
@@ -66,7 +67,21 @@ parse _ = undefined
 
 respond "controller.44" payload = encode $ parse payload
 
-respond "global" msg = "unimplemented"
+respond "global" msg =
+    encode $ object
+        [ "busAddress" .= (0x44 :: Word8)
+        , "humanFriendlyName" .= ("SHT31" :: T.Text)
+        , "readDefinitions" .=
+            [ object
+                [ "definitionId" .= (1 :: Word8)
+                , "registerIdLength" .= (16  :: Word8)
+                , "registerId" .= (0x2400 :: Word16)
+                , "registerBlockLength" .= (1 :: Word8)
+                , "numBytesPerRegister" .= (6 :: Word8)
+                , "readPeriod" .= (500 :: Word32)
+                ]
+            ]
+        ]
 
 -- This will never happen but Haskell doesn't know that.
 respond _ _ = undefined
