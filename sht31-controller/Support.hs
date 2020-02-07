@@ -2,16 +2,17 @@
 {-# LANGUAGE NamedFieldPuns #-}
 module Support (subscribe, persist) where
 
-import qualified Data.ByteString.Lazy as BL
-import qualified Data.Text as T
-import Network.AMQP as AMQP
-import System.Environment (getEnv)
+import Control.Monad (void)
+import Data.Aeson
+import Data.Bits
 import Data.Int (Int32)
 import Data.Word (Word8, Word16, Word32)
-import Data.Bits
 import GHC.Generics
-import Data.Aeson
+import Network.AMQP as AMQP
+import System.Environment (getEnv)
+import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map as Map
+import qualified Data.Text as T
 
 e key = T.pack <$> getEnv key
 
@@ -35,7 +36,12 @@ handle respondFunc chan (msg@AMQP.Message {msgBody}, env@AMQP.Envelope {AMQP.env
     exchangeName <- e "EXCHANGE"
     let response = respondFunc envRoutingKey (BL.unpack msgBody)
     print response
-    AMQP.publishMsg chan exchangeName "backend" AMQP.newMsg {msgBody = response}
+    case response of
+        Nothing ->
+            return Nothing
+        Just res ->
+            AMQP.publishMsg chan exchangeName "backend" AMQP.newMsg {msgBody = res}
+
     AMQP.ackEnv env
 
 persist conn = do
