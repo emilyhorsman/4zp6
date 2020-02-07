@@ -1,8 +1,9 @@
 #include <Arduino.h>
-#include <string>
-#include <map>
+#include <Preferences.h>
 #include <WiFi.h>
 #include <WiFiAP.h>
+#include <map>
+#include <string>
 
 #include "WiFiProvisioning.h"
 
@@ -11,9 +12,16 @@ WiFiProvisioning::WiFiProvisioning()
 , mClient()
 , mHasConnectedClient(false)
 , mRequestBuffer()
+, mPreferences()
 {}
 
 void WiFiProvisioning::setup() {
+    mPreferences.begin("telemetry", false);
+    Serial.println(mPreferences.getString("ssid").c_str());
+    Serial.println(mPreferences.getString("password").c_str());
+    Serial.println(mPreferences.getString("mqtt_host").c_str());
+    Serial.println(mPreferences.getUInt("mqtt_port"));
+
     WiFi.softAP("TelemetryMicrocontroller", "4zp6capstone");
     WiFi.softAPenableIpV6();
     Serial.printf(
@@ -128,6 +136,11 @@ void WiFiProvisioning::viewPost() {
             key += c;
         }
     }
+
+    mPreferences.putString("ssid", payload["ssid"].c_str());
+    mPreferences.putString("password", payload["password"].c_str());
+    mPreferences.putString("mqtt_host", payload["host"].c_str());
+    mPreferences.putUInt("mqtt_port", (uint32_t) atoi(payload["port"].c_str()));
 
     mClient.println("HTTP/1.1 200 OK");
     mClient.println("Content-Type: text/html");
