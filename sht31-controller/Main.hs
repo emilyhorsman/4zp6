@@ -68,4 +68,4 @@ respond "global" msg =
 respond _ _ = Nothing
 
 main :: IO ()
-main = subscribe respond >>= persist
+main = subscribe ["44", "45"] respond >>= persist
