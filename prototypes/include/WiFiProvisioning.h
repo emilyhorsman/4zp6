@@ -17,6 +17,7 @@ class WiFiProvisioning {
         void controller();
         void viewGet();
         void viewPost();
+        bool isPostRequestComplete();
 
     public:
         WiFiProvisioning();

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <string>
+#include <map>
 #include <WiFi.h>
 #include <WiFiAP.h>
 
@@ -50,7 +51,7 @@ void WiFiProvisioning::loop() {
         return;
     }
 
-    if (!mClient.available()) {
+    if (mClient.available() == 0) {
         return;
     }
 
@@ -58,15 +59,43 @@ void WiFiProvisioning::loop() {
     this->controller();
 }
 
+bool WiFiProvisioning::isPostRequestComplete() {
+    std::size_t delimIndex = mRequestBuffer.find("\r\n\r\n");
+    if (delimIndex == std::string::npos) {
+        return false;
+    }
+
+    std::size_t contentLengthIndex = mRequestBuffer.find("Content-Length:");
+    if (contentLengthIndex == std::string::npos) {
+        return false;
+    }
+
+    std::string value = "";
+    for (int i = contentLengthIndex + 16; i < delimIndex; i++) {
+        if (mRequestBuffer[i] == '\r') {
+            break;
+        }
+
+        value += mRequestBuffer[i];
+    }
+
+    return mRequestBuffer.size() - (delimIndex + 4) == atoi(value.c_str());
+
+}
+
 void WiFiProvisioning::controller() {
     if (mRequestBuffer.find("GET / HTTP/1.1\r\n", 0, 16) == 0) {
         this->viewGet();
         this->stopClient();
+        return;
     }
 
-    if (mRequestBuffer.find("POST / HTTP/1.1", 0, 17) == 0) {
+    if (
+        mRequestBuffer.find("POST / HTTP/1.1\r\n", 0, 17) == 0 &&
+        this->isPostRequestComplete()
+    ) {
         this->viewPost();
-        return;
+        this->stopClient();
     }
 }
 
@@ -81,4 +110,28 @@ void WiFiProvisioning::viewGet() {
 }
 
 void WiFiProvisioning::viewPost() {
+    std::size_t delimIndex = mRequestBuffer.find("\r\n\r\n");
+    std::map<std::string, std::string> payload;
+    std::string key = "";
+    bool isValue = false;
+    for (uint8_t i = delimIndex + 4; i < mRequestBuffer.size(); i++) {
+        char c = mRequestBuffer[i];
+        if (isValue && c == '&') {
+            key = "";
+            isValue = false;
+        } else if (isValue) {
+            payload[key] += c;
+        } else if (!isValue && c == '=') {
+            isValue = true;
+            payload[key] = "";
+        } else {
+            key += c;
+        }
+    }
+
+    mClient.println("HTTP/1.1 200 OK");
+    mClient.println("Content-Type: text/html");
+    mClient.println();
+    mClient.println("Success");
+    mClient.println();
 }
