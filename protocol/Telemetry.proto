@@ -1,0 +1,200 @@
+// BSD 2-Clause License
+//
+// Copyright (c) 2020 Emily Horsman, Tanner Ryan. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+/**
+ * Telemetry wire protocol.
+ */
+message Telemetry {
+    oneof message {
+        Registration registration = 1;
+        Provisioning provisioning = 2;
+        Payload payload = 3;
+        Request request = 4;
+    }
+}
+
+/**
+ * Registration frame (microcontroller -> backend).
+ *
+ * Conditions:
+ *  - MQTT connection established, re-established
+ *  - Peripheral connected, disconnected
+ */
+message Registration {
+    /**
+     * Firmware version identifier.
+     */
+    uint32 version = 1;
+
+    /**
+     * Microcontroller unique identifier (MAC address).
+     */
+    bytes uuid = 2;
+
+    /**
+     * Microcontroller IP address.
+     */
+    bytes ip = 3;
+
+    /**
+     * List of connected peripherals.
+     */
+    repeated Peripheral_t peripherals = 4;
+    message Peripheral_t {
+        uint32 busId = 1;
+        uint32 busAddr = 2;
+        bytes generalCallResp = 3;
+    }
+}
+
+/**
+ * Provisioning frame (backend -> microcontroller).
+ *
+ * Conditions:
+ *  - Received Registration frame from microcontroller.
+ *  - Received new read definitions from corresponding peripheral controller.
+ */
+message Provisioning {
+    /**
+     * Default bus address for peripheral.
+     */
+    uint32 busAddr = 1;
+
+    /**
+     * Display name of peripheral processor.
+     */
+    string name = 2;
+
+    /*
+     * Peripheral read definitions.
+     */
+    repeated ReadDef_t readDefinitions = 3;
+    message ReadDef_t {
+        /**
+         * An arbitrary ID for external reference. This does not relate to the
+         * hardware or any application logic in the I2CRuntime. This is used
+         * externally to track read definitions.
+         */
+        uint32 definitionId = 1;
+
+        /**
+         * Some peripherals have 16-bit register IDs and some have 8-bit register
+         * IDs.
+         */
+        RegLength_t registerIdLength = 2;
+        enum RegLength_t {
+            RL16 = 0;
+            RL8 = 1;
+        }
+
+        /**
+         * Data is read on this output from a contiguous block of register IDs.
+         * e.g., 0x80 to 0xFF. This is the first register ID of the block.
+         */
+        uint32 registerId = 3;
+
+        /**
+         * Data is read on this output from a contiguous block of register IDs.
+         * e.g., 0x80 to 0xFF. This defines the number of register IDs in the block.
+         * This is essentially how many times the loop will read bytes at a register
+         * and then advance to the next register. For many peripherals this value is
+         * simple 1 (i.e., there is no need to advance).
+         */
+        uint32 registerBlockLength = 4;
+
+        /**
+         * The number of bytes that will be read at each register ID in the
+         * contiguous block. This means that the total number of bytes retrieved
+         * from one ReadDefinition instance is:
+         * 
+         *     numBytesPerRegister * registerBlockLength
+         */
+        uint32 numBytesPerRegister = 5;
+
+        /**
+         * How many milliseconds between reading all bytes from the block of
+         * registers?
+         */
+        uint32 readPeriod = 6;
+    }
+}
+
+/**
+ * Payload frame (microcontroller -> backend).
+ *
+ * Conditions:
+ *  - Data collected from peripheral.
+ */
+message Payload {
+    /**
+     * I2C bus ID payload was collected from.
+     */
+    uint32 busId = 1;
+
+    /**
+     * I2C bus address payload was collected from.
+     */
+    uint32 busAddr = 2;
+
+    /**
+     * Payload collection definition identifier, matching ReadDef_t.
+     */
+    uint32 definitionId = 3;
+
+    /**
+     * Contents of peripheral read.
+     */
+    bytes buff = 4;
+}
+
+/**
+ * Request frame (backend -> microcontroller).
+ *
+ * Conditions:
+ *  - Request microcontroller to reboot.
+ *  - Request microcontroller to poll peripherals, send Payload frame(s).
+ *  - Request microcontroller to send heartbeat (Registration frame).
+ */
+message Request {
+    Action_t action = 1;
+    enum Action_t {
+        /**
+         * Request microcontroller reboot.
+         */
+        REBOOT = 0;
+
+        /**
+         * Request manual schedule execution and Payload frame(s).
+         */
+        POLL = 1;
+
+        /**
+         * Request manual Registration frame.
+         */
+        HEARTBEAT = 2;
+    }
+}
