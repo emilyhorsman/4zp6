@@ -3,15 +3,9 @@
 module Support (subscribe, persist) where
 
 import Control.Monad (void)
-import Data.Aeson
-import Data.Bits
-import Data.Int (Int32)
-import Data.Word (Word8, Word16, Word32)
-import GHC.Generics
 import Network.AMQP as AMQP
 import System.Environment (getEnv)
 import qualified Data.ByteString.Lazy as BL
-import qualified Data.Map as Map
 import qualified Data.Text as T
 
 e key = T.pack <$> getEnv key
