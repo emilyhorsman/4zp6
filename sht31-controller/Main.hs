@@ -14,7 +14,7 @@ import GHC.Generics
 import Data.Aeson
 import qualified Data.Map as Map
 
-import Support (subscribe)
+import Support (subscribe, persist)
 
 data Reading = Reading { defId :: Word32, temp :: Int32, humidity :: Word32, denominator :: Word32 }
     deriving (Generic, Show)
@@ -65,8 +65,5 @@ respond _ _ = undefined
 
 main :: IO ()
 main = do
-    putStrLn "Hello"
-    (conn, _) <- subscribe respond
-
-    getLine
-    AMQP.closeConnection conn
+    conn <- subscribe respond
+    persist conn

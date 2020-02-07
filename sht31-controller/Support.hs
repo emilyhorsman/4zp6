@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns #-}
-module Support (subscribe) where
+module Support (subscribe, persist) where
 
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
@@ -29,7 +29,7 @@ subscribe respondFunc = do
     AMQP.bindQueue chan queueName exchangeName "global"
     AMQP.consumeMsgs chan queueName AMQP.Ack $ handle respondFunc chan
 
-    return (conn, chan)
+    return conn
 
 handle respondFunc chan (msg@AMQP.Message {msgBody}, env@AMQP.Envelope {AMQP.envRoutingKey}) = do
     exchangeName <- e "EXCHANGE"
@@ -37,3 +37,7 @@ handle respondFunc chan (msg@AMQP.Message {msgBody}, env@AMQP.Envelope {AMQP.env
     print response
     AMQP.publishMsg chan exchangeName "backend" AMQP.newMsg {msgBody = response}
     AMQP.ackEnv env
+
+persist conn = do
+    getLine
+    AMQP.closeConnection conn
