@@ -93,7 +93,7 @@ message Registration {
         uint32 busId = 1;
 
         /**
-         * THe I2C bus address this peripheral is connected to on the microcontroller.
+         * The I2C bus address this peripheral is connected to on the microcontroller.
          */
         uint32 busAddr = 2;
 
@@ -115,7 +115,7 @@ message Provisioning {
     /**
      * Default bus address for peripheral.
      */
-    uint32 busAddr = 1;
+    bytes busAddr = 1;
 
     /**
      * Display name of peripheral processor, displayed on dashboard.
