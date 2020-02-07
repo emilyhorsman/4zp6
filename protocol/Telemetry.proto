@@ -171,7 +171,7 @@ message Payload {
     /**
      * Contents of peripheral read.
      */
-    bytes buff = 4;
+    bytes data = 4;
 }
 
 /**
@@ -193,11 +193,11 @@ message Request {
         /**
          * Request manual schedule execution and Payload frame(s).
          */
-        POLL = 1;
+        FORCE_READS = 1;
 
         /**
          * Request manual Registration frame.
          */
-        HEARTBEAT = 2;
+        REQUEST_REGISTRATION = 2;
     }
 }
