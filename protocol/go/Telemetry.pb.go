@@ -20,67 +20,67 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type Provisioning_ReadDefT_RegLengthT int32
+type Provisioning_ReadDef_RegLength int32
 
 const (
-	Provisioning_ReadDefT_RL16 Provisioning_ReadDefT_RegLengthT = 0
-	Provisioning_ReadDefT_RL8  Provisioning_ReadDefT_RegLengthT = 1
+	Provisioning_ReadDef_RL16 Provisioning_ReadDef_RegLength = 0
+	Provisioning_ReadDef_RL8  Provisioning_ReadDef_RegLength = 1
 )
 
-var Provisioning_ReadDefT_RegLengthT_name = map[int32]string{
+var Provisioning_ReadDef_RegLength_name = map[int32]string{
 	0: "RL16",
 	1: "RL8",
 }
 
-var Provisioning_ReadDefT_RegLengthT_value = map[string]int32{
+var Provisioning_ReadDef_RegLength_value = map[string]int32{
 	"RL16": 0,
 	"RL8":  1,
 }
 
-func (x Provisioning_ReadDefT_RegLengthT) String() string {
-	return proto.EnumName(Provisioning_ReadDefT_RegLengthT_name, int32(x))
+func (x Provisioning_ReadDef_RegLength) String() string {
+	return proto.EnumName(Provisioning_ReadDef_RegLength_name, int32(x))
 }
 
-func (Provisioning_ReadDefT_RegLengthT) EnumDescriptor() ([]byte, []int) {
+func (Provisioning_ReadDef_RegLength) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_93f6e686c665f83a, []int{2, 0, 0}
 }
 
-type Request_ActionT int32
+type Request_Action int32
 
 const (
 	//*
 	// Request microcontroller reboot.
-	Request_REBOOT Request_ActionT = 0
+	Request_REBOOT Request_Action = 0
 	//*
 	// Request manual schedule execution and Payload frame(s).
-	Request_POLL Request_ActionT = 1
+	Request_FORCE_READS Request_Action = 1
 	//*
 	// Request manual Registration frame.
-	Request_HEARTBEAT Request_ActionT = 2
+	Request_REQUEST_REGISTRATION Request_Action = 2
 )
 
-var Request_ActionT_name = map[int32]string{
+var Request_Action_name = map[int32]string{
 	0: "REBOOT",
-	1: "POLL",
-	2: "HEARTBEAT",
+	1: "FORCE_READS",
+	2: "REQUEST_REGISTRATION",
 }
 
-var Request_ActionT_value = map[string]int32{
-	"REBOOT":    0,
-	"POLL":      1,
-	"HEARTBEAT": 2,
+var Request_Action_value = map[string]int32{
+	"REBOOT":               0,
+	"FORCE_READS":          1,
+	"REQUEST_REGISTRATION": 2,
 }
 
-func (x Request_ActionT) String() string {
-	return proto.EnumName(Request_ActionT_name, int32(x))
+func (x Request_Action) String() string {
+	return proto.EnumName(Request_Action_name, int32(x))
 }
 
-func (Request_ActionT) EnumDescriptor() ([]byte, []int) {
+func (Request_Action) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_93f6e686c665f83a, []int{4, 0}
 }
 
 //*
-// MQTT binary payload.
+// Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
 type Telemetry struct {
 	// Types that are valid to be assigned to Message:
 	//	*Telemetry_Registration
@@ -194,6 +194,8 @@ func (*Telemetry) XXX_OneofWrappers() []interface{} {
 //*
 // Registration frame (microcontroller -> backend).
 //
+// The microcontroller UUID (MAC address) will be sent in the MQTT topic.
+//
 // Conditions:
 //  - MQTT connection established, re-established
 //  - Peripheral connected, disconnected
@@ -205,14 +207,17 @@ type Registration struct {
 	// Microcontroller unique identifier (MAC address).
 	Uuid []byte `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	//*
-	// Microcontroller IP address.
-	Ip []byte `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
+	// Microcontroller IPv4 address.
+	Ipv4 []byte `protobuf:"bytes,3,opt,name=ipv4,proto3" json:"ipv4,omitempty"`
+	//*
+	// Microcontroller IPv6 address.
+	Ipv6 []byte `protobuf:"bytes,4,opt,name=ipv6,proto3" json:"ipv6,omitempty"`
 	//*
 	// List of connected peripherals.
-	Peripherals          []*Registration_PeripheralT `protobuf:"bytes,4,rep,name=peripherals,proto3" json:"peripherals,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
-	XXX_unrecognized     []byte                      `json:"-"`
-	XXX_sizecache        int32                       `json:"-"`
+	Peripherals          []*Registration_Peripheral `protobuf:"bytes,5,rep,name=peripherals,proto3" json:"peripherals,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
+	XXX_unrecognized     []byte                     `json:"-"`
+	XXX_sizecache        int32                      `json:"-"`
 }
 
 func (m *Registration) Reset()         { *m = Registration{} }
@@ -254,69 +259,82 @@ func (m *Registration) GetUuid() []byte {
 	return nil
 }
 
-func (m *Registration) GetIp() []byte {
+func (m *Registration) GetIpv4() []byte {
 	if m != nil {
-		return m.Ip
+		return m.Ipv4
 	}
 	return nil
 }
 
-func (m *Registration) GetPeripherals() []*Registration_PeripheralT {
+func (m *Registration) GetIpv6() []byte {
+	if m != nil {
+		return m.Ipv6
+	}
+	return nil
+}
+
+func (m *Registration) GetPeripherals() []*Registration_Peripheral {
 	if m != nil {
 		return m.Peripherals
 	}
 	return nil
 }
 
-type Registration_PeripheralT struct {
-	BusId                uint32   `protobuf:"varint,1,opt,name=busId,proto3" json:"busId,omitempty"`
-	BusAddr              uint32   `protobuf:"varint,2,opt,name=busAddr,proto3" json:"busAddr,omitempty"`
+type Registration_Peripheral struct {
+	//*
+	// The I2C bus this peripheral is connected to on the microcontroller. Represented by the SDA line pin.
+	BusId uint32 `protobuf:"varint,1,opt,name=busId,proto3" json:"busId,omitempty"`
+	//*
+	// THe I2C bus address this peripheral is connected to on the microcontroller.
+	BusAddr uint32 `protobuf:"varint,2,opt,name=busAddr,proto3" json:"busAddr,omitempty"`
+	//*
+	// I2C general call response.
 	GeneralCallResp      []byte   `protobuf:"bytes,3,opt,name=generalCallResp,proto3" json:"generalCallResp,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Registration_PeripheralT) Reset()         { *m = Registration_PeripheralT{} }
-func (m *Registration_PeripheralT) String() string { return proto.CompactTextString(m) }
-func (*Registration_PeripheralT) ProtoMessage()    {}
-func (*Registration_PeripheralT) Descriptor() ([]byte, []int) {
+func (m *Registration_Peripheral) Reset()         { *m = Registration_Peripheral{} }
+func (m *Registration_Peripheral) String() string { return proto.CompactTextString(m) }
+func (*Registration_Peripheral) ProtoMessage()    {}
+func (*Registration_Peripheral) Descriptor() ([]byte, []int) {
 	return fileDescriptor_93f6e686c665f83a, []int{1, 0}
 }
 
-func (m *Registration_PeripheralT) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Registration_PeripheralT.Unmarshal(m, b)
+func (m *Registration_Peripheral) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Registration_Peripheral.Unmarshal(m, b)
 }
-func (m *Registration_PeripheralT) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Registration_PeripheralT.Marshal(b, m, deterministic)
+func (m *Registration_Peripheral) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Registration_Peripheral.Marshal(b, m, deterministic)
 }
-func (m *Registration_PeripheralT) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Registration_PeripheralT.Merge(m, src)
+func (m *Registration_Peripheral) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Registration_Peripheral.Merge(m, src)
 }
-func (m *Registration_PeripheralT) XXX_Size() int {
-	return xxx_messageInfo_Registration_PeripheralT.Size(m)
+func (m *Registration_Peripheral) XXX_Size() int {
+	return xxx_messageInfo_Registration_Peripheral.Size(m)
 }
-func (m *Registration_PeripheralT) XXX_DiscardUnknown() {
-	xxx_messageInfo_Registration_PeripheralT.DiscardUnknown(m)
+func (m *Registration_Peripheral) XXX_DiscardUnknown() {
+	xxx_messageInfo_Registration_Peripheral.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Registration_PeripheralT proto.InternalMessageInfo
+var xxx_messageInfo_Registration_Peripheral proto.InternalMessageInfo
 
-func (m *Registration_PeripheralT) GetBusId() uint32 {
+func (m *Registration_Peripheral) GetBusId() uint32 {
 	if m != nil {
 		return m.BusId
 	}
 	return 0
 }
 
-func (m *Registration_PeripheralT) GetBusAddr() uint32 {
+func (m *Registration_Peripheral) GetBusAddr() uint32 {
 	if m != nil {
 		return m.BusAddr
 	}
 	return 0
 }
 
-func (m *Registration_PeripheralT) GetGeneralCallResp() []byte {
+func (m *Registration_Peripheral) GetGeneralCallResp() []byte {
 	if m != nil {
 		return m.GeneralCallResp
 	}
@@ -334,14 +352,14 @@ type Provisioning struct {
 	// Default bus address for peripheral.
 	BusAddr uint32 `protobuf:"varint,1,opt,name=busAddr,proto3" json:"busAddr,omitempty"`
 	//*
-	// Display name of peripheral processor.
+	// Display name of peripheral processor, displayed on dashboard.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	//
 	// Peripheral read definitions.
-	ReadDefinitions      []*Provisioning_ReadDefT `protobuf:"bytes,3,rep,name=readDefinitions,proto3" json:"readDefinitions,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
-	XXX_unrecognized     []byte                   `json:"-"`
-	XXX_sizecache        int32                    `json:"-"`
+	ReadDefinitions      []*Provisioning_ReadDef `protobuf:"bytes,3,rep,name=readDefinitions,proto3" json:"readDefinitions,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
 func (m *Provisioning) Reset()         { *m = Provisioning{} }
@@ -383,14 +401,14 @@ func (m *Provisioning) GetName() string {
 	return ""
 }
 
-func (m *Provisioning) GetReadDefinitions() []*Provisioning_ReadDefT {
+func (m *Provisioning) GetReadDefinitions() []*Provisioning_ReadDef {
 	if m != nil {
 		return m.ReadDefinitions
 	}
 	return nil
 }
 
-type Provisioning_ReadDefT struct {
+type Provisioning_ReadDef struct {
 	//*
 	// An arbitrary ID for external reference. This does not relate to the
 	// hardware or any application logic in the I2CRuntime. This is used
@@ -399,7 +417,7 @@ type Provisioning_ReadDefT struct {
 	//*
 	// Some peripherals have 16-bit register IDs and some have 8-bit register
 	// IDs.
-	RegisterIdLength Provisioning_ReadDefT_RegLengthT `protobuf:"varint,2,opt,name=registerIdLength,proto3,enum=Provisioning_ReadDefT_RegLengthT" json:"registerIdLength,omitempty"`
+	RegisterIdLength Provisioning_ReadDef_RegLength `protobuf:"varint,2,opt,name=registerIdLength,proto3,enum=Provisioning_ReadDef_RegLength" json:"registerIdLength,omitempty"`
 	//*
 	// Data is read on this output from a contiguous block of register IDs.
 	// e.g., 0x80 to 0xFF. This is the first register ID of the block.
@@ -427,67 +445,67 @@ type Provisioning_ReadDefT struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Provisioning_ReadDefT) Reset()         { *m = Provisioning_ReadDefT{} }
-func (m *Provisioning_ReadDefT) String() string { return proto.CompactTextString(m) }
-func (*Provisioning_ReadDefT) ProtoMessage()    {}
-func (*Provisioning_ReadDefT) Descriptor() ([]byte, []int) {
+func (m *Provisioning_ReadDef) Reset()         { *m = Provisioning_ReadDef{} }
+func (m *Provisioning_ReadDef) String() string { return proto.CompactTextString(m) }
+func (*Provisioning_ReadDef) ProtoMessage()    {}
+func (*Provisioning_ReadDef) Descriptor() ([]byte, []int) {
 	return fileDescriptor_93f6e686c665f83a, []int{2, 0}
 }
 
-func (m *Provisioning_ReadDefT) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Provisioning_ReadDefT.Unmarshal(m, b)
+func (m *Provisioning_ReadDef) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Provisioning_ReadDef.Unmarshal(m, b)
 }
-func (m *Provisioning_ReadDefT) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Provisioning_ReadDefT.Marshal(b, m, deterministic)
+func (m *Provisioning_ReadDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Provisioning_ReadDef.Marshal(b, m, deterministic)
 }
-func (m *Provisioning_ReadDefT) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Provisioning_ReadDefT.Merge(m, src)
+func (m *Provisioning_ReadDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Provisioning_ReadDef.Merge(m, src)
 }
-func (m *Provisioning_ReadDefT) XXX_Size() int {
-	return xxx_messageInfo_Provisioning_ReadDefT.Size(m)
+func (m *Provisioning_ReadDef) XXX_Size() int {
+	return xxx_messageInfo_Provisioning_ReadDef.Size(m)
 }
-func (m *Provisioning_ReadDefT) XXX_DiscardUnknown() {
-	xxx_messageInfo_Provisioning_ReadDefT.DiscardUnknown(m)
+func (m *Provisioning_ReadDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_Provisioning_ReadDef.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Provisioning_ReadDefT proto.InternalMessageInfo
+var xxx_messageInfo_Provisioning_ReadDef proto.InternalMessageInfo
 
-func (m *Provisioning_ReadDefT) GetDefinitionId() uint32 {
+func (m *Provisioning_ReadDef) GetDefinitionId() uint32 {
 	if m != nil {
 		return m.DefinitionId
 	}
 	return 0
 }
 
-func (m *Provisioning_ReadDefT) GetRegisterIdLength() Provisioning_ReadDefT_RegLengthT {
+func (m *Provisioning_ReadDef) GetRegisterIdLength() Provisioning_ReadDef_RegLength {
 	if m != nil {
 		return m.RegisterIdLength
 	}
-	return Provisioning_ReadDefT_RL16
+	return Provisioning_ReadDef_RL16
 }
 
-func (m *Provisioning_ReadDefT) GetRegisterId() uint32 {
+func (m *Provisioning_ReadDef) GetRegisterId() uint32 {
 	if m != nil {
 		return m.RegisterId
 	}
 	return 0
 }
 
-func (m *Provisioning_ReadDefT) GetRegisterBlockLength() uint32 {
+func (m *Provisioning_ReadDef) GetRegisterBlockLength() uint32 {
 	if m != nil {
 		return m.RegisterBlockLength
 	}
 	return 0
 }
 
-func (m *Provisioning_ReadDefT) GetNumBytesPerRegister() uint32 {
+func (m *Provisioning_ReadDef) GetNumBytesPerRegister() uint32 {
 	if m != nil {
 		return m.NumBytesPerRegister
 	}
 	return 0
 }
 
-func (m *Provisioning_ReadDefT) GetReadPeriod() uint32 {
+func (m *Provisioning_ReadDef) GetReadPeriod() uint32 {
 	if m != nil {
 		return m.ReadPeriod
 	}
@@ -496,6 +514,8 @@ func (m *Provisioning_ReadDefT) GetReadPeriod() uint32 {
 
 //*
 // Payload frame (microcontroller -> backend).
+//
+// The microcontroller UUID (MAC address) will be sent in the MQTT topic.
 //
 // Conditions:
 //  - Data collected from peripheral.
@@ -507,11 +527,11 @@ type Payload struct {
 	// I2C bus address payload was collected from.
 	BusAddr uint32 `protobuf:"varint,2,opt,name=busAddr,proto3" json:"busAddr,omitempty"`
 	//*
-	// Payload collection definition identifier, matching ReadDef_t.
+	// Payload collection definition identifier, matching ReadDef.
 	DefinitionId uint32 `protobuf:"varint,3,opt,name=definitionId,proto3" json:"definitionId,omitempty"`
 	//*
 	// Contents of peripheral read.
-	Buff                 []byte   `protobuf:"bytes,4,opt,name=buff,proto3" json:"buff,omitempty"`
+	Data                 []byte   `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -563,9 +583,9 @@ func (m *Payload) GetDefinitionId() uint32 {
 	return 0
 }
 
-func (m *Payload) GetBuff() []byte {
+func (m *Payload) GetData() []byte {
 	if m != nil {
-		return m.Buff
+		return m.Data
 	}
 	return nil
 }
@@ -578,10 +598,10 @@ func (m *Payload) GetBuff() []byte {
 //  - Request microcontroller to poll peripherals, send Payload frame(s).
 //  - Request microcontroller to send heartbeat (Registration frame).
 type Request struct {
-	Action               Request_ActionT `protobuf:"varint,1,opt,name=action,proto3,enum=Request_ActionT" json:"action,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	Action               Request_Action `protobuf:"varint,1,opt,name=action,proto3,enum=Request_Action" json:"action,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *Request) Reset()         { *m = Request{} }
@@ -609,7 +629,7 @@ func (m *Request) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Request proto.InternalMessageInfo
 
-func (m *Request) GetAction() Request_ActionT {
+func (m *Request) GetAction() Request_Action {
 	if m != nil {
 		return m.Action
 	}
@@ -617,13 +637,13 @@ func (m *Request) GetAction() Request_ActionT {
 }
 
 func init() {
-	proto.RegisterEnum("Provisioning_ReadDefT_RegLengthT", Provisioning_ReadDefT_RegLengthT_name, Provisioning_ReadDefT_RegLengthT_value)
-	proto.RegisterEnum("Request_ActionT", Request_ActionT_name, Request_ActionT_value)
+	proto.RegisterEnum("Provisioning_ReadDef_RegLength", Provisioning_ReadDef_RegLength_name, Provisioning_ReadDef_RegLength_value)
+	proto.RegisterEnum("Request_Action", Request_Action_name, Request_Action_value)
 	proto.RegisterType((*Telemetry)(nil), "Telemetry")
 	proto.RegisterType((*Registration)(nil), "Registration")
-	proto.RegisterType((*Registration_PeripheralT)(nil), "Registration.Peripheral_t")
+	proto.RegisterType((*Registration_Peripheral)(nil), "Registration.Peripheral")
 	proto.RegisterType((*Provisioning)(nil), "Provisioning")
-	proto.RegisterType((*Provisioning_ReadDefT)(nil), "Provisioning.ReadDef_t")
+	proto.RegisterType((*Provisioning_ReadDef)(nil), "Provisioning.ReadDef")
 	proto.RegisterType((*Payload)(nil), "Payload")
 	proto.RegisterType((*Request)(nil), "Request")
 }
@@ -631,40 +651,41 @@ func init() {
 func init() { proto.RegisterFile("Telemetry.proto", fileDescriptor_93f6e686c665f83a) }
 
 var fileDescriptor_93f6e686c665f83a = []byte{
-	// 552 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0xcf, 0xaf, 0xd2, 0x40,
-	0x10, 0xc7, 0x29, 0xed, 0xa3, 0x8f, 0xa1, 0x40, 0x5d, 0x4d, 0x6c, 0x38, 0x18, 0x52, 0x3d, 0xe0,
-	0xa5, 0x2a, 0x2f, 0x31, 0x1e, 0xbc, 0x80, 0x92, 0xf0, 0x12, 0x12, 0xc8, 0x84, 0x3b, 0x29, 0xaf,
-	0x0b, 0x34, 0x96, 0xb6, 0x6f, 0x77, 0xfb, 0x12, 0xfe, 0x41, 0xe3, 0xc1, 0x3f, 0xc7, 0x3f, 0xc0,
-	0xec, 0xf6, 0x87, 0x05, 0xf1, 0xe0, 0x6d, 0xe7, 0x3b, 0x9f, 0xe9, 0x7e, 0x67, 0xda, 0x29, 0xf4,
-	0xd7, 0x34, 0xa2, 0x47, 0x2a, 0xd8, 0xc9, 0x4b, 0x59, 0x22, 0x12, 0xf7, 0xa7, 0x06, 0xed, 0x4a,
-	0x23, 0x77, 0x60, 0x31, 0xba, 0x0f, 0xb9, 0x60, 0xbe, 0x08, 0x93, 0xd8, 0xd1, 0x86, 0xda, 0xa8,
-	0x33, 0xee, 0x7a, 0x58, 0x13, 0xe7, 0x0d, 0x3c, 0x83, 0x64, 0x51, 0xca, 0x92, 0xa7, 0x90, 0x87,
-	0x49, 0x1c, 0xc6, 0x7b, 0xa7, 0x59, 0x14, 0xad, 0x6a, 0xa2, 0x2c, 0xaa, 0x43, 0xe4, 0x0d, 0x98,
-	0xa9, 0x7f, 0x8a, 0x12, 0x3f, 0x70, 0x74, 0xc5, 0xdf, 0x7a, 0xab, 0x3c, 0x9e, 0x37, 0xb0, 0x4c,
-	0x49, 0x8a, 0xd1, 0xc7, 0x8c, 0x72, 0xe1, 0x18, 0x05, 0x85, 0x79, 0x2c, 0xa9, 0x22, 0x35, 0x6d,
-	0x83, 0x79, 0xa4, 0x9c, 0xfb, 0x7b, 0xea, 0xfe, 0xd2, 0xc0, 0xaa, 0x9b, 0x25, 0x0e, 0x98, 0x4f,
-	0x94, 0xf1, 0xb2, 0x99, 0x2e, 0x96, 0x21, 0x21, 0x60, 0x64, 0x59, 0x18, 0x28, 0xbb, 0x16, 0xaa,
-	0x33, 0xe9, 0x41, 0x33, 0x4c, 0x95, 0x21, 0x0b, 0x9b, 0x61, 0x4a, 0x3e, 0x43, 0x27, 0xa5, 0x2c,
-	0x4c, 0x0f, 0x94, 0xf9, 0x11, 0x77, 0x8c, 0xa1, 0x3e, 0xea, 0x8c, 0x07, 0x67, 0xe3, 0xf0, 0x56,
-	0x15, 0xb0, 0x11, 0x58, 0xc7, 0x07, 0x07, 0xb0, 0xea, 0x49, 0xf2, 0x02, 0x6e, 0xb6, 0x19, 0xbf,
-	0x0f, 0x0a, 0x27, 0x79, 0x20, 0x1d, 0x6e, 0x33, 0x3e, 0x09, 0x02, 0xa6, 0xac, 0x74, 0xb1, 0x0c,
-	0xc9, 0x08, 0xfa, 0x7b, 0x1a, 0xcb, 0xe2, 0x2f, 0x7e, 0x14, 0x21, 0xe5, 0xa5, 0xb5, 0x4b, 0xd9,
-	0xfd, 0xa1, 0x83, 0x55, 0x1f, 0x77, 0xfd, 0xa1, 0xda, 0xf9, 0x43, 0x09, 0x18, 0xb1, 0x7f, 0xa4,
-	0xea, 0xae, 0x36, 0xaa, 0x33, 0x99, 0x40, 0x9f, 0x51, 0x3f, 0xf8, 0x4a, 0x77, 0x61, 0x1c, 0xca,
-	0xa6, 0xb8, 0xa3, 0xab, 0x56, 0x5f, 0x9e, 0xbd, 0x44, 0x0f, 0x73, 0x68, 0x23, 0xf0, 0x92, 0x1f,
-	0x7c, 0x6f, 0x42, 0xbb, 0x4a, 0x13, 0x17, 0xac, 0xa0, 0x4a, 0x56, 0x0d, 0x9f, 0x69, 0x64, 0x09,
-	0x76, 0xfe, 0x19, 0x51, 0x76, 0x1f, 0x2c, 0x68, 0xbc, 0x17, 0x07, 0x65, 0xaa, 0x37, 0x7e, 0xfd,
-	0x8f, 0x5b, 0xe5, 0xdc, 0x73, 0x70, 0x23, 0xf0, 0xaf, 0x62, 0xf2, 0x0a, 0xe0, 0x8f, 0xa6, 0x26,
-	0xd5, 0xc5, 0x9a, 0x42, 0xde, 0xc3, 0xf3, 0x32, 0x9a, 0x46, 0xc9, 0xc3, 0xb7, 0xe2, 0x4e, 0x43,
-	0x81, 0xd7, 0x52, 0xb2, 0x22, 0xce, 0x8e, 0xd3, 0x93, 0xa0, 0x7c, 0x45, 0x19, 0x16, 0x84, 0x73,
-	0x93, 0x57, 0x5c, 0x49, 0xe5, 0x1e, 0xfc, 0x40, 0xbe, 0xf6, 0x24, 0x70, 0x5a, 0xa5, 0x87, 0x52,
-	0x71, 0x87, 0xd0, 0xa9, 0x35, 0x41, 0x6e, 0xc1, 0xc0, 0xc5, 0x87, 0x8f, 0x76, 0x83, 0x98, 0xa0,
-	0xe3, 0xe2, 0x93, 0xad, 0xb9, 0x8f, 0x60, 0x16, 0x8b, 0xf0, 0xdf, 0xdf, 0xcb, 0xe5, 0xd4, 0xf5,
-	0x2b, 0x53, 0x27, 0x60, 0x6c, 0xb3, 0xdd, 0x4e, 0x75, 0x6d, 0xa1, 0x3a, 0xbb, 0x14, 0xcc, 0x62,
-	0xab, 0xc8, 0x5b, 0x68, 0xf9, 0x0f, 0xd5, 0xea, 0xf7, 0xc6, 0xcf, 0xca, 0x7d, 0xf3, 0x26, 0x4a,
-	0xde, 0x08, 0x2c, 0x00, 0xf7, 0x1d, 0xdc, 0x96, 0x1a, 0x01, 0x68, 0xe1, 0x6c, 0xba, 0x5c, 0xae,
-	0xed, 0x86, 0xec, 0x69, 0xb5, 0x5c, 0x2c, 0x6c, 0x8d, 0x74, 0xa1, 0x3d, 0x9f, 0x4d, 0x70, 0x3d,
-	0x9d, 0x4d, 0xd6, 0x76, 0x73, 0xdb, 0x52, 0x7f, 0x9c, 0xbb, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff,
-	0x83, 0x37, 0x59, 0xb4, 0x84, 0x04, 0x00, 0x00,
+	// 570 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0xcd, 0x4e, 0xdb, 0x40,
+	0x10, 0x8e, 0x63, 0x13, 0x93, 0x89, 0x43, 0xac, 0x2d, 0x95, 0x2c, 0x0e, 0x14, 0x59, 0x95, 0xca,
+	0xc9, 0x6a, 0x43, 0x85, 0xaa, 0x5e, 0x50, 0x02, 0x6e, 0x89, 0x8a, 0x9a, 0x74, 0x48, 0xcf, 0x68,
+	0xc1, 0x4b, 0xb0, 0xea, 0xd8, 0x66, 0xd7, 0x46, 0xca, 0x1b, 0xf4, 0xa9, 0x78, 0x82, 0x3e, 0x54,
+	0xb5, 0xeb, 0x1f, 0x9c, 0x34, 0x97, 0xde, 0x66, 0xbe, 0xef, 0x1b, 0xef, 0x37, 0x33, 0xbb, 0x86,
+	0xc1, 0x9c, 0x45, 0x6c, 0xc9, 0x32, 0xbe, 0xf2, 0x52, 0x9e, 0x64, 0x89, 0xfb, 0x47, 0x83, 0x6e,
+	0x8d, 0x91, 0x13, 0xb0, 0x38, 0x5b, 0x84, 0x22, 0xe3, 0x34, 0x0b, 0x93, 0xd8, 0xd1, 0x8e, 0xb4,
+	0xe3, 0xde, 0xb0, 0xef, 0x61, 0x03, 0xbc, 0x6c, 0xe1, 0x9a, 0x48, 0x16, 0xa5, 0x3c, 0x79, 0x0a,
+	0x45, 0x98, 0xc4, 0x61, 0xbc, 0x70, 0xda, 0x65, 0xd1, 0xac, 0x01, 0xca, 0xa2, 0xa6, 0x88, 0xbc,
+	0x05, 0x33, 0xa5, 0xab, 0x28, 0xa1, 0x81, 0xa3, 0x2b, 0xfd, 0xae, 0x37, 0x2b, 0xf2, 0xcb, 0x16,
+	0x56, 0x94, 0x54, 0x71, 0xf6, 0x98, 0x33, 0x91, 0x39, 0x46, 0xa9, 0xc2, 0x22, 0x97, 0xaa, 0x92,
+	0x1a, 0x77, 0xc1, 0x5c, 0x32, 0x21, 0xe8, 0x82, 0xb9, 0xbf, 0xdb, 0x60, 0x35, 0xcd, 0x12, 0x07,
+	0xcc, 0x27, 0xc6, 0x45, 0xd5, 0x4c, 0x1f, 0xab, 0x94, 0x10, 0x30, 0xf2, 0x3c, 0x0c, 0x94, 0x5d,
+	0x0b, 0x55, 0x2c, 0xb1, 0x30, 0x7d, 0xfa, 0xa8, 0x2c, 0x59, 0xa8, 0xe2, 0x12, 0x3b, 0x55, 0x06,
+	0x0a, 0xec, 0x94, 0x7c, 0x86, 0x5e, 0xca, 0x78, 0x98, 0x3e, 0x30, 0x4e, 0x23, 0xe1, 0xec, 0x1c,
+	0xe9, 0xc7, 0xbd, 0xa1, 0xb3, 0x36, 0x26, 0x6f, 0x56, 0x0b, 0xb0, 0x29, 0x3e, 0xb8, 0x07, 0x78,
+	0xa1, 0xc8, 0x3e, 0xec, 0xdc, 0xe6, 0x62, 0x12, 0x94, 0xee, 0x8a, 0x44, 0xba, 0xbe, 0xcd, 0xc5,
+	0x28, 0x08, 0xb8, 0xb2, 0xd7, 0xc7, 0x2a, 0x25, 0xc7, 0x30, 0x58, 0xb0, 0x58, 0x96, 0x9e, 0xd3,
+	0x28, 0x42, 0x26, 0xd2, 0xd2, 0xec, 0x26, 0xec, 0x3e, 0xeb, 0x60, 0x35, 0x57, 0xd0, 0xfc, 0xa8,
+	0xb6, 0xfe, 0x51, 0x02, 0x46, 0x4c, 0x97, 0x4c, 0x9d, 0xd5, 0x45, 0x15, 0x93, 0x33, 0x18, 0x70,
+	0x46, 0x83, 0x0b, 0x76, 0x1f, 0xc6, 0xa1, 0x6c, 0x48, 0x38, 0xba, 0x6a, 0xf3, 0xf5, 0xda, 0x62,
+	0x3d, 0x2c, 0x44, 0xb8, 0xa9, 0x3e, 0x78, 0x6e, 0x83, 0x59, 0x92, 0xc4, 0x05, 0x2b, 0xa8, 0xa9,
+	0xba, 0xd9, 0x35, 0x8c, 0x7c, 0x03, 0xbb, 0xb8, 0x56, 0x8c, 0x4f, 0x82, 0x2b, 0x16, 0x2f, 0xb2,
+	0x07, 0x65, 0x68, 0x6f, 0xf8, 0x66, 0xeb, 0x89, 0x72, 0xda, 0x85, 0x0c, 0xff, 0x29, 0x24, 0x87,
+	0x00, 0x2f, 0x98, 0x9a, 0x50, 0x1f, 0x1b, 0x08, 0x79, 0x0f, 0xaf, 0xaa, 0x6c, 0x1c, 0x25, 0x77,
+	0xbf, 0xca, 0xf3, 0x0c, 0x25, 0xdc, 0x46, 0xc9, 0x8a, 0x38, 0x5f, 0x8e, 0x57, 0x19, 0x13, 0x33,
+	0xc6, 0xb1, 0x54, 0x38, 0x3b, 0x45, 0xc5, 0x16, 0xaa, 0xf0, 0x40, 0x03, 0xb9, 0xec, 0x24, 0x70,
+	0x3a, 0x95, 0x87, 0x0a, 0x71, 0x0f, 0xa1, 0x5b, 0xb7, 0x40, 0x76, 0xc1, 0xc0, 0xab, 0x0f, 0xa7,
+	0x76, 0x8b, 0x98, 0xa0, 0xe3, 0xd5, 0x27, 0x5b, 0x73, 0x1f, 0xc1, 0x2c, 0x9f, 0xc4, 0x7f, 0xdf,
+	0x92, 0xcd, 0x79, 0xeb, 0x5b, 0xe6, 0x4d, 0xc0, 0x08, 0x68, 0x46, 0xab, 0x7b, 0x2d, 0x63, 0x57,
+	0xc8, 0x95, 0xa9, 0x47, 0x45, 0xde, 0x41, 0x87, 0xde, 0xd5, 0x3f, 0x81, 0xbd, 0xe1, 0xa0, 0x7a,
+	0x79, 0xde, 0x48, 0xc1, 0x58, 0xd2, 0xee, 0x19, 0x74, 0x0a, 0x84, 0x00, 0x74, 0xd0, 0x1f, 0x4f,
+	0xa7, 0x73, 0xbb, 0x45, 0x06, 0xd0, 0xfb, 0x32, 0xc5, 0x73, 0xff, 0x06, 0xfd, 0xd1, 0xc5, 0xb5,
+	0xad, 0x11, 0x07, 0xf6, 0xd1, 0xff, 0xf1, 0xd3, 0xbf, 0x9e, 0xdf, 0xa0, 0xff, 0x75, 0x72, 0x3d,
+	0xc7, 0xd1, 0x7c, 0x32, 0xfd, 0x6e, 0xb7, 0x6f, 0x3b, 0xea, 0x4f, 0x74, 0xf2, 0x37, 0x00, 0x00,
+	0xff, 0xff, 0x41, 0x02, 0x92, 0x31, 0x9c, 0x04, 0x00, 0x00,
 }

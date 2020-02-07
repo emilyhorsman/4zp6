@@ -1,6 +1,7 @@
 .pio
 *.pdf
 a.out*
+Telemetry.pb
 
 
 # Created by https://www.gitignore.io/api/latex,macos,visualstudiocode

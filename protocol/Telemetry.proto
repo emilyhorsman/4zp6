@@ -26,19 +26,36 @@
 syntax = "proto3";
 
 /**
- * Telemetry wire protocol.
+ * Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
  */
 message Telemetry {
     oneof message {
+        /**
+         * Registration frame notifes backend of microcontroller firmware, IP addresses, and connected peripherals.
+         */
         Registration registration = 1;
+
+        /**
+         * Provisioning frame provides microcontroller with peripheral read definitions.
+         */
         Provisioning provisioning = 2;
+
+        /**
+         * Payload frame provides backend with raw peripheral byte data collected from microcontrollers.
+         */
         Payload payload = 3;
+
+        /**
+         * Request frame notifes microcontroller to perform one-off requests.
+         */
         Request request = 4;
     }
 }
 
 /**
  * Registration frame (microcontroller -> backend).
+ *
+ * The microcontroller UUID (MAC address) will be sent in the MQTT topic.
  *
  * Conditions:
  *  - MQTT connection established, re-established
@@ -56,20 +73,33 @@ message Registration {
     bytes uuid = 2;
 
     /**
-     * Microcontroller IP address.
+     * Microcontroller IPv4 address.
      */
-    bytes ip = 3;
+    bytes ipv4 = 3;
+
+    /**
+     * Microcontroller IPv6 address.
+     */
+    bytes ipv6 = 4;
 
     /**
      * List of connected peripherals.
      */
-    repeated Peripheral_t peripherals = 4;
-    message Peripheral_t {
+    repeated Peripheral peripherals = 5;
+    message Peripheral {
         /**
          * The I2C bus this peripheral is connected to on the microcontroller. Represented by the SDA line pin.
          */
         uint32 busId = 1;
+
+        /**
+         * THe I2C bus address this peripheral is connected to on the microcontroller.
+         */
         uint32 busAddr = 2;
+
+        /**
+         * I2C general call response.
+         */
         bytes generalCallResp = 3;
     }
 }
@@ -88,15 +118,15 @@ message Provisioning {
     uint32 busAddr = 1;
 
     /**
-     * Display name of peripheral processor.
+     * Display name of peripheral processor, displayed on dashboard.
      */
     string name = 2;
 
     /*
      * Peripheral read definitions.
      */
-    repeated ReadDef_t readDefinitions = 3;
-    message ReadDef_t {
+    repeated ReadDef readDefinitions = 3;
+    message ReadDef {
         /**
          * An arbitrary ID for external reference. This does not relate to the
          * hardware or any application logic in the I2CRuntime. This is used
@@ -108,8 +138,8 @@ message Provisioning {
          * Some peripherals have 16-bit register IDs and some have 8-bit register
          * IDs.
          */
-        RegLength_t registerIdLength = 2;
-        enum RegLength_t {
+        RegLength registerIdLength = 2;
+        enum RegLength {
             RL16 = 0;
             RL8 = 1;
         }
@@ -149,6 +179,8 @@ message Provisioning {
 /**
  * Payload frame (microcontroller -> backend).
  *
+ * The microcontroller UUID (MAC address) will be sent in the MQTT topic.
+ *
  * Conditions:
  *  - Data collected from peripheral.
  */
@@ -164,7 +196,7 @@ message Payload {
     uint32 busAddr = 2;
 
     /**
-     * Payload collection definition identifier, matching ReadDef_t.
+     * Payload collection definition identifier, matching ReadDef.
      */
     uint32 definitionId = 3;
 
@@ -183,8 +215,8 @@ message Payload {
  *  - Request microcontroller to send heartbeat (Registration frame).
  */
 message Request {
-    Action_t action = 1;
-    enum Action_t {
+    Action action = 1;
+    enum Action {
         /**
          * Request microcontroller reboot.
          */
