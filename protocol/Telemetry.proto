@@ -65,6 +65,9 @@ message Registration {
      */
     repeated Peripheral_t peripherals = 4;
     message Peripheral_t {
+        /**
+         * The I2C bus this peripheral is connected to on the microcontroller. Represented by the SDA line pin.
+         */
         uint32 busId = 1;
         uint32 busAddr = 2;
         bytes generalCallResp = 3;
