@@ -29,27 +29,37 @@ syntax = "proto3";
  * Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
  */
 message Telemetry {
-    oneof message {
-        /**
-         * Registration frame notifes backend of microcontroller firmware, IP addresses, and connected peripherals.
-         */
-        Registration registration = 1;
-
-        /**
-         * Provisioning frame provides microcontroller with peripheral read definitions.
-         */
-        Provisioning provisioning = 2;
-
-        /**
-         * Payload frame provides backend with raw peripheral byte data collected from microcontrollers.
-         */
-        Payload payload = 3;
-
-        /**
-         * Request frame notifes microcontroller to perform one-off requests.
-         */
-        Request request = 4;
+    /**
+     * Type of frame message encoded.
+     */
+    Message message = 1;
+    enum Message {
+        ZERO = 0;
+        REGISTRATION = 1;
+        PROVISIONING = 2;
+        PAYLOAD = 3;
+        REQUEST = 4;
     }
+
+    /**
+     * Registration frame notifes backend of microcontroller firmware, IP addresses, and connected peripherals.
+     */
+    Registration registration = 2;
+
+    /**
+     * Provisioning frame provides microcontroller with peripheral read definitions.
+     */
+    Provisioning provisioning = 3;
+
+    /**
+     * Payload frame provides backend with raw peripheral byte data collected from microcontrollers.
+     */
+    Payload payload = 4;
+
+    /**
+     * Request frame notifes microcontroller to perform one-off requests.
+     */
+    Request request = 5;
 }
 
 /**
@@ -228,8 +238,18 @@ message Request {
         FORCE_READS = 1;
 
         /**
+         * Request microcontroller to rescan I2C bus and resend Registration.
+         */
+        FORCE_SCAN = 2;
+
+        /**
          * Request manual Registration frame.
          */
-        REQUEST_REGISTRATION = 2;
+        REQUEST_REGISTRATION = 3;
+
+        /**
+         * Request microcontroller to clear preferences stored in flash.
+         */
+        CLEAR_PREFERENCES = 4;
     }
 }
