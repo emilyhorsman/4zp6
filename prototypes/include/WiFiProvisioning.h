@@ -24,6 +24,8 @@ class WiFiProvisioning {
         void viewGet();
         void viewPost();
         bool isPostRequestComplete();
+        void tryConnection(char *, char *);
+        void broadcastAP();
 
     public:
         WiFiProvisioning();

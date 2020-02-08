@@ -16,9 +16,13 @@ WiFiProvisioning::WiFiProvisioning()
 , mRequestStart(0)
 {}
 
-void WiFiProvisioning::setup() {
-    mPreferences.begin("telemetry", false);
+void WiFiProvisioning::tryConnection(char *ssid, char *pass) {
+    Serial.printf("%lu Attempting connection to %s\n", millis(), ssid);
+    WiFi.begin(ssid, pass);
+    delay(10000);
+}
 
+void WiFiProvisioning::broadcastAP() {
     WiFi.softAP("TelemetryMicrocontroller", "4zp6capstone");
     WiFi.softAPenableIpV6();
     Serial.printf(
@@ -27,6 +31,23 @@ void WiFiProvisioning::setup() {
         WiFi.softAPIP().toString().c_str(),
         WiFi.softAPIPv6().toString().c_str()
     );
+}
+
+void WiFiProvisioning::setup() {
+    mPreferences.begin("telemetry", false);
+
+    char ssid[32];
+    char pass[32];
+    if (
+        mPreferences.getString("ssid", ssid, 32) > 0 &&
+        mPreferences.getString("password", pass, 32) > 0
+    ) {
+        this->tryConnection(ssid, pass);
+    }
+
+    if (!WiFi.isConnected()) {
+        this->broadcastAP();
+    }
 
     mServer.begin();
 }
