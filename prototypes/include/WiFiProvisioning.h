@@ -5,6 +5,8 @@
 #include <WiFi.h>
 #include <string>
 
+#include "Scheduler.h"
+
 #define PROVISIONING_PORT
 
 void replace(std::string &haystack, std::string needle, const char * replacement);
@@ -17,6 +19,10 @@ class WiFiProvisioning {
         std::string mRequestBuffer;
         Preferences mPreferences;
         size_t mRequestStart;
+        bool mIsNetworked;
+        uint8_t mConnectionAttempts;
+        Scheduler mScheduler;
+        ScheduleId mScheduleTickId;
 
         void stopClient();
         void controller();
@@ -24,8 +30,13 @@ class WiFiProvisioning {
         void viewGet();
         void viewPost();
         bool isPostRequestComplete();
-        void tryConnection(char *, char *);
+        /**
+         * Returns false if SSID and password are not set.
+         */
+        bool tryConnectionFromPreferences();
         void broadcastAP();
+        void unnetworkedLoop();
+        void tick();
 
     public:
         WiFiProvisioning();

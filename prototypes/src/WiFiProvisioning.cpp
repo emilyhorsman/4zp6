@@ -2,7 +2,9 @@
 #include <Preferences.h>
 #include <WiFi.h>
 #include <WiFiAP.h>
+#include <functional>
 #include <map>
+#include <memory>
 #include <string>
 
 #include "WiFiProvisioning.h"
@@ -14,17 +16,51 @@ WiFiProvisioning::WiFiProvisioning()
 , mRequestBuffer()
 , mPreferences()
 , mRequestStart(0)
-{}
+, mIsNetworked(false)
+, mConnectionAttempts(0)
+, mScheduler()
+, mScheduleTickId(0)
+{
+    mScheduleTickId = mScheduler.addSchedule(
+        std::make_shared<Func>(std::bind(&WiFiProvisioning::tick, this)),
+        1000,
+        false
+    );
+}
 
-void WiFiProvisioning::tryConnection(char *ssid, char *pass) {
-    Serial.printf("%lu Attempting connection to %s\n", millis(), ssid);
-    WiFi.begin(ssid, pass);
-    delay(10000);
+void WiFiProvisioning::tick() {
+    if (WiFi.isConnected()) {
+        mScheduler.disableSchedule(mScheduleTickId);
+        mIsNetworked = true;
+        Serial.printf("%lu Connected as %s\n", millis(), WiFi.localIP().toString().c_str());
+    }
+
+    if (++mConnectionAttempts == 10) {
+        Serial.printf("%lu Connection attempts exceeded.\n", millis());
+        mScheduler.disableSchedule(mScheduleTickId);
+        WiFi.disconnect();
+        this->broadcastAP();
+    }
+}
+
+bool WiFiProvisioning::tryConnectionFromPreferences() {
+    String ssid = mPreferences.getString("ssid");
+    String pass = mPreferences.getString("password");
+    if (ssid.isEmpty() || pass.isEmpty()) {
+        Serial.printf("%lu No SSID and password in preferences.\n", millis());
+        return false;
+    }
+
+    Serial.printf("%lu Attempting connection to %s\n", millis(), ssid.c_str());
+    WiFi.begin(ssid.c_str(), pass.c_str());
+    mScheduler.enableSchedule(mScheduleTickId);
+    return true;
 }
 
 void WiFiProvisioning::broadcastAP() {
     WiFi.softAP("TelemetryMicrocontroller", "4zp6capstone");
     WiFi.softAPenableIpV6();
+    mIsNetworked = true;
     Serial.printf(
         "%lu Access Point: %s %s\n",
         millis(),
@@ -36,16 +72,7 @@ void WiFiProvisioning::broadcastAP() {
 void WiFiProvisioning::setup() {
     mPreferences.begin("telemetry", false);
 
-    char ssid[32];
-    char pass[32];
-    if (
-        mPreferences.getString("ssid", ssid, 32) > 0 &&
-        mPreferences.getString("password", pass, 32) > 0
-    ) {
-        this->tryConnection(ssid, pass);
-    }
-
-    if (!WiFi.isConnected()) {
+    if (!this->tryConnectionFromPreferences()) {
         this->broadcastAP();
     }
 
@@ -60,6 +87,12 @@ void WiFiProvisioning::stopClient() {
 }
 
 void WiFiProvisioning::loop() {
+    mScheduler.loop();
+
+    if (!mIsNetworked) {
+        return;
+    }
+
     if (!mHasConnectedClient) {
         // Why does WiFiServer::available not return a pointer?? Its internal
         // members that are expensive are pointers at least.
