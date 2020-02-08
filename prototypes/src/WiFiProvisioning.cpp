@@ -29,13 +29,17 @@ WiFiProvisioning::WiFiProvisioning()
 }
 
 void WiFiProvisioning::tick() {
+    if (mIsNetworked) {
+        return;
+    }
+
     if (WiFi.isConnected()) {
         mScheduler.disableSchedule(mScheduleTickId);
         mIsNetworked = true;
         Serial.printf("%lu Connected as %s\n", millis(), WiFi.localIP().toString().c_str());
     }
 
-    if (++mConnectionAttempts == 10) {
+    if (++mConnectionAttempts == PROVISIONING_CONNECTION_ATTEMPT_LIMIT) {
         Serial.printf("%lu Connection attempts exceeded.\n", millis());
         mScheduler.disableSchedule(mScheduleTickId);
         WiFi.disconnect();
@@ -58,7 +62,7 @@ bool WiFiProvisioning::tryConnectionFromPreferences() {
 }
 
 void WiFiProvisioning::broadcastAP() {
-    WiFi.softAP("TelemetryMicrocontroller", "4zp6capstone");
+    WiFi.softAP(PROVISIONING_AP_SSID, PROVISIONING_AP_PASS);
     WiFi.softAPenableIpV6();
     mIsNetworked = true;
     Serial.printf(
@@ -70,7 +74,7 @@ void WiFiProvisioning::broadcastAP() {
 }
 
 void WiFiProvisioning::setup() {
-    mPreferences.begin("telemetry", false);
+    mPreferences.begin(PREFERENCES_NAMESPACE, false);
 
     if (!this->tryConnectionFromPreferences()) {
         this->broadcastAP();
@@ -106,7 +110,7 @@ void WiFiProvisioning::loop() {
         mRequestBuffer.clear();
     }
 
-    if (!mClient.connected() || mRequestStart + 1000 < millis()) {
+    if (!mClient.connected() || mRequestStart + WEB_SERVER_TIMEOUT < millis()) {
         this->stopClient();
         Serial.printf("%lu Timed out.\n", millis());
         return;
@@ -115,7 +119,6 @@ void WiFiProvisioning::loop() {
     if (mClient.available() == 0) {
         return;
     }
-
     mRequestBuffer += mClient.read();
     this->controller();
 }
@@ -140,8 +143,10 @@ bool WiFiProvisioning::isPostRequestComplete() {
         value += mRequestBuffer[i];
     }
 
+    // The request is complete when the payload length is at least the value
+    // given by the Content-Length header. There is no other reliable way to
+    // determine when this POST request ends.
     return mRequestBuffer.size() - (delimIndex + 4) >= atoi(value.c_str());
-
 }
 
 void WiFiProvisioning::controller() {
@@ -159,6 +164,8 @@ void WiFiProvisioning::controller() {
         this->stopClient();
         return;
     }
+
+    // If we don't match any route then the request will timeout.
 }
 
 void replace(std::string &haystack, std::string needle, const char * replacement) {
@@ -170,7 +177,11 @@ void replace(std::string &haystack, std::string needle, const char * replacement
 }
 
 std::string WiFiProvisioning::getContent() {
+    // string.py yields this bit of C++ code for us. We want to use the
+    // preprocessor to include the HTML instead of keeping a file in flash
+    // memory and wasting runtime resources and program size.
 #include "index.html._cc"
+    // Populate all the form values.
     replace(file, std::string("{ssid}"), mPreferences.getString("ssid").c_str());
     replace(file, std::string("{password}"), mPreferences.getString("password").c_str());
     replace(file, std::string("{mqtt_host}"), mPreferences.getString("mqtt_host").c_str());
@@ -200,6 +211,7 @@ void WiFiProvisioning::viewPost() {
     std::map<std::string, std::string> payload;
     std::string key = "";
     bool isValue = false;
+    // Parse a payload like host=FooSSID&pass=blahblah
     for (uint32_t i = delimIndex + 4; i < mRequestBuffer.size(); i++) {
         char c = mRequestBuffer[i];
         if (isValue && c == '&') {
@@ -225,6 +237,6 @@ void WiFiProvisioning::viewPost() {
     mClient.println("HTTP/1.1 200 OK");
     mClient.println("Content-Type: text/html");
     mClient.println();
-    mClient.println("Success");
+    mClient.println("Success. <a href='/'>Go back.</a>");
     mClient.println();
 }
