@@ -138,7 +138,6 @@ void WiFiProvisioning::viewGet() {
 }
 
 void WiFiProvisioning::viewPost() {
-    Serial.printf("%lu viewPost\n", millis());
     std::size_t delimIndex = mRequestBuffer.find("\r\n\r\n");
     if (delimIndex == std::string::npos) {
         Serial.printf("%lu not found, should never have gotten here\n", millis());
@@ -147,8 +146,7 @@ void WiFiProvisioning::viewPost() {
     std::map<std::string, std::string> payload;
     std::string key = "";
     bool isValue = false;
-    Serial.printf("%lu %d to %d", millis(), delimIndex + 4, mRequestBuffer.size());
-    for (uint8_t i = delimIndex + 4; i < mRequestBuffer.size(); i++) {
+    for (uint32_t i = delimIndex + 4; i < mRequestBuffer.size(); i++) {
         char c = mRequestBuffer[i];
         if (isValue && c == '&') {
             key = "";
@@ -162,8 +160,6 @@ void WiFiProvisioning::viewPost() {
             key += c;
         }
     }
-
-    Serial.printf("Payload size: %d\n", payload.size());
 
     mPreferences.putString("ssid", payload["ssid"].c_str());
     mPreferences.putString("password", payload["password"].c_str());
