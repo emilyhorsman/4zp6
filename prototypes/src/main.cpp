@@ -8,6 +8,7 @@
 
 #include "I2CManager.h"
 #include "I2CRuntime.h"
+#include "MQTTManager.h"
 #include "Scheduler.h"
 #include "WiFiProvisioning.h"
 
