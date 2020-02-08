@@ -7,8 +7,6 @@
 
 #include "Scheduler.h"
 
-#define PROVISIONING_PORT
-
 void replace(std::string &haystack, std::string needle, const char * replacement);
 
 class WiFiProvisioning {

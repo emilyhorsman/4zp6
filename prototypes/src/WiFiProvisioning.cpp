@@ -10,7 +10,7 @@
 #include "WiFiProvisioning.h"
 
 WiFiProvisioning::WiFiProvisioning()
-: mServer(PROVISIONING_PORT)
+: mServer()
 , mClient()
 , mHasConnectedClient(false)
 , mRequestBuffer()
