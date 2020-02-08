@@ -1,7 +1,7 @@
 .pio
 *.pdf
 a.out*
-Telemetry.pb
+telemetry.pb
 binary/
 
 
