@@ -101,7 +101,6 @@ func (m *MQTT) UpdateTopics(topics []string) error {
 func (m *MQTT) notifyTopics() error {
 	// unsubscribe existing topics, subscribe new
 	if len(m.topics) > 0 {
-		m.log.Info("[mqtt] unsubscribing from previous topics")
 		m.client.Unsubscribe(m.topics...)
 	}
 	for _, topic := range m.topics {
