@@ -7,6 +7,8 @@
 
 #define PROVISIONING_PORT
 
+void replace(std::string &haystack, std::string needle, const char * replacement);
+
 class WiFiProvisioning {
     private:
         WiFiServer mServer;
@@ -14,9 +16,11 @@ class WiFiProvisioning {
         bool mHasConnectedClient;
         std::string mRequestBuffer;
         Preferences mPreferences;
+        size_t mRequestStart;
 
         void stopClient();
         void controller();
+        std::string getContent();
         void viewGet();
         void viewPost();
         bool isPostRequestComplete();

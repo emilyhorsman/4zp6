@@ -9,4 +9,6 @@ with open("include/index.html", "r") as f:
     ])
 
 with open("include/index.html._cc", "w") as f:
+    f.write("std::string file = ");
     f.write(contents)
+    f.write(";");

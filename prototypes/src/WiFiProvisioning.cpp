@@ -13,14 +13,11 @@ WiFiProvisioning::WiFiProvisioning()
 , mHasConnectedClient(false)
 , mRequestBuffer()
 , mPreferences()
+, mRequestStart(0)
 {}
 
 void WiFiProvisioning::setup() {
     mPreferences.begin("telemetry", false);
-    Serial.println(mPreferences.getString("ssid").c_str());
-    Serial.println(mPreferences.getString("password").c_str());
-    Serial.println(mPreferences.getString("mqtt_host").c_str());
-    Serial.println(mPreferences.getUInt("mqtt_port"));
 
     WiFi.softAP("TelemetryMicrocontroller", "4zp6capstone");
     WiFi.softAPenableIpV6();
@@ -51,11 +48,13 @@ void WiFiProvisioning::loop() {
         }
         Serial.printf("%lu Client connected: %s\n", millis(), mClient.remoteIP().toString().c_str());
         mHasConnectedClient = true;
+        mRequestStart = millis();
         mRequestBuffer.clear();
     }
 
-    if (!mClient.connected()) {
+    if (!mClient.connected() || mRequestStart + 1000 < millis()) {
         this->stopClient();
+        Serial.printf("%lu Timed out.\n", millis());
         return;
     }
 
@@ -87,7 +86,7 @@ bool WiFiProvisioning::isPostRequestComplete() {
         value += mRequestBuffer[i];
     }
 
-    return mRequestBuffer.size() - (delimIndex + 4) == atoi(value.c_str());
+    return mRequestBuffer.size() - (delimIndex + 4) >= atoi(value.c_str());
 
 }
 
@@ -104,24 +103,51 @@ void WiFiProvisioning::controller() {
     ) {
         this->viewPost();
         this->stopClient();
+        return;
     }
+}
+
+void replace(std::string &haystack, std::string needle, const char * replacement) {
+    std::size_t index = haystack.find(needle);
+    if (index == std::string::npos) {
+        return;
+    }
+    haystack.replace(index, needle.size(), replacement);
+}
+
+std::string WiFiProvisioning::getContent() {
+#include "index.html._cc"
+    replace(file, std::string("{ssid}"), mPreferences.getString("ssid").c_str());
+    replace(file, std::string("{password}"), mPreferences.getString("password").c_str());
+    replace(file, std::string("{mqtt_host}"), mPreferences.getString("mqtt_host").c_str());
+    replace(file, std::string("{mqtt_user}"), mPreferences.getString("mqtt_user").c_str());
+    replace(file, std::string("{mqtt_password}"), mPreferences.getString("mqtt_password").c_str());
+    char tmp[6];
+    snprintf(tmp, 6, "%d", mPreferences.getUInt("mqtt_port"));
+    replace(file, std::string("{mqtt_port}"), tmp);
+
+    return file;
 }
 
 void WiFiProvisioning::viewGet() {
     mClient.println("HTTP/1.1 200 OK");
     mClient.println("Content-Type: text/html");
     mClient.println();
-    mClient.println(
-#include "index.html._cc"
-    );
+    mClient.println(this->getContent().c_str());
     mClient.println();
 }
 
 void WiFiProvisioning::viewPost() {
+    Serial.printf("%lu viewPost\n", millis());
     std::size_t delimIndex = mRequestBuffer.find("\r\n\r\n");
+    if (delimIndex == std::string::npos) {
+        Serial.printf("%lu not found, should never have gotten here\n", millis());
+        return;
+    }
     std::map<std::string, std::string> payload;
     std::string key = "";
     bool isValue = false;
+    Serial.printf("%lu %d to %d", millis(), delimIndex + 4, mRequestBuffer.size());
     for (uint8_t i = delimIndex + 4; i < mRequestBuffer.size(); i++) {
         char c = mRequestBuffer[i];
         if (isValue && c == '&') {
@@ -137,9 +163,13 @@ void WiFiProvisioning::viewPost() {
         }
     }
 
+    Serial.printf("Payload size: %d\n", payload.size());
+
     mPreferences.putString("ssid", payload["ssid"].c_str());
     mPreferences.putString("password", payload["password"].c_str());
     mPreferences.putString("mqtt_host", payload["host"].c_str());
+    mPreferences.putString("mqtt_user", payload["mqtt_user"].c_str());
+    mPreferences.putString("mqtt_password", payload["mqtt_password"].c_str());
     mPreferences.putUInt("mqtt_port", (uint32_t) atoi(payload["port"].c_str()));
 
     mClient.println("HTTP/1.1 200 OK");
