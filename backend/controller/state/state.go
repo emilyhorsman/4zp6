@@ -139,6 +139,7 @@ func (s *State) amqp() error {
 	return nil
 }
 
+// sql attempts to populate the SQL field in State.
 func (s *State) sql() error {
 	// use vlan inside Docker, localhost when outside
 	sqlHost := "postgres"
