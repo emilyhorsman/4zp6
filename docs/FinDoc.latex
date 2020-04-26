@@ -23,9 +23,6 @@
 
 \section*{Preamble}
 
-\subsection*{Brief}
-
-
 \name saves significant development time for common embedded applications.
 
 There is a large market of hardware peripherals which use an \proto bus to communicate with a computer.
