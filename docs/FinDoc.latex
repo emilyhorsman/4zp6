@@ -10,7 +10,7 @@
 \fancyhead[L]{COMPSCI 4ZP6}
 \fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
 
-\newcommand{\name}{Telemetry}
+\newcommand{\name}{Telemetry\,}
 \newcommand{\proto}{I\textsuperscript{2}C\,}
 
 \title{Telemetry}
@@ -24,6 +24,47 @@
 \section*{Preamble}
 
 \subsection*{Brief}
+
+
+\name saves significant development time for common embedded applications.
+
+There is a large market of hardware peripherals which use an \proto bus to communicate with a computer.
+They usually interface with an embedded device.\footnote{``Arduino-compatible'' microcontrollers are popular choices amongst hobbyists and industrial prototypers.}
+These embedded controllers need to be flashed to change application logic and this often requires physical access.
+There are thousands of such peripherals including sensors that measure temperature, moisture, colour, current, etc.
+Hobbyists and industrial prototypers buy these sensors from distributors such as Adafruit and Sparkfun.
+These distributors often share libraries that allow these sensors to be used with common embedded controllers with little development time.\footnote{e.g., For the SHT31 temperature and humidity sensor: \url{https://github.com/adafruit/Adafruit_SHT31}}
+However, these libraries have a lot of redundancy amongst them and often contain technical tradeoffs.\footnote{e.g., calling functions which sleep the device instead of using an event loop that would allow other tasks to be performed.}
+
+Writing a program for embedded controllers that reads and writes to \proto-based hardware peripherals traditionally involves three tasks:
+
+\begin{enumerate}
+\item Getting data off the \proto bus with sensor-specific protocols running in an ``application layer''.
+\item Turning raw bytes from the sensor protocol into semantically sensible values. i.e., from bytes to a temperature reading in degrees Celsius.
+\item Managing multiple sensors connected to the same \proto bus which are read and written to at various intervals.
+\end{enumerate}
+
+\name is a library for embedded devices that builds on an abstraction of hardware peripherals to simplify these tasks.
+
+\begin{enumerate}
+\item Generalizes interactions on the \proto bus to allow declarative configurations for new sensors to be written instead of application logic.
+\item Decouples the application logic which deals with data semantics from the embedded device and its development environment.
+    Developers will write a small program independent of the firmware flashed to embedded devices without needing to deal with low-level details.
+    These programs can be written in any language and run on servers, instead of being written in the low-level systems languages that embedded devices typically use.\footnote{C and C++ are common choices for embedded controllers. Developers can use anything --- even something like Haskell --- for \name.}
+\item Manages peripherals on an \proto bus without writing additional firmware logic.
+    This includes logic for automatically discovering and processing data when a sensor is physically connected.
+\end{enumerate}
+
+This achieves meaningful outcomes for development teams.
+
+\begin{enumerate}
+\item Much less development time to work with data from sensors.
+    Reduces prototyping to a ``plug-and-play'' experience.
+\item Reduces skill specialization required for embedded development.
+    Application logic can be written in any language without knowledge of embedded C++.
+\item \name can be used as a pre-packaged firmware that can be uploaded to a compatible embedded device without changes.
+    This allows you to physically connect sensors and immediately store data and consume data from a provided API.
+\end{enumerate}
 
 \subsection*{Responsibilities}
 
