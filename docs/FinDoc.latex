@@ -22,5 +22,15 @@
 \maketitle
 
 \section*{Preamble}
-blah blah
+
+\subsection*{Brief}
+
+\subsection*{Responsibilities}
+
+\section*{Software Requirements Specification}
+
+\section*{Software Design Description}
+
+\section*{Code Guide}
+
 \end{document}
