@@ -9,7 +9,13 @@ MQTTManager::MQTTManager()
 , mPubSub(mWiFiClient)
 , mScheduler()
 , mScheduleTickId()
-{}
+{
+    mScheduleTickId = mScheduler.addSchedule(
+        std::make_shared<Func>(std::bind(&MQTTManager::tick, this)),
+        1000,
+        true
+    );
+}
 
 
 void MQTTManager::setup() {
@@ -18,7 +24,12 @@ void MQTTManager::setup() {
 
 
 void MQTTManager::loop() {
+    mScheduler.loop();
     mPubSub.loop();
+}
+
+
+void MQTTManager::tick() {
     if (!mPubSub.connected()) {
         this->attemptConnection();
     }
@@ -34,4 +45,6 @@ void MQTTManager::attemptConnection() {
         Serial.printf("%lu Incomplete MQTT connection details in preferences.\n", millis());
         return;
     }
+
+    Serial.printf("%lu Attempting connection\n", millis());
 }

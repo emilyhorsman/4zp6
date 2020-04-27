@@ -16,6 +16,7 @@ class MQTTManager {
         ScheduleId mScheduleTickId;
 
         void attemptConnection();
+        void tick();
 
     public:
         MQTTManager();
