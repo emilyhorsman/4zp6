@@ -60,5 +60,21 @@ void MQTTManager::attemptConnection() {
 
     Serial.printf("%lu Attempting connection\n", millis());
     mPubSub.setServer(host.c_str(), port);
-    Serial.printf("%lu Connection status: %d\n", millis(), mPubSub.connect(mUUID.c_str(), user.c_str(), pass.c_str()));
+    bool status = mPubSub.connect(mUUID.c_str(), user.c_str(), pass.c_str());
+    if (status) {
+        this->txRegistration();
+    }
+}
+
+
+void MQTTManager::txRegistration() {
+    Serial.printf("%lu Sending registration\n", millis());
+    Serial.println(this->publish("hello"));
+}
+
+
+bool MQTTManager::publish(std::string payload) {
+    char txUUID[16];
+    snprintf(txUUID, 16, "tx/%s", mUUID.c_str());
+    return mPubSub.publish(txUUID, payload.c_str());
 }

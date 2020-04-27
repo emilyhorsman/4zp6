@@ -18,6 +18,8 @@ class MQTTManager {
 
         void attemptConnection();
         void tick();
+        void txRegistration();
+        bool publish(std::string payload);
 
     public:
         MQTTManager();
