@@ -47,4 +47,6 @@ void MQTTManager::attemptConnection() {
     }
 
     Serial.printf("%lu Attempting connection\n", millis());
+    mPubSub.setServer(host.c_str(), port);
+    Serial.printf("%lu Connection status: %d\n", millis(), mPubSub.connect("test", user.c_str(), pass.c_str()));
 }
