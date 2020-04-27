@@ -15,6 +15,8 @@ class MQTTManager {
         Scheduler mScheduler;
         ScheduleId mScheduleTickId;
 
+        void attemptConnection();
+
     public:
         MQTTManager();
         void loop();
