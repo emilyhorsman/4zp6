@@ -17,6 +17,7 @@ class MQTTManager {
 
     public:
         MQTTManager();
+        void loop();
 };
 
 #endif

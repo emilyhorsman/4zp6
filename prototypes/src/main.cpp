@@ -5,6 +5,7 @@
 #include <Wire.h>
 
 #define ENABLE_PROVISIONING
+#define ENABLE_MQTT
 
 #include "I2CManager.h"
 #include "I2CRuntime.h"
@@ -58,6 +59,9 @@ uint8_t **shtBuffer = NULL;
 #ifdef ENABLE_PROVISIONING
 WiFiProvisioning provisioning;
 #endif
+#ifdef ENABLE_MQTT
+MQTTManager mqttManager;
+#endif
 
 void setup()
 {
@@ -104,7 +108,7 @@ void setup()
         1000
     );
 #endif
-    
+
     wire->begin();
     delay(3000);
 
@@ -124,5 +128,9 @@ void loop()
 
 #ifdef ENABLE_PROVISIONING
     provisioning.loop();
+#endif
+
+#ifdef ENABLE_MQTT
+    mqttManager.loop();
 #endif
 }

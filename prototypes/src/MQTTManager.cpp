@@ -3,7 +3,12 @@
 MQTTManager::MQTTManager()
 : mPreferences()
 , mWiFiClient()
-, mPubSub()
+, mPubSub(mWiFiClient)
 , mScheduler()
 , mScheduleTickId()
 {}
+
+
+void MQTTManager::loop() {
+    mPubSub.loop();
+}
