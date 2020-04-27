@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "MQTTManager.h"
+#include "WiFiProvisioning.h"
 
 MQTTManager::MQTTManager()
 : mPreferences()
@@ -9,6 +10,11 @@ MQTTManager::MQTTManager()
 , mScheduler()
 , mScheduleTickId()
 {}
+
+
+void MQTTManager::setup() {
+    mPreferences.begin(PREFERENCES_NAMESPACE, false);
+}
 
 
 void MQTTManager::loop() {

@@ -116,6 +116,10 @@ void setup()
     provisioning.setup();
 #endif
 
+#ifdef ENABLE_MQTT
+    mqttManager.setup();
+#endif
+
     Serial.printf("%lu Setup completed\n", millis());
 }
 
