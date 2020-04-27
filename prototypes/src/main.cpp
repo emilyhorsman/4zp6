@@ -84,6 +84,7 @@ void setup()
 
                 // Sample application logic that a peripheral processor might
                 // implement outside the microcontroller.
+                // TODO: Remove this
                 Serial.printf(
                     "%x %x %x %x %x %x\n",
                     shtBuffer[0][0],
