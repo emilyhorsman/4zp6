@@ -4,7 +4,7 @@ localhost:80 127.0.0.1:80 telemetry.0xt.ca:80 {
       -Server
       Cache-Control "no-cache, no-store, must-revalidate"
     }
-    proxy /api http://4zp6controller:6060 {
+    proxy /api http://engine:6060 {
       keepalive 32
       transparent
     }

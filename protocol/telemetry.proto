@@ -24,6 +24,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 syntax = "proto3";
+option go_package = ".;telemetry";
 
 /**
  * Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
