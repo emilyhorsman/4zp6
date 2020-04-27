@@ -14,7 +14,9 @@ class MQTTManager {
         PubSubClient mPubSub;
         Scheduler mScheduler;
         ScheduleId mScheduleTickId;
-        std::string mUUID;
+        char mUUID[13];
+        char mTXUUID[16];
+        char mRXUUID[16];
 
         void attemptConnection();
         void tick();

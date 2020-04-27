@@ -11,6 +11,8 @@ MQTTManager::MQTTManager()
 , mScheduler()
 , mScheduleTickId()
 , mUUID()
+, mTXUUID()
+, mRXUUID()
 {
     mScheduleTickId = mScheduler.addSchedule(
         std::make_shared<Func>(std::bind(&MQTTManager::tick, this)),
@@ -24,14 +26,13 @@ void MQTTManager::setup() {
     mPreferences.begin(PREFERENCES_NAMESPACE, false);
 
     byte macAddr[6];
-    char buf[3];
     WiFi.macAddress(macAddr);
-    mUUID.clear();
     for (uint8_t i = 0; i < 6; i++) {
-        snprintf(buf, 3, "%x", macAddr[i]);
-        mUUID += buf[0];
-        mUUID += buf[1];
+        snprintf(mUUID + i * 2, 3, "%x", macAddr[i]);
     }
+    snprintf(mUUID, 13, "%x%x%x%x%x%x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
+    snprintf(mTXUUID, 16, "tx/%s", mUUID);
+    snprintf(mRXUUID, 16, "rx/%s", mUUID);
 }
 
 
@@ -60,7 +61,7 @@ void MQTTManager::attemptConnection() {
 
     Serial.printf("%lu Attempting connection\n", millis());
     mPubSub.setServer(host.c_str(), port);
-    bool status = mPubSub.connect(mUUID.c_str(), user.c_str(), pass.c_str());
+    bool status = mPubSub.connect(mUUID, user.c_str(), pass.c_str());
     if (status) {
         this->txRegistration();
     }
@@ -74,7 +75,5 @@ void MQTTManager::txRegistration() {
 
 
 bool MQTTManager::publish(std::string payload) {
-    char txUUID[16];
-    snprintf(txUUID, 16, "tx/%s", mUUID.c_str());
-    return mPubSub.publish(txUUID, payload.c_str());
+    return mPubSub.publish(mTXUUID, payload.c_str());
 }
