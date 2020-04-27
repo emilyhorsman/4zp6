@@ -2,6 +2,7 @@
 #include <WiFI.h>
 
 #include "MQTTManager.h"
+#include "TelemetryProtocol.h"
 #include "WiFiProvisioning.h"
 
 MQTTManager::MQTTManager()
