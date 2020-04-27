@@ -24,12 +24,13 @@ void MQTTManager::setup() {
     mPreferences.begin(PREFERENCES_NAMESPACE, false);
 
     byte macAddr[6];
-    char buf[2];
+    char buf[3];
     WiFi.macAddress(macAddr);
     mUUID.clear();
     for (uint8_t i = 0; i < 6; i++) {
-        snprintf(buf, 2, "%x", macAddr[i]);
-        mUUID += buf;
+        snprintf(buf, 3, "%x", macAddr[i]);
+        mUUID += buf[0];
+        mUUID += buf[1];
     }
 }
 
