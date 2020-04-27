@@ -118,6 +118,7 @@ func main() {
 	for {
 		// only run schedule if device is provisioned
 		if provisioned {
+			log.Println("device provisioned, running schedule")
 			schedule(mqtt)
 		} else {
 			log.Println("device not provisioned, sleeping for", scheduleInterval)
@@ -128,19 +129,46 @@ func main() {
 
 // schedule is called when the time-driven schedule is to run.
 func schedule(mqtt state.MQTT) {
-	log.Println("schedule run")
+	// generate data to send (current time)
+	t := time.Now().UTC().Format(time.RFC3339)
+
+	// attach data to payload
+	payload := telemetry.Payload{
+		BusId:        0x1,
+		BusAddr:      0x44,
+		DefinitionId: 0x0,
+		Data:         []byte(t),
+	}
+	// attach payload to frame
+	frame := &telemetry.Telemetry{
+		Message: telemetry.Telemetry_PAYLOAD,
+		Payload: &payload,
+	}
+	// generate binary frame payload
+	binary, err := proto.Marshal(frame)
+	if err != nil {
+		log.Panic(err)
+	}
+	// publish payload
+	err = mqtt.Publish(txRoute, binary)
+	if err != nil {
+		log.Panic(err)
+	}
+	log.Printf("sent TX_Payload %+v\n", frame)
 }
 
 // rxProvisioning is called when receiving a provisioning frame. It provisions
 // the state of the microcontroller.
 func rxProvisioning(wire state.MQTTMessage, msg telemetry.Telemetry) {
-
+	// device is now provisioned
+	provisioned = true
+	log.Printf("%+v\n", msg)
 }
 
 // rxRequest is called when receiving a request frame. It is for performing one
 // off requests of the microcontroller.
 func rxRequest(wire state.MQTTMessage, msg telemetry.Telemetry) {
-
+	log.Printf("%+v\n", msg)
 }
 
 // txRegistration sends a registration frame to the backend. If the frame cannot
@@ -173,12 +201,12 @@ func txRegistration(mqtt state.MQTT) error {
 		Registration: &registration,
 	}
 	// generate binary frame payload
-	payload, err := proto.Marshal(frame)
+	binary, err := proto.Marshal(frame)
 	if err != nil {
 		return err
 	}
 	// publish payload
-	err = mqtt.Publish(txRoute, payload)
+	err = mqtt.Publish(txRoute, binary)
 	if err != nil {
 		return err
 	}
