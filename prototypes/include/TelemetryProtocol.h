@@ -5,7 +5,7 @@
 
 class TelemetryProtocol {
     public:
-        static void registration(uint8_t *buffer);
+        static void registration(uint8_t *buffer, char *uuid);
 };
 
 #endif

@@ -71,10 +71,17 @@ void MQTTManager::attemptConnection() {
 
 void MQTTManager::txRegistration() {
     Serial.printf("%lu Sending registration\n", millis());
-    Serial.println(this->publish("hello"));
+    uint8_t buffer[1024];
+    TelemetryProtocol::registration(buffer, mUUID);
+    Serial.println(this->publish((char *) buffer));
+}
+
+
+bool MQTTManager::publish(char *payload) {
+    return mPubSub.publish(mTXUUID, payload);
 }
 
 
 bool MQTTManager::publish(std::string payload) {
-    return mPubSub.publish(mTXUUID, payload.c_str());
+    return this->publish(payload.c_str());
 }
