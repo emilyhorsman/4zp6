@@ -1,0 +1,11 @@
+std::string file = "<style type=\"text/css\">label { display: block; }</style>"
+"<h1>Provisioning</h1>"
+"<form method=\"POST\">"
+"<label>SSID <input type=\"text\" name=\"ssid\" value=\"{ssid}\" required></label>"
+"<label>Pass <input type=\"password\" name=\"password\" value=\"{password}\" required></label>"
+"<label>MQTT Host <input type=\"text\" name=\"host\" value=\"{mqtt_host}\" required></label>"
+"<label>MQTT User <input type=\"text\" name=\"mqtt_user\" value=\"{mqtt_user}\" required></label>"
+"<label>MQTT Pass <input type=\"password\" name=\"mqtt_password\" value=\"{mqtt_password}\" required></label>"
+"<label>MQTT Port <input type=\"number\" name=\"port\" value=\"{mqtt_port}\" required></label>"
+"<input type=\"submit\">"
+"</form>";
