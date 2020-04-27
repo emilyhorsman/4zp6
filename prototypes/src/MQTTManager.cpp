@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <WiFI.h>
 
 #include "MQTTManager.h"
 #include "WiFiProvisioning.h"
@@ -9,6 +10,7 @@ MQTTManager::MQTTManager()
 , mPubSub(mWiFiClient)
 , mScheduler()
 , mScheduleTickId()
+, mUUID()
 {
     mScheduleTickId = mScheduler.addSchedule(
         std::make_shared<Func>(std::bind(&MQTTManager::tick, this)),
@@ -20,6 +22,15 @@ MQTTManager::MQTTManager()
 
 void MQTTManager::setup() {
     mPreferences.begin(PREFERENCES_NAMESPACE, false);
+
+    byte macAddr[6];
+    char buf[2];
+    WiFi.macAddress(macAddr);
+    mUUID.clear();
+    for (uint8_t i = 0; i < 6; i++) {
+        snprintf(buf, 2, "%x", macAddr[i]);
+        mUUID += buf;
+    }
 }
 
 
@@ -48,5 +59,5 @@ void MQTTManager::attemptConnection() {
 
     Serial.printf("%lu Attempting connection\n", millis());
     mPubSub.setServer(host.c_str(), port);
-    Serial.printf("%lu Connection status: %d\n", millis(), mPubSub.connect("test", user.c_str(), pass.c_str()));
+    Serial.printf("%lu Connection status: %d\n", millis(), mPubSub.connect(mUUID.c_str(), user.c_str(), pass.c_str()));
 }
