@@ -24,6 +24,7 @@ class MQTTManager {
         void attemptConnection();
         void tick();
         void txRegistration();
+        void txPayload(uint32_t busId, uint16_t busAddress, ReadDefinition *def, uint8_t *payload);
         bool publish(uint8_t *payload, unsigned int len);
         bool publish(char *payload);
         bool publish(std::string payload);

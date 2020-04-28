@@ -109,6 +109,16 @@ void MQTTManager::txRegistration() {
 }
 
 
+void MQTTManager::txPayload(uint32_t busId, uint16_t busAddress, ReadDefinition *def, uint8_t *payload) {
+    Serial.printf("%lu Sending payload\n", millis());
+    uint8_t buffer[1024];
+    size_t len = TelemetryProtocol::payload(busId, busAddress, def, payload, buffer);
+    if (len) {
+        this->publish(buffer, len);
+    }
+}
+
+
 bool MQTTManager::publish(uint8_t *payload, unsigned int len) {
     return mPubSub.publish(mTXUUID, payload, len);
 }
