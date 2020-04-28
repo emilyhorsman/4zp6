@@ -7,6 +7,9 @@
 #include "I2CPeripheral.h"
 #include "I2CReadManager.h"
 #include "Scheduler.h"
+#include "TelemetryProtocol.h"
+
+class I2CRuntime;
 
 /**
  * Only intended to be used by an I2CRuntime instance.
@@ -20,12 +23,13 @@ class I2CPeripheralManager {
         uint8_t ** mBuffer;
         std::vector<I2CReadManager *> mReadManagers;
         TwoWire * mWire;
+        I2CRuntime *mRuntime;
 
         static uint8_t ** allocateBytes(Peripheral *);
         static void deallocateBytes(Peripheral *, uint8_t **);
 
     public:
-        I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire);
+        I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire, I2CRuntime *runtime);
         ~I2CPeripheralManager();
         void loop();
         uint8_t ** getBuffer();
@@ -42,6 +46,9 @@ class I2CRuntime {
         bool hasPeripheral(std::size_t);
         uint8_t ** getPeripheralBuffer(std::size_t);
         void loop();
+        void setPayloadFunc(std::shared_ptr<PayloadFunc>);
+
+        std::shared_ptr<PayloadFunc> mPayloadFunc;
 };
 
 #endif

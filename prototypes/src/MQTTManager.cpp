@@ -23,6 +23,17 @@ MQTTManager::MQTTManager(I2CRuntime &runtime)
         1000,
         true
     );
+
+    mRuntime.setPayloadFunc(std::make_shared<PayloadFunc>(
+        std::bind(
+            &MQTTManager::txPayload,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3,
+            std::placeholders::_4
+        )
+    ));
 }
 
 

@@ -8,6 +8,9 @@
 #include "I2CPeripheral.h"
 
 
+typedef std::function<void (uint32_t, uint16_t, ReadDefinition *, uint8_t *)> PayloadFunc;
+
+
 class TelemetryProtocol {
     public:
         static size_t registration(uint8_t *buffer);

@@ -4,16 +4,18 @@
 
 #include "I2CRuntime.h"
 #include "Scheduler.h"
+#include "TelemetryProtocol.h"
 
 uint16_t ReadDefinition::getNumBlockBytes() {
     return registerBlockLength * numBytesPerRegister;
 }
 
-I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire)
+I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire, I2CRuntime *runtime)
 : mPeripheral(peripheral)
 , mBuffer(NULL)
 , mReadManagers()
 , mWire(wire)
+, mRuntime(runtime)
 {
     mBuffer = I2CPeripheralManager::allocateBytes(mPeripheral);
     for (uint8_t i = 0; i < peripheral->numReadDefinitions; i++) {
@@ -26,13 +28,12 @@ I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire
             mWire,
             std::make_shared<Func>(
                 [=]() {
-                    Serial.printf("%lu completed read %d %p\n", millis(), i, def);
-                    /*mRuntime->txPayload(
+                    (*mRuntime->mPayloadFunc) (
                         1,
                         mPeripheral->busAddress,
                         def,
                         mBuffer[i]
-                    );*/
+                    );
                 }
             )
         ));
@@ -79,10 +80,11 @@ uint8_t ** I2CPeripheralManager::getBuffer() {
 I2CRuntime::I2CRuntime(TwoWire *wire)
 : mManagers()
 , mWire(wire)
+, mPayloadFunc(NULL)
 {}
 
 std::size_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
-    mManagers.push_back(new I2CPeripheralManager(peripheral, mWire));
+    mManagers.push_back(new I2CPeripheralManager(peripheral, mWire, this));
     Serial.printf("%lu Added peripheral %d\n", millis(), mManagers.size() - 1);
     return mManagers.size() - 1;
 }
@@ -102,4 +104,9 @@ void I2CRuntime::loop() {
 uint8_t ** I2CRuntime::getPeripheralBuffer(std::size_t peripheralId) {
     assert(this->hasPeripheral(peripheralId));
     return mManagers[peripheralId]->getBuffer();
+}
+
+
+void I2CRuntime::setPayloadFunc(std::shared_ptr<PayloadFunc> func) {
+    mPayloadFunc = func;
 }

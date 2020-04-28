@@ -142,17 +142,12 @@ ReadDefinition * TelemetryProtocol::readDefinitionFromPB(Provisioning_ReadDef &m
 
 
 size_t TelemetryProtocol::payload(uint32_t busId, uint16_t busAddress, ReadDefinition *def, uint8_t *payload, uint8_t *buffer) {
-    Serial.printf("payload %p\n", def);
-    Serial.println("populating payload");
     Telemetry message = Telemetry_init_default;
     message.message = Telemetry_Message_PAYLOAD;
     message.payload.busId = busId;
     message.payload.busAddr = busAddress;
-    Serial.println("i'm gonna do it i'm gonna dereference it");
     message.payload.definitionId = def->definitionId;
-    Serial.println("dereferenced def");
     Sized data = { payload, def->getNumBlockBytes() };
-    Serial.println("constucted Sized");
     message.payload.data.arg = &data;
     message.payload.data.funcs.encode = encode_string;
 
