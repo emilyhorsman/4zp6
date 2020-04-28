@@ -162,13 +162,13 @@ func schedule(mqtt state.MQTT) {
 func rxProvisioning(wire state.MQTTMessage, msg telemetry.Telemetry) {
 	// device is now provisioned
 	provisioned = true
-	log.Printf("%+v\n", msg)
+	log.Printf("%+v\n", msg.Provisioning)
 }
 
 // rxRequest is called when receiving a request frame. It is for performing one
 // off requests of the microcontroller.
 func rxRequest(wire state.MQTTMessage, msg telemetry.Telemetry) {
-	log.Printf("%+v\n", msg)
+	log.Printf("%+v\n", msg.Request)
 }
 
 // txRegistration sends a registration frame to the backend. If the frame cannot
