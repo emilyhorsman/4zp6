@@ -17,6 +17,7 @@ class MQTTManager {
         char mUUID[13];
         char mTXUUID[16];
         char mRXUUID[16];
+        bool mIsSubscribed;
 
         void attemptConnection();
         void tick();
@@ -24,6 +25,8 @@ class MQTTManager {
         bool publish(uint8_t *payload, unsigned int len);
         bool publish(char *payload);
         bool publish(std::string payload);
+        void subscribe();
+        void onPayload(char * topic, uint8_t * payload, unsigned int size);
 
     public:
         MQTTManager();

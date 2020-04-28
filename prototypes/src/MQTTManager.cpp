@@ -14,6 +14,7 @@ MQTTManager::MQTTManager()
 , mUUID()
 , mTXUUID()
 , mRXUUID()
+, mIsSubscribed(false)
 {
     mScheduleTickId = mScheduler.addSchedule(
         std::make_shared<Func>(std::bind(&MQTTManager::tick, this)),
@@ -34,6 +35,14 @@ void MQTTManager::setup() {
     snprintf(mUUID, 13, "%x%x%x%x%x%x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
     snprintf(mTXUUID, 16, "tx/%s", mUUID);
     snprintf(mRXUUID, 16, "rx/%s", mUUID);
+
+    mPubSub.setCallback(std::bind(
+        &MQTTManager::onPayload,
+        this,
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3
+    ));
 }
 
 
@@ -46,7 +55,21 @@ void MQTTManager::loop() {
 void MQTTManager::tick() {
     if (!mPubSub.connected()) {
         this->attemptConnection();
+    } else if (!mIsSubscribed && mPubSub.state() == MQTT_CONNECTED) {
+        this->subscribe();
     }
+}
+
+
+void MQTTManager::subscribe() {
+    mIsSubscribed = mPubSub.subscribe(mRXUUID);
+    if (!mIsSubscribed) {
+        Serial.printf("%lu Unable to subscribe to %s topic: %d\n", millis(), mRXUUID, mPubSub.state());
+    }
+}
+
+
+void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
 }
 
 
@@ -65,6 +88,7 @@ void MQTTManager::attemptConnection() {
     bool status = mPubSub.connect(mUUID, user.c_str(), pass.c_str());
     if (status) {
         this->txRegistration();
+        this->subscribe();
     }
 }
 
