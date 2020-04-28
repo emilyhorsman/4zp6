@@ -131,7 +131,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - ./Caddyfile:/etc/Caddyfile
+      - ./Caddyfile-production:/etc/Caddyfile
       - caddy:/root/.caddy
       - ./assets:/assets
 
