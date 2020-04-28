@@ -1,5 +1,6 @@
-#include <WiFi.h>
 #include <Telemetry.pb.h>
+#include <WiFi.h>
+#include <pb_decode.h>
 #include <pb_encode.h>
 
 #include "TelemetryProtocol.h"
@@ -51,4 +52,17 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
     }
 
     return stream.bytes_written;
+}
+
+void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
+    pb_istream_t stream = pb_istream_from_buffer(buffer, size);
+    Telemetry message = Telemetry_init_default;
+    if (!pb_decode(&stream, Telemetry_fields, &message)) {
+        Serial.printf("%lu Failed to decode message\n", millis());
+        return;
+    }
+
+    if (message.message != Telemetry_Message_PROVISIONING) {
+        return;
+    }
 }

@@ -70,6 +70,7 @@ void MQTTManager::subscribe() {
 
 
 void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
+    TelemetryProtocol::provisioning(payload, size);
 }
 
 

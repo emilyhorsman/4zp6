@@ -7,6 +7,7 @@
 class TelemetryProtocol {
     public:
         static size_t registration(uint8_t *buffer);
+        static void provisioning(uint8_t *buffer, unsigned int size);
 };
 
 #endif
