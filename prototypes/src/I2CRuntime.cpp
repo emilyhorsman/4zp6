@@ -17,14 +17,22 @@ I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire
 {
     mBuffer = I2CPeripheralManager::allocateBytes(mPeripheral);
     for (uint8_t i = 0; i < peripheral->numReadDefinitions; i++) {
+        ReadDefinition *def = peripheral->readDefinitions[i];
+        Serial.printf("manager constructor: %i %p\n", i, def);
         mReadManagers.push_back(new I2CReadManager(
-            peripheral->readDefinitions[i],
+            def,
             peripheral,
             mBuffer[i],
             mWire,
             std::make_shared<Func>(
-                []() {
-                    Serial.printf("%lu completed read", millis());
+                [=]() {
+                    Serial.printf("%lu completed read %d %p\n", millis(), i, def);
+                    mRuntime->txPayload(
+                        1,
+                        mPeripheral->busAddress,
+                        def,
+                        mBuffer[i]
+                    );
                 }
             )
         ));
