@@ -56,7 +56,7 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
 
 void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
-    Telemetry message = Telemetry_init_default;
+    Telemetry message;
     if (!pb_decode(&stream, Telemetry_fields, &message)) {
         Serial.printf("%lu Failed to decode message\n", millis());
         return;
@@ -65,4 +65,22 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
     if (message.message != Telemetry_Message_PROVISIONING) {
         return;
     }
+
+    uint8_t *busAddresses;
+    message.provisioning.busAddr.arg = busAddresses;
+    message.provisioning.busAddr.funcs.decode = [](
+        pb_istream_t *stream,
+        const pb_field_t *field,
+        void **arg
+    ) -> bool {
+        // TODO: I2CPeripheral stores a single bus address because it's like data not definition.
+        // TODO: Create multiple Peripheral instances that share ReadDefinitions
+        // TODO: I think Peripheral::busAddress should just be a uint8_t
+        uint64_t size;
+        if (!pb_decode_varint(stream, &size)) {
+            return false;
+        }
+        uint8_t *busAddresses = (uint8_t *) (*arg);
+        return pb_read(stream, busAddresses, size);
+    };
 }
