@@ -58,14 +58,6 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
 void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
     Telemetry message;
-    if (!pb_decode(&stream, Telemetry_fields, &message)) {
-        Serial.printf("%lu Failed to decode message\n", millis());
-        return;
-    }
-
-    if (message.message != Telemetry_Message_PROVISIONING) {
-        return;
-    }
 
     std::vector<uint8_t> busAddrs;
     message.provisioning.busAddr.arg = &busAddrs;
@@ -91,4 +83,13 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         }
         return true;
     };
+
+    if (!pb_decode(&stream, Telemetry_fields, &message)) {
+        Serial.printf("%lu Failed to decode message\n", millis());
+        return;
+    }
+
+    if (message.message != Telemetry_Message_PROVISIONING) {
+        return;
+    }
 }
