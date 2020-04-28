@@ -4,6 +4,7 @@
 #include <pb_encode.h>
 #include <vector>
 
+#include "I2CPeripheral.h"
 #include "TelemetryProtocol.h"
 
 struct Sized {
@@ -79,6 +80,8 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         return true;
     };
 
+    std::vector<ReadDefinition *> readDefs;
+    message.provisioning.readDefinitions.arg = &readDefs;
     message.provisioning.readDefinitions.funcs.decode = [](
         pb_istream_t *stream,
         const pb_field_t *field,
@@ -89,7 +92,9 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
             return false;
         }
 
-        // TODO
+        ((std::vector<ReadDefinition *> *) (*arg))->push_back(
+            TelemetryProtocol::readDefinitionFromPB(submessage)
+        );
 
         return true;
     };
@@ -102,4 +107,11 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
     if (message.message != Telemetry_Message_PROVISIONING) {
         return;
     }
+}
+
+
+ReadDefinition * TelemetryProtocol::readDefinitionFromPB(Provisioning_ReadDef &msg) {
+    ReadDefinition *def = (ReadDefinition *) malloc(sizeof(ReadDefinition));
+    def->definitionId = (uint16_t) (0xffff & msg.definitionId);
+    return def;
 }
