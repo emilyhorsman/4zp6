@@ -5,10 +5,12 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 
+#include "I2CRuntime.h"
 #include "Scheduler.h"
 
 class MQTTManager {
     private:
+        I2CRuntime &mRuntime;
         Preferences mPreferences;
         WiFiClient mWiFiClient;
         PubSubClient mPubSub;
@@ -29,7 +31,7 @@ class MQTTManager {
         void onPayload(char * topic, uint8_t * payload, unsigned int size);
 
     public:
-        MQTTManager();
+        MQTTManager(I2CRuntime &runtime);
         void setup();
         void loop();
 };

@@ -61,7 +61,7 @@ uint8_t **shtBuffer = NULL;
 WiFiProvisioning provisioning;
 #endif
 #ifdef ENABLE_MQTT
-MQTTManager mqttManager;
+MQTTManager mqttManager(runtime);
 #endif
 
 void setup()

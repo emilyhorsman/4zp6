@@ -56,7 +56,11 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
     return stream.bytes_written;
 }
 
-void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
+void TelemetryProtocol::provisioning(
+    uint8_t *buffer,
+    unsigned int size,
+    I2CRuntime &runtime
+) {
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
     Telemetry message = Telemetry_init_default;
 

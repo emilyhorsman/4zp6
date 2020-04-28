@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <WiFI.h>
 
+#include "I2CRuntime.h"
 #include "MQTTManager.h"
 #include "TelemetryProtocol.h"
 #include "WiFiProvisioning.h"
 
-MQTTManager::MQTTManager()
-: mPreferences()
+MQTTManager::MQTTManager(I2CRuntime &runtime)
+: mRuntime(runtime)
+, mPreferences()
 , mWiFiClient()
 , mPubSub(mWiFiClient)
 , mScheduler()
@@ -70,7 +72,7 @@ void MQTTManager::subscribe() {
 
 
 void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
-    TelemetryProtocol::provisioning(payload, size);
+    TelemetryProtocol::provisioning(payload, size, mRuntime);
 }
 
 
