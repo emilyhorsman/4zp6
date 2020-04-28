@@ -58,7 +58,7 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
 
 void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
-    Telemetry message;
+    Telemetry message = Telemetry_init_default;
 
     std::vector<uint8_t> busAddrs;
     message.provisioning.busAddr.arg = &busAddrs;
