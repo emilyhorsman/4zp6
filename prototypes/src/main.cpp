@@ -5,9 +5,11 @@
 #include <Wire.h>
 
 #define ENABLE_PROVISIONING
+#define ENABLE_MQTT
 
 #include "I2CManager.h"
 #include "I2CRuntime.h"
+#include "MQTTManager.h"
 #include "Scheduler.h"
 #include "WiFiProvisioning.h"
 
@@ -57,6 +59,9 @@ uint8_t **shtBuffer = NULL;
 #ifdef ENABLE_PROVISIONING
 WiFiProvisioning provisioning;
 #endif
+#ifdef ENABLE_MQTT
+MQTTManager mqttManager;
+#endif
 
 void setup()
 {
@@ -79,6 +84,7 @@ void setup()
 
                 // Sample application logic that a peripheral processor might
                 // implement outside the microcontroller.
+                // TODO: Remove this
                 Serial.printf(
                     "%x %x %x %x %x %x\n",
                     shtBuffer[0][0],
@@ -103,12 +109,16 @@ void setup()
         1000
     );
 #endif
-    
+
     wire->begin();
     delay(3000);
 
 #ifdef ENABLE_PROVISIONING
     provisioning.setup();
+#endif
+
+#ifdef ENABLE_MQTT
+    mqttManager.setup();
 #endif
 
     Serial.printf("%lu Setup completed\n", millis());
@@ -123,5 +133,9 @@ void loop()
 
 #ifdef ENABLE_PROVISIONING
     provisioning.loop();
+#endif
+
+#ifdef ENABLE_MQTT
+    mqttManager.loop();
 #endif
 }

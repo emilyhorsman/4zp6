@@ -57,6 +57,7 @@ bool WiFiProvisioning::tryConnectionFromPreferences() {
 
     Serial.printf("%lu Attempting connection to %s\n", millis(), ssid.c_str());
     WiFi.begin(ssid.c_str(), pass.c_str());
+    WiFi.enableIpV6();
     mScheduler.enableSchedule(mScheduleTickId);
     return true;
 }
