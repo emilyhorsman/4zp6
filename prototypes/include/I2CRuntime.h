@@ -10,7 +10,7 @@
 
 /**
  * Only intended to be used by an I2CRuntime instance.
- * 
+ *
  * A peripheral manager will manage the read managers for each read definition
  * on a single peripheral.
  */
@@ -39,6 +39,7 @@ class I2CRuntime {
     public:
         I2CRuntime(TwoWire *);
         std::size_t addPeripheral(Peripheral *peripheral);
+        bool hasPeripheral(std::size_t);
         uint8_t ** getPeripheralBuffer(std::size_t);
         void loop();
 };

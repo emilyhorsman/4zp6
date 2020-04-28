@@ -70,7 +70,12 @@ I2CRuntime::I2CRuntime(TwoWire *wire)
 
 std::size_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
     mManagers.push_back(new I2CPeripheralManager(peripheral, mWire));
+    Serial.printf("%lu Added peripheral %d\n", millis(), mManagers.size() - 1);
     return mManagers.size() - 1;
+}
+
+bool I2CRuntime::hasPeripheral(std::size_t peripheralId) {
+    return peripheralId < mManagers.size();
 }
 
 void I2CRuntime::loop() {
@@ -82,6 +87,6 @@ void I2CRuntime::loop() {
 }
 
 uint8_t ** I2CRuntime::getPeripheralBuffer(std::size_t peripheralId) {
-    assert(peripheralId < mManagers.size());
+    assert(this->hasPeripheral(peripheralId));
     return mManagers[peripheralId]->getBuffer();
 }

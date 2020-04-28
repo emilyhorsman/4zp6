@@ -77,6 +77,9 @@ void setup()
     scheduler.addSchedule(
         std::make_shared<Func>(
             []() {
+                if (!runtime.hasPeripheral(0)) {
+                    return;
+                }
                 shtBuffer = runtime.getPeripheralBuffer(0);
                 if (shtBuffer == NULL) {
                     return;
@@ -107,7 +110,7 @@ void setup()
             }
         ),
         1000,
-        false
+        true
     );
 #endif
 

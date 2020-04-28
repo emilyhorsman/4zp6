@@ -111,6 +111,21 @@ void TelemetryProtocol::provisioning(
     if (message.message != Telemetry_Message_PROVISIONING) {
         return;
     }
+
+    if (busAddrs.empty() || readDefs.empty()) {
+        return;
+    }
+    // TODO: Manually free this later
+    Peripheral *peripheral = (Peripheral *) malloc(sizeof(Peripheral));
+    // TODO: Support multiple bus addresses
+    peripheral->busAddress = busAddrs[0];
+    peripheral->setupWriteDefinition = NULL;
+    peripheral->numReadDefinitions = readDefs.size();
+    peripheral->readDefinitions = (ReadDefinition **) malloc(sizeof(ReadDefinition *) * readDefs.size());
+    for (size_t i = 0; i < readDefs.size(); i++) {
+        peripheral->readDefinitions[i] = readDefs[i];
+    }
+    runtime.addPeripheral(peripheral);
 }
 
 
