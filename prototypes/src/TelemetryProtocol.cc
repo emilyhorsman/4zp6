@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
+#include <vector>
 
 #include "TelemetryProtocol.h"
 
@@ -66,8 +67,8 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         return;
     }
 
-    uint8_t *busAddresses;
-    message.provisioning.busAddr.arg = busAddresses;
+    std::vector<uint8_t> busAddrs;
+    message.provisioning.busAddr.arg = &busAddrs;
     message.provisioning.busAddr.funcs.decode = [](
         pb_istream_t *stream,
         const pb_field_t *field,
@@ -80,7 +81,14 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         if (!pb_decode_varint(stream, &size)) {
             return false;
         }
-        uint8_t *busAddresses = (uint8_t *) (*arg);
-        return pb_read(stream, busAddresses, size);
+        uint8_t buf;
+        while (size > 0) {
+            if (!pb_read(stream, &buf, 1)) {
+                return false;
+            }
+            ((std::vector<uint8_t> *) (*arg))->push_back(buf);
+            --size;
+        }
+        return true;
     };
 }
