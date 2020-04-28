@@ -84,6 +84,21 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         return true;
     };
 
+    message.provisioning.readDefinitions.funcs.decode = [](
+        pb_istream_t *stream,
+        const pb_field_t *field,
+        void **arg
+    ) -> bool {
+        Provisioning_ReadDef submessage;
+        if (!pb_decode(stream, Provisioning_ReadDef_fields, &submessage)) {
+            return false;
+        }
+
+        // TODO
+
+        return true;
+    };
+
     if (!pb_decode(&stream, Telemetry_fields, &message)) {
         Serial.printf("%lu Failed to decode message\n", millis());
         return;
