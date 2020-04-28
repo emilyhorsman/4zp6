@@ -41,6 +41,7 @@ class I2CReadManager {
         ReadManagerState mState;
         uint16_t mCursor;
         TwoWire * mWire;
+        std::shared_ptr<Func> mOnCompletedRead;
 
         void startBlockRead();
         void finishBlockRead();
@@ -50,7 +51,7 @@ class I2CReadManager {
         void read();
 
     public:
-        I2CReadManager(ReadDefinition *, Peripheral *, uint8_t *, TwoWire *);
+        I2CReadManager(ReadDefinition *, Peripheral *, uint8_t *, TwoWire *, std::shared_ptr<Func>);
         void loop();
         bool isWriting();
 };

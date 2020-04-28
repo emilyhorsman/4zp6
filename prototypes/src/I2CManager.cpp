@@ -58,7 +58,7 @@ void I2CManager::poll()
             // reading it in the future.
             mWire->read();
         }
-        
+
         mCurPollingAddress++;
 
         // Some peripherals need a delay between the initial transmission and
