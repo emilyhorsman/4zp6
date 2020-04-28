@@ -96,10 +96,10 @@ func main() {
 			switch msg.Message {
 			case telemetry.Telemetry_PROVISIONING:
 				log.Println("RX_Provisioning on", wire.Topic)
-				rxProvisioning(wire, msg)
+				rxProvisioning(&msg, &wire)
 			case telemetry.Telemetry_REQUEST:
 				log.Println("RX_Request on", wire.Topic)
-				rxRequest(wire, msg)
+				rxRequest(&msg, &wire)
 			default:
 				log.Println("RX unsupported message type", msg.Message, "on", wire.Topic)
 			}
@@ -159,7 +159,7 @@ func schedule(mqtt state.MQTT) {
 
 // rxProvisioning is called when receiving a provisioning frame. It provisions
 // the state of the microcontroller.
-func rxProvisioning(wire state.MQTTMessage, msg telemetry.Telemetry) {
+func rxProvisioning(msg *telemetry.Telemetry, wire *state.MQTTMessage) {
 	// device is now provisioned
 	provisioned = true
 	log.Printf("%+v\n", msg.Provisioning)
@@ -167,7 +167,7 @@ func rxProvisioning(wire state.MQTTMessage, msg telemetry.Telemetry) {
 
 // rxRequest is called when receiving a request frame. It is for performing one
 // off requests of the microcontroller.
-func rxRequest(wire state.MQTTMessage, msg telemetry.Telemetry) {
+func rxRequest(msg *telemetry.Telemetry, wire *state.MQTTMessage) {
 	log.Printf("%+v\n", msg.Request)
 }
 
