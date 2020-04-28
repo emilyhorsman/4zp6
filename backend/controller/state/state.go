@@ -30,33 +30,33 @@ func Provision() (*State, error) {
 	var s State
 
 	s.Log = log.New()
-	s.Log.Info("initializing controller")
+	s.Log.Info("[master] initializing controller")
 
-	s.Log.Info("initializing config in state")
+	s.Log.Info("[master] initializing config in state")
 	err := s.config()
 	if err != nil {
 		return &s, err
 	}
 
-	s.Log.Info("initializing MQTT in state")
+	s.Log.Info("[master] initializing MQTT in state")
 	err = s.mqtt()
 	if err != nil {
 		return &s, err
 	}
 
-	s.Log.Info("initializing AMQP in state")
+	s.Log.Info("[master] initializing AMQP in state")
 	err = s.amqp()
 	if err != nil {
 		return &s, err
 	}
 
-	s.Log.Info("initializing SQL in state")
+	s.Log.Info("[master] initializing SQL in state")
 	err = s.sql()
 	if err != nil {
 		return &s, err
 	}
 
-	s.Log.Info("controller initialized, no errors")
+	s.Log.Info("[master] controller initialized, no errors")
 	return &s, nil
 }
 
@@ -66,7 +66,7 @@ func (s *State) config() error {
 
 	// .env need to be manually loaded outside of Docker
 	if !s.IsDocker {
-		s.Log.Info("controller not connected to Docker network, loading config files manually")
+		s.Log.Info("[master] controller not connected to Docker network, loading config files manually")
 		configPath, err := filepath.Abs("../config/config.env")
 		if err != nil {
 			return err
@@ -80,7 +80,7 @@ func (s *State) config() error {
 			return err
 		}
 	} else {
-		s.Log.Info("controller connected to Docker network, autoloading config")
+		s.Log.Info("[master] controller connected to Docker network, autoloading config")
 	}
 
 	// generate configuration from loaded environment
@@ -96,7 +96,7 @@ func (s *State) mqtt() error {
 	// use vlan inside Docker, localhost when outside
 	mqttHost := "tcp://vernemq:1883"
 	if !s.IsDocker {
-		s.Log.Info("controller not connected to Docker network, using loopback interface for MQTT")
+		s.Log.Info("[master] controller not connected to Docker network, using loopback interface for MQTT")
 		mqttHost = "tcp://127.0.0.1:1883"
 	}
 	outChan, err := s.MQTT.Init(s.Log, mqttHost, s.Config.MQTTUser, s.Config.MQTTPass)
@@ -121,7 +121,7 @@ func (s *State) amqp() error {
 	// use vlan inside Docker, localhost when outside
 	amqpHost := "rabbitmq"
 	if !s.IsDocker {
-		s.Log.Info("controller not connected to Docker network, using loopback interface for AMQP")
+		s.Log.Info("[master] controller not connected to Docker network, using loopback interface for AMQP")
 		amqpHost = "127.0.0.1"
 	}
 	amqpConn := fmt.Sprintf("amqp://%s:%s@%s:5672/",
@@ -144,7 +144,7 @@ func (s *State) sql() error {
 	// use vlan inside Docker, localhost when outside
 	sqlHost := "postgres"
 	if !s.IsDocker {
-		s.Log.Info("controller not connected to Docker network, using loopback interface for AMQP")
+		s.Log.Info("[master] controller not connected to Docker network, using loopback interface for AMQP")
 		sqlHost = "127.0.0.1"
 	}
 	sqlConn := fmt.Sprintf("host=%s user=%s password=%s sslmode=disable",

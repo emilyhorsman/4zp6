@@ -63,7 +63,7 @@ func Start(s *state.State) error {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	s.Log.Info("controller now listening on :6060")
+	s.Log.Info("[api] controller now listening on :6060")
 	return server.ListenAndServe()
 }
 
