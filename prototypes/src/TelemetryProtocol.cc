@@ -111,6 +111,7 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
 
 
 ReadDefinition * TelemetryProtocol::readDefinitionFromPB(Provisioning_ReadDef &msg) {
+    // TODO: Make sure these are freed
     ReadDefinition *def = (ReadDefinition *) malloc(sizeof(ReadDefinition));
     def->definitionId = (uint16_t) (0xffff & msg.definitionId);
     def->registerIdLength = (RegisterLength) msg.registerIdLength;
