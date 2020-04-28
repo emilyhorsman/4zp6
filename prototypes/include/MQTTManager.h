@@ -21,6 +21,7 @@ class MQTTManager {
         void attemptConnection();
         void tick();
         void txRegistration();
+        bool publish(uint8_t *payload, unsigned int len);
         bool publish(char *payload);
         bool publish(std::string payload);
 

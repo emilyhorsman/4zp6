@@ -72,8 +72,15 @@ void MQTTManager::attemptConnection() {
 void MQTTManager::txRegistration() {
     Serial.printf("%lu Sending registration\n", millis());
     uint8_t buffer[1024];
-    TelemetryProtocol::registration(buffer, mUUID);
-    Serial.println(this->publish((char *) buffer));
+    size_t len = TelemetryProtocol::registration(buffer);
+    if (len) {
+        this->publish(buffer, len);
+    }
+}
+
+
+bool MQTTManager::publish(uint8_t *payload, unsigned int len) {
+    return mPubSub.publish(mTXUUID, payload, len);
 }
 
 
