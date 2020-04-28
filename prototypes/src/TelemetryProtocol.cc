@@ -69,17 +69,12 @@ void TelemetryProtocol::provisioning(uint8_t *buffer, unsigned int size) {
         // TODO: I2CPeripheral stores a single bus address because it's like data not definition.
         // TODO: Create multiple Peripheral instances that share ReadDefinitions
         // TODO: I think Peripheral::busAddress should just be a uint8_t
-        uint64_t size;
-        if (!pb_decode_varint(stream, &size)) {
-            return false;
-        }
         uint8_t buf;
-        while (size > 0) {
+        while (stream->bytes_left) {
             if (!pb_read(stream, &buf, 1)) {
                 return false;
             }
             ((std::vector<uint8_t> *) (*arg))->push_back(buf);
-            --size;
         }
         return true;
     };
