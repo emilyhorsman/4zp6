@@ -27,12 +27,12 @@ I2CPeripheralManager::I2CPeripheralManager(Peripheral *peripheral, TwoWire *wire
             std::make_shared<Func>(
                 [=]() {
                     Serial.printf("%lu completed read %d %p\n", millis(), i, def);
-                    mRuntime->txPayload(
+                    /*mRuntime->txPayload(
                         1,
                         mPeripheral->busAddress,
                         def,
                         mBuffer[i]
-                    );
+                    );*/
                 }
             )
         ));

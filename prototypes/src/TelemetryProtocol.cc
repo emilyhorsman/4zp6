@@ -56,10 +56,9 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
     return stream.bytes_written;
 }
 
-void TelemetryProtocol::provisioning(
+Peripheral * TelemetryProtocol::provisioning(
     uint8_t *buffer,
-    unsigned int size,
-    I2CRuntime &runtime
+    unsigned int size
 ) {
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
     Telemetry message = Telemetry_init_default;
@@ -105,15 +104,15 @@ void TelemetryProtocol::provisioning(
 
     if (!pb_decode(&stream, Telemetry_fields, &message)) {
         Serial.printf("%lu Failed to decode message\n", millis());
-        return;
+        return NULL;
     }
 
     if (message.message != Telemetry_Message_PROVISIONING) {
-        return;
+        return NULL;
     }
 
     if (busAddrs.empty() || readDefs.empty()) {
-        return;
+        return NULL;
     }
     // TODO: Manually free this later
     Peripheral *peripheral = (Peripheral *) malloc(sizeof(Peripheral));
@@ -125,7 +124,7 @@ void TelemetryProtocol::provisioning(
     for (size_t i = 0; i < readDefs.size(); i++) {
         peripheral->readDefinitions[i] = readDefs[i];
     }
-    runtime.addPeripheral(peripheral);
+    return peripheral;
 }
 
 

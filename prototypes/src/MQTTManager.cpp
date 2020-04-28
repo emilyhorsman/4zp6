@@ -72,7 +72,10 @@ void MQTTManager::subscribe() {
 
 
 void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
-    TelemetryProtocol::provisioning(payload, size, mRuntime);
+    Peripheral *p = TelemetryProtocol::provisioning(payload, size);
+    if (p != NULL) {
+        mRuntime.addPeripheral(p);
+    }
 }
 
 
