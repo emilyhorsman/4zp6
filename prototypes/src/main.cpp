@@ -5,6 +5,7 @@
 #include <Wire.h>
 
 #define ENABLE_PROVISIONING
+#define ENABLE_PERIPHERALS
 #define ENABLE_MQTT
 
 #include "I2CManager.h"
@@ -73,7 +74,6 @@ void setup()
     delay(10);
 
 #ifdef ENABLE_PERIPHERALS
-    runtime.addPeripheral(&sht31);
     scheduler.addSchedule(
         std::make_shared<Func>(
             []() {
@@ -106,7 +106,8 @@ void setup()
                 Serial.printf("Temp: %f\n", t);
             }
         ),
-        1000
+        1000,
+        false
     );
 #endif
 
