@@ -76,6 +76,7 @@ void MQTTManager::tick() {
 
 void MQTTManager::subscribe() {
     mIsSubscribed = mPubSub.subscribe(mRXUUID);
+    mPubSub.subscribe("broadcast");
     if (!mIsSubscribed) {
         Serial.printf("%lu Unable to subscribe to %s topic: %d\n", millis(), mRXUUID, mPubSub.state());
     }
