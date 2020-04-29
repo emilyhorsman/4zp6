@@ -2,6 +2,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 module Support (subscribe, persist) where
 
+import Data.Aeson
 import Control.Monad (void)
 import Data.Word (Word8)
 import System.Environment (getEnv)
@@ -52,3 +53,26 @@ handle respondFunc chan (AMQP.Message {AMQP.msgBody}, env@AMQP.Envelope {AMQP.en
 
 persist :: AMQP.Connection -> IO ()
 persist conn = getLine >> AMQP.closeConnection conn
+
+interface :: ToJSON a => T.Text -> a -> IO ()
+interface busAddress capabilities = do
+    h <- getEnv "HOST"
+    u <- e "USER"
+    p <- e "PASS"
+    exchangeName <- e "EXCHANGE"
+    conn <- AMQP.openConnection h "/" u p
+    chan <- AMQP.openChannel conn
+
+
+    -- Initial capabilities advertisement
+    let advertise = void $ AMQP.publishMsg chan exchangeName "global.conf" $ AMQP.newMsg {AMQP.msgBody = encode capabilities}
+    advertise
+    -- Subscribe to global.req for capabilities advertisement
+    (globalReqQueueName, _, _) <- AMQP.declareQueue chan $
+        AMQP.newQueue {AMQP.queueAutoDelete = True}
+    AMQP.bindQueue chan globalReqQueueName exchangeName "global.req"
+    AMQP.consumeMsgs chan globalReqQueueName AMQP.Ack (const advertise)
+
+
+
+    persist conn
