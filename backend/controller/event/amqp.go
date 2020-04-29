@@ -17,6 +17,8 @@ func consumeAMQP(s *state.State) {
 		msg := <-s.AMQPCh[0]
 		t := time.Now().UTC()
 
+		s.Log.Println("[amqp] incoming message", msg.RoutingKey, string(msg.Payload))
+
 		// parse routing key
 		parts := strings.Split(msg.RoutingKey, ".")
 
