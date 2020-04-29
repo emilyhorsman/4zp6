@@ -28,7 +28,7 @@ go = do
     conn <- AMQP.openConnection h "/" u p
     chan <- AMQP.openChannel conn
 
-    publishMsg chan exchangeName "controller.44.#" AMQP.newMsg {msgBody = (encode payload)}
+    publishMsg chan exchangeName "global.config" AMQP.newMsg {msgBody = "foobar"}
     AMQP.closeConnection conn
 
 main :: IO ()

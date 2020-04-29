@@ -87,10 +87,13 @@ type PublishFunc = T.Text -> BL.ByteString -> IO ()
 
 reply :: PublishFunc -> T.Text -> Maybe T.Text -> IO ()
 reply pub _ Nothing = return ()
-reply pub routingKey (Just s) = pub (T.replace "controller" "data" routingKey) $ BL.fromStrict $ encodeUtf8 s
+reply pub routingKey (Just s) = do
+    putStrLn "Sending controller.data"
+    pub (T.replace "controller" "data" routingKey) $ BL.fromStrict $ encodeUtf8 s
 
 handleData :: ToJSON a => PublishFunc -> ([Word8] -> Maybe a) -> (AMQP.Message, AMQP.Envelope) -> IO ()
 handleData pub func (AMQP.Message {AMQP.msgBody}, env@AMQP.Envelope {AMQP.envRoutingKey}) = do
+    putStrLn "Received data message"
     case (decode msgBody :: Maybe DataMessage) of
         Nothing -> putStrLn "Failed to parse"
         Just result ->
@@ -104,21 +107,23 @@ interface busAddress handleFunc capabilities = do
     u <- e "USER"
     p <- e "PASS"
     exchangeName <- e "EXCHANGE"
+    putStrLn "Opening connection"
     conn <- AMQP.openConnection h "/" u p
+    putStrLn "Opening channel"
     chan <- AMQP.openChannel conn
+    putStrLn "Channel open"
 
-    AMQP.declareExchange chan
-        AMQP.newExchange {AMQP.exchangeName, AMQP.exchangeType = "topic"}
+    AMQP.declareExchange chan AMQP.newExchange {AMQP.exchangeName, AMQP.exchangeType = "topic"}
 
-    let pub key msg = void $ AMQP.publishMsg chan exchangeName key $ AMQP.newMsg { AMQP.msgBody = msg }
-    -- Initial capabilities advertisement
-    let advertise = void $ AMQP.publishMsg chan exchangeName "global.conf" $ AMQP.newMsg {AMQP.msgBody = encode capabilities}
+    let pub key msg = void $ AMQP.publishMsg chan exchangeName key $ AMQP.newMsg {AMQP.msgBody = msg}
+    let advertise = void $ AMQP.publishMsg chan exchangeName "global.config" $ AMQP.newMsg {AMQP.msgBody = encode capabilities}
     advertise
-    -- Subscribe to global.req for capabilities advertisement
+    putStrLn "Sent capabilities advertisement"
+
     (globalReqQueueName, _, _) <- AMQP.declareQueue chan $
         AMQP.newQueue {AMQP.queueAutoDelete = True}
     AMQP.bindQueue chan globalReqQueueName exchangeName "global.req"
-    AMQP.consumeMsgs chan globalReqQueueName AMQP.Ack $ \(_, env) -> advertise >> AMQP.ackEnv env
+    AMQP.consumeMsgs chan globalReqQueueName AMQP.Ack $ \(_, env) -> putStrLn "global req msg" >> advertise >> AMQP.ackEnv env
 
     (dataQueueName, _, _) <- AMQP.declareQueue chan $
         AMQP.newQueue {AMQP.queueAutoDelete = True}
