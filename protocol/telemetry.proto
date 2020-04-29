@@ -126,7 +126,7 @@ message Provisioning {
     /**
      * Default bus address for peripheral.
      */
-    bytes busAddr = 1;
+    uint32 busAddr = 1;
 
     /**
      * Display name of peripheral processor, displayed on dashboard.
