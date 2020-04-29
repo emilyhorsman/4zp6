@@ -1,6 +1,8 @@
 package event
 
 import (
+	"time"
+
 	"github.com/emilyhorsman/4zp6/backend/controller/state"
 )
 
@@ -24,6 +26,19 @@ func Start(s *state.State) error {
 	if err != nil {
 		s.Log.Fatal(err)
 	}
+
+	// notify peripheral processors to send provisioning config every 3 mintues
+	go func(s *state.State) {
+		delay := 3 * time.Minute
+		for {
+			s.Log.Println("[amqp] requesting processors to broadcast provisioning config, requesting again in", delay)
+			err := s.AMQP[1].Publish("global.req", nil)
+			if err != nil {
+				s.Log.Errorln(err)
+			}
+			time.Sleep(delay)
+		}
+	}(s)
 
 	// consume from MQTT + AMQP
 	go consumeMQTT(s)

@@ -18,6 +18,7 @@ import (
 func Start(s *state.State) error {
 	// create main request router
 	router := mux.NewRouter()
+	api := router.PathPrefix("/api").Subrouter()
 	router.StrictSlash(true)
 
 	// UUID generator
@@ -53,7 +54,7 @@ func Start(s *state.State) error {
 	})
 
 	// register all routes
-	registerRoutes(s, router)
+	registerRoutes(s, api)
 
 	server := &http.Server{
 		Addr:         ":6060",
@@ -77,6 +78,9 @@ func Start(s *state.State) error {
 // registerRoutes registers all of the HTTP routes.
 func registerRoutes(s *state.State, r *mux.Router) {
 	r.HandleFunc("/", indexHandler)
+	r.HandleFunc("/microcontrollers", controllerHandler)
+	r.HandleFunc("/provisioning", provisioningHandler)
+	r.HandleFunc("/data", dataHandler)
 }
 
 // notFoundHandler returns the HTTP 404 response.
