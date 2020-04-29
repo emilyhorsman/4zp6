@@ -13,25 +13,6 @@ import (
 // consumeAMQP consumes the AMQP output channel found in state. It is
 // responsible for processing incoming AMQP messages.
 func consumeAMQP(s *state.State) {
-	// testing only
-	a := db.JSONConfig{
-		BusAddr: 68,
-		Name:    "SHT31",
-		ReadDefinitions: []db.ReadDefinition{
-			{
-				DefinitionID:        1,
-				RegisterIDLength:    16,
-				RegisterID:          9216,
-				RegisterBlockLength: 1,
-				NumBytesPerRegister: 6,
-				ReadPeriod:          500,
-			},
-		},
-	}
-	buff, _ := json.Marshal(a)
-	_ = s.AMQP[1].Publish("global.config", buff)
-	// testing only
-
 	for {
 		msg := <-s.AMQPCh[0]
 		t := time.Now().UTC()
@@ -93,27 +74,5 @@ func consumeAMQP(s *state.State) {
 			}
 			continue
 		}
-
-		// testing only (controller receiving raw data)
-		if parts[0] == "controller" {
-			// parse parts
-			addr := parts[1]
-			uuid := parts[2]
-			data := `{"key1":1,"key2":"A","key3":true}`
-			err := s.AMQP[1].Publish("data."+addr+"."+uuid, []byte(data))
-			if err != nil {
-				s.Log.Errorln(err)
-			}
-			continue
-		}
-		// testing only
-
-		// testing only (controller requested to send capabilities)
-		if parts[0] == "global" && parts[1] == "req" {
-			buff, _ := json.Marshal(a)
-			_ = s.AMQP[1].Publish("global.config", buff)
-			continue
-		}
-		// testing only
 	}
 }

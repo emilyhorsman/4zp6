@@ -99,7 +99,7 @@ func main() {
 				rxProvisioning(&msg, &wire)
 			case telemetry.Telemetry_REQUEST:
 				log.Println("RX_Request on", wire.Topic)
-				rxRequest(&msg, &wire)
+				rxRequest(mqtt, &msg, &wire)
 			default:
 				log.Println("RX unsupported message type", msg.Message, "on", wire.Topic)
 			}
@@ -167,7 +167,10 @@ func rxProvisioning(msg *telemetry.Telemetry, wire *state.MQTTMessage) {
 
 // rxRequest is called when receiving a request frame. It is for performing one
 // off requests of the microcontroller.
-func rxRequest(msg *telemetry.Telemetry, wire *state.MQTTMessage) {
+func rxRequest(mqtt state.MQTT, msg *telemetry.Telemetry, wire *state.MQTTMessage) {
+	if msg.Request.Action == telemetry.Request_REQUEST_REGISTRATION {
+		txRegistration(mqtt)
+	}
 	log.Printf("%+v\n", msg.Request)
 }
 
