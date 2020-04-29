@@ -30,7 +30,7 @@ MQTTManager mqttManager(runtime);
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(460800);
     while (!Serial) {
         delay(10);
     }
