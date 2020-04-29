@@ -193,9 +193,9 @@ func txRegistration(mqtt state.MQTT) error {
 	// attach peripherals to registration
 	registration := telemetry.Registration{
 		Version:     uint32(device.Firmware),
-		Uuid:        []byte(device.UUID),
-		Ipv4:        []byte(device.IPv4),
-		Ipv6:        []byte(device.IPv6),
+		Uuid:        device.UUID,
+		Ipv4:        device.IPv4,
+		Ipv6:        device.IPv6,
 		Peripherals: peripherals,
 	}
 	// attach registration to frame
