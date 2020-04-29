@@ -70,9 +70,6 @@ Peripheral * TelemetryProtocol::provisioning(
         const pb_field_t *field,
         void **arg
     ) -> bool {
-        // TODO: I2CPeripheral stores a single bus address because it's like data not definition.
-        // TODO: Create multiple Peripheral instances that share ReadDefinitions
-        // TODO: I think Peripheral::busAddress should just be a uint8_t
         uint8_t buf;
         while (stream->bytes_left) {
             if (!pb_read(stream, &buf, 1)) {
