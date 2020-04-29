@@ -8,6 +8,8 @@ import (
 
 	"github.com/emilyhorsman/4zp6/backend/controller/db"
 	"github.com/emilyhorsman/4zp6/backend/controller/state"
+	telemetry "github.com/emilyhorsman/4zp6/protocol/go"
+	"google.golang.org/protobuf/proto"
 )
 
 // consumeAMQP consumes the AMQP output channel found in state. It is
@@ -74,6 +76,27 @@ func consumeAMQP(s *state.State) {
 			if err != nil {
 				s.Log.Errorln(err)
 			}
+			// query profile by bus address
+			profile, _, err := db.QueryProvisioning(s, uint32(config.BusAddr))
+			if err != nil {
+				s.Log.Error(err)
+			}
+			// attach provisioning profile to frame
+			frame := &telemetry.Telemetry{
+				Message:      telemetry.Telemetry_PROVISIONING,
+				Provisioning: profile,
+			}
+			// generate binary frame payload
+			binary, err := proto.Marshal(frame)
+			if err != nil {
+				s.Log.Error(err)
+			}
+			// publish payload (broadcast to all controllers)
+			err = s.MQTT.Publish("rx/#", binary)
+			if err != nil {
+				s.Log.Error(err)
+			}
+			s.Log.Printf("[mqtt] TX_Provisioning broadcast busAddr 0x%x", config.BusAddr)
 			continue
 		}
 	}
