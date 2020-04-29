@@ -26,7 +26,29 @@ bool encode_string(
     return pb_encode_string(stream, p->buf, p->size);
 }
 
-size_t TelemetryProtocol::registration(uint8_t *buffer) {
+bool encode_statuses(
+    pb_ostream_t *stream,
+    const pb_field_t *field,
+    void * const *arg
+) {
+    std::vector<PeripheralStatus> *statuses = (std::vector<PeripheralStatus> *) *arg;
+
+    for (auto status : *statuses) {
+        if (!pb_encode_tag(stream, PB_WT_STRING, field->tag)) {
+            return false;
+        }
+        Registration_Peripheral p = Registration_Peripheral_init_default;
+        p.busId = (uint32_t) status.busId;
+        p.busAddr = (uint32_t) status.busAddr;
+        if (!pb_encode_submessage(stream, Registration_Peripheral_fields, &p)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+size_t TelemetryProtocol::registration(std::vector<PeripheralStatus> *statuses, uint8_t *buffer) {
     Telemetry message = Telemetry_init_default;
     message.message = Telemetry_Message_REGISTRATION;
     message.registration.version = 1;
@@ -46,6 +68,11 @@ size_t TelemetryProtocol::registration(uint8_t *buffer) {
     Sized ipv6Arg = { (const uint8_t *) ipv6, 6 };
     message.registration.ipv6.funcs.encode = encode_string;
     message.registration.ipv6.arg = &ipv6Arg;
+
+    if (statuses != NULL) {
+        message.registration.peripherals.arg = statuses;
+        message.registration.peripherals.funcs.encode = encode_statuses;
+    }
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, 1024 /* TODO */);
     if (!pb_encode(&stream, Telemetry_fields, &message)) {

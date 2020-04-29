@@ -104,16 +104,20 @@ void MQTTManager::attemptConnection() {
     mPubSub.setServer(host.c_str(), port);
     bool status = mPubSub.connect(mUUID, user.c_str(), pass.c_str());
     if (status) {
-        this->txRegistration();
+        this->txRegistration(NULL);
         this->subscribe();
     }
 }
 
 
-void MQTTManager::txRegistration() {
+void MQTTManager::txRegistration(std::vector<PeripheralStatus> *statuses) {
+    if (mPubSub.state() != MQTT_CONNECTED) {
+        return;
+    }
+
     Serial.printf("%lu Sending registration\n", millis());
     uint8_t buffer[1024];
-    size_t len = TelemetryProtocol::registration(buffer);
+    size_t len = TelemetryProtocol::registration(statuses, buffer);
     if (len) {
         this->publish(buffer, len);
     }

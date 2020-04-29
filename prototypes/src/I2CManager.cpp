@@ -92,5 +92,8 @@ void I2CManager::setCallback(std::shared_ptr<std::function<void(uint8_t)>> f) {
 
 
 bool I2CManager::isConnected(uint8_t busAddr) {
-    return mAddressStatus[mCurPollingAddress];
+    if (busAddr > 127) {
+        return false;
+    }
+    return mAddressStatus[busAddr];
 }

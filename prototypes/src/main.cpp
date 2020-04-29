@@ -13,6 +13,7 @@
 #include "MQTTManager.h"
 #include "Scheduler.h"
 #include "WiFiProvisioning.h"
+#include "TelemetryProtocol.h"
 
 TwoWire *wire = &Wire;
 
@@ -55,6 +56,14 @@ void setup()
                 busAddr,
                 manager.isConnected(busAddr)
             );
+
+            std::vector<PeripheralStatus> statuses;
+            for (uint8_t i = 1; i < 128; i++) {
+                if (manager.isConnected(i)) {
+                    statuses.push_back(PeripheralStatus { 1, i });
+                }
+            }
+            mqttManager.txRegistration(&statuses);
         }
     ));
 

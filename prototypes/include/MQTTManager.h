@@ -7,6 +7,7 @@
 
 #include "I2CRuntime.h"
 #include "Scheduler.h"
+#include "TelemetryProtocol.h"
 
 class MQTTManager {
     private:
@@ -23,7 +24,6 @@ class MQTTManager {
 
         void attemptConnection();
         void tick();
-        void txRegistration();
         void txPayload(uint32_t busId, uint16_t busAddress, ReadDefinition *def, uint8_t *payload);
         bool publish(uint8_t *payload, unsigned int len);
         bool publish(char *payload);
@@ -35,6 +35,7 @@ class MQTTManager {
         MQTTManager(I2CRuntime &runtime);
         void setup();
         void loop();
+        void txRegistration(std::vector<PeripheralStatus> *statuses);
 };
 
 #endif
