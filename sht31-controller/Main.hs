@@ -48,8 +48,8 @@ parse [defId, tMsb, tLsb, _, hMsb, hLsb, _] =
 parse _ = Nothing
 
 capabilities = object
-    [ "busAddress" .= (0x44 :: Word8)
-    , "humanFriendlyName" .= ("SHT31" :: T.Text)
+    [ "busAddr" .= (0x44 :: Word8)
+    , "name" .= ("SHT31" :: T.Text)
     , "readDefinitions" .=
         [ object
             [ "definitionId" .= (1 :: Word8)
