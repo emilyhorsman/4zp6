@@ -19,6 +19,8 @@ const (
 
 	insertPeripheral = `INSERT INTO Peripheral(controller,busId,busAddr,callResp)
 	VALUES ($1,$2,$3,$4);`
+
+	selectRegistration = `SELECT uuid from Registration;`
 )
 
 // UpsertRegistration will insert the registration telemetry message into the
@@ -54,4 +56,20 @@ func UpsertRegistration(s *state.State, msg *telemetry.Telemetry) error {
 		_, err = stmt.Exec(r.Uuid, p.BusId, p.BusAddr, p.GeneralCallResp)
 	}
 	return nil
+}
+
+// GetRegistered returns the map of microcontrollers UUID that are in the
+// registration table.
+func GetRegistered(s *state.State) (map[string]bool, error) {
+	out := make(map[string]bool)
+	rows, err := s.SQL.Query(selectRegistration)
+	if err != nil {
+		return out, err
+	}
+	for rows.Next() {
+		var uuid string
+		rows.Scan(&uuid)
+		out[uuid] = true
+	}
+	return out, nil
 }

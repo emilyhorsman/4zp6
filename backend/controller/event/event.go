@@ -17,7 +17,8 @@ func Start(s *state.State) error {
 
 	// subscribe to AMQP routes (route tx. messages to sensorData queue)
 	routes := map[string][]string{
-		"sensorData": {"tx.#"},
+		"engineConfig": {"global.config"},
+		"engineData":   {"data.#"},
 	}
 	err = s.AMQP[0].UpdateRouting(routes)
 	if err != nil {

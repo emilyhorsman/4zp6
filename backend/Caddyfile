@@ -8,6 +8,11 @@ localhost:80 127.0.0.1:80 telemetry.0xt.ca:80 {
       keepalive 32
       transparent
     }
+    proxy /amqp http://rabbitmq:15672 {
+      keepalive 32
+      transparent
+      without /amqp
+    }
     proxy /api http://engine:6060 {
       keepalive 32
       transparent

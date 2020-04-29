@@ -37,6 +37,14 @@ const (
 		definitionId 	int not null REFERENCES ReadDefinition(definitionId) ON DELETE CASCADE,
 		PRIMARY KEY(busAddr, definitionId)
 	);`
+
+	dataSchema = `CREATE TABLE IF NOT EXISTS Data(
+		uuid 	text 		not null REFERENCES Registration(uuid) ON DELETE CASCADE,
+		busAddr int 		not null REFERENCES Processor(busAddr) ON DELETE CASCADE,
+		time 	timestamptz not null,
+		data 	jsonb 		not null,
+		PRIMARY KEY(uuid, busAddr, time)
+	);`
 )
 
 // Init initializes the Postgres database. If the tables do not already exist,
@@ -65,6 +73,11 @@ func Init(s *state.State) error {
 	}
 	// create Provisioning relation if not already exists
 	_, err = s.SQL.Query(provisioningSchema)
+	if err != nil {
+		return err
+	}
+	// create Data relation if not already exists
+	_, err = s.SQL.Query(dataSchema)
 	if err != nil {
 		return err
 	}

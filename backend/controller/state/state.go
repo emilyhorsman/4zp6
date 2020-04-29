@@ -22,6 +22,15 @@ type State struct {
 	AMQP     [2]*AMQP            // AMQP is the AMQP client (two for duplex)
 	AMQPCh   [2]chan AMQPMessage // AMQPCh is the AMQP output channel
 	SQL      *sql.DB             // SQL is the SQL client
+	Data     chan []byte         // Data channel is populated by AMQP and consumed by websockets
+}
+
+// WebsocketFrame is a frame emitted on the websocket connection.
+type WebsocketFrame struct {
+	UUID      string      `json:"uuid"`      // UUID is the UUID of the microcontroller
+	BusAddr   int         `json:"busAddr"`   // BusAddr is the bus address where data was collected
+	Timestamp string      `json:"timestamp"` // Timestamp is time which data was received by peripheral controller
+	Data      interface{} `json:"data"`      // Data is the JSON payload from peripheral controller
 }
 
 // Provision generates a global state for the controller. It
@@ -55,6 +64,9 @@ func Provision() (*State, error) {
 	if err != nil {
 		return &s, err
 	}
+
+	s.Log.Info("[master] initializing Data in state")
+	s.Data = make(chan []byte)
 
 	s.Log.Info("[master] controller initialized, no errors")
 	return &s, nil

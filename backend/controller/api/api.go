@@ -63,6 +63,13 @@ func Start(s *state.State) error {
 		IdleTimeout:  120 * time.Second,
 	}
 
+	go func() {
+		for {
+			data := <-s.Data
+			s.Log.Println("{api}", string(data))
+		}
+	}()
+
 	s.Log.Info("[api] controller now listening on :6060")
 	return server.ListenAndServe()
 }

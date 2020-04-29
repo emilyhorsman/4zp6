@@ -1,15 +1,31 @@
 package event
 
 import (
+	"encoding/json"
+	"strconv"
+	"strings"
+
 	"github.com/emilyhorsman/4zp6/backend/controller/db"
 	"github.com/emilyhorsman/4zp6/backend/controller/state"
 	telemetry "github.com/emilyhorsman/4zp6/protocol/go"
 	"google.golang.org/protobuf/proto"
 )
 
+var (
+	// map of registered microcontroller UUIDs
+	registered map[string]bool
+)
+
 // consuemMQTT consumes the MQTT output channel found in state. It is
 // responsible for processing incoming MQTT messages.
 func consumeMQTT(s *state.State) {
+	// get map of registered microcontrollers
+	reg, err := db.GetRegistered(s)
+	if err != nil {
+		s.Log.Fatal(err)
+	}
+	registered = reg
+
 	for {
 		// attempt to unmarshal incoming message
 		wire := <-s.MQTTCh
@@ -29,23 +45,9 @@ func consumeMQTT(s *state.State) {
 			s.Log.Println("[mqtt] RX_Payload on", wire.Topic)
 			rxPayload(s, &msg, &wire)
 		default:
-			s.Log.Println("[mqtt] RX unsupported message type", msg.Message, "on", wire.Topic)
+			s.Log.Printf("[mqtt] RX unsupported message type %s on %s", msg.Message, wire.Topic)
 		}
 	}
-
-	/*
-		// publish to MQTT
-		go func() {
-			for {
-				time.Sleep(2 * time.Second)
-				t := time.Now().UTC().Format(time.RFC3339)
-				err := s.MQTT.Publish("test/a", []byte(t))
-				if err != nil {
-					s.Log.Error(err)
-				}
-			}
-		}()
-	*/
 }
 
 // rxRegistration is called when receiving a registration frame. It will update
@@ -65,6 +67,9 @@ func rxRegistration(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMe
 	reg := msg.Registration
 	txRoute := "rx/" + string(reg.Uuid)
 
+	// update registration map entry
+	registered[string(reg.Uuid)] = true
+
 	// for each peripheral sent, send a provisioning profile (if exists)
 	for _, p := range reg.Peripherals {
 		// query profile by bus address
@@ -74,7 +79,7 @@ func rxRegistration(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMe
 		}
 		if !found {
 			// no point in sending blank profile
-			s.Log.Warnln("[mqtt] no provisioning proviles available", string(reg.Uuid), "busAddr", p.BusAddr)
+			s.Log.Warnf("[mqtt] no provisioning proviles available %s, busAddr 0x%x", string(reg.Uuid), p.BusAddr)
 			continue
 		}
 		// attach provisioning profile to frame
@@ -92,11 +97,59 @@ func rxRegistration(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMe
 		if err != nil {
 			s.Log.Error(err)
 		}
-		s.Log.Println("[mqtt] TX_Provisioning", string(reg.Uuid), "busAddr", p.BusAddr)
+		s.Log.Printf("[mqtt] TX_Provisioning %s, busAddr 0x%x", string(reg.Uuid), p.BusAddr)
 	}
 }
 
-// rxPayload is called when receiving a payload frame.
+// rxPayload is called when receiving a payload frame. If the microcontroller is
+// not yet registered, it will send a TX_Request to the microcontroller
+// requesting a registration frame. If the device is registered, it will forward
+// the raw data to AMQP for processing.
 func rxPayload(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMessage) {
-	s.Log.Printf("[mqtt] %+v\n", msg.Payload)
+	// get UUID
+	parts := strings.Split(wire.Topic, "/")
+	if len(parts) != 2 {
+		s.Log.Errorln("[mqtt] invalid routing key", wire.Topic)
+	}
+	uuid := parts[1]
+
+	// request registraiton if device not registered
+	_, ok := registered[uuid]
+	if !ok {
+		s.Log.Warnln("[mqtt]", uuid, "has not registered, sending TX_Request for Registration")
+		// send request registration frame
+		frame := &telemetry.Telemetry{
+			Message: telemetry.Telemetry_REQUEST,
+			Request: &telemetry.Request{
+				Action: telemetry.Request_REQUEST_REGISTRATION,
+			},
+		}
+		// generate binary frame payload
+		binary, err := proto.Marshal(frame)
+		if err != nil {
+			s.Log.Error(err)
+		}
+		// publish payload (send it back to sender)
+		err = s.MQTT.Publish("rx/"+uuid, binary)
+		if err != nil {
+			s.Log.Error(err)
+		}
+		return
+	}
+
+	// conert message payload to JSON
+	buff, err := json.Marshal(msg.Payload)
+	if err != nil {
+		s.Log.Error(err)
+	}
+
+	// routing key: controller.addr.uuid
+	route := "controller." + strconv.Itoa(int(msg.Payload.BusAddr)) + "." + uuid
+
+	// send JSON data over AMQP
+	err = s.AMQP[1].Publish(route, buff)
+	if err != nil {
+		s.Log.Errorln("[amqp] error publishing raw data", err)
+	}
+	s.Log.Println("[amqp] published raw data on", route)
 }
