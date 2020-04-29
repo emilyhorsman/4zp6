@@ -92,7 +92,7 @@ func consumeAMQP(s *state.State) {
 				s.Log.Error(err)
 			}
 			// publish payload (broadcast to all controllers)
-			err = s.MQTT.Publish("rx/#", binary)
+			err = s.MQTT.Publish("broadcast", binary)
 			if err != nil {
 				s.Log.Error(err)
 			}
