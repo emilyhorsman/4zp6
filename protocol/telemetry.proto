@@ -25,6 +25,7 @@
 
 syntax = "proto3";
 option go_package = ".;telemetry";
+import "nanopb.proto";
 
 /**
  * Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
@@ -81,17 +82,17 @@ message Registration {
     /**
      * Microcontroller unique identifier (MAC address).
      */
-    bytes uuid = 2;
+    string uuid = 2 [(nanopb).max_size = 13];
 
     /**
      * Microcontroller IPv4 address.
      */
-    bytes ipv4 = 3;
+    string ipv4 = 3 [(nanopb).max_size = 16];
 
     /**
      * Microcontroller IPv6 address.
      */
-    bytes ipv6 = 4;
+    string ipv6 = 4 [(nanopb).max_size = 40];
 
     /**
      * List of connected peripherals.
