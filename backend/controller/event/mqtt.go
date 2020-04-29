@@ -79,7 +79,7 @@ func rxRegistration(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMe
 		}
 		if !found {
 			// no point in sending blank profile
-			s.Log.Warnf("[mqtt] no provisioning proviles available %s, busAddr 0x%x", string(reg.Uuid), p.BusAddr)
+			s.Log.Warnf("[mqtt] no provisioning profiles available %s, busAddr 0x%x", string(reg.Uuid), p.BusAddr)
 			continue
 		}
 		// attach provisioning profile to frame
@@ -143,6 +143,8 @@ func rxPayload(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMessage
 		s.Log.Error(err)
 	}
 
+	s.Log.Println("[tanner]", string(buff))
+
 	// routing key: controller.addr.uuid
 	route := "controller." + strconv.Itoa(int(msg.Payload.BusAddr)) + "." + uuid
 
@@ -151,5 +153,5 @@ func rxPayload(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMessage
 	if err != nil {
 		s.Log.Errorln("[amqp] error publishing raw data", err)
 	}
-	s.Log.Println("[amqp] published raw data on", route)
+	s.Log.Println("[amqp] TX_Payload raw on", route)
 }
