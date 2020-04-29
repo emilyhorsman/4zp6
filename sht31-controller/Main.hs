@@ -51,7 +51,7 @@ capabilities = object
     , "readDefinitions" .=
         [ object
             [ "definitionId" .= (1 :: Word8)
-            , "registerIdLength" .= (16  :: Word8)
+            , "registerIdLength" .= (0 :: Word8)
             , "registerId" .= (0x2400 :: Word16)
             , "registerBlockLength" .= (1 :: Word8)
             , "numBytesPerRegister" .= (6 :: Word8)
