@@ -31,6 +31,7 @@ class I2CManager {
         uint8_t mCurPollingAddress;
         TwoWire *mWire;
         bool mDidTransmit;
+        std::shared_ptr<std::function<void(uint8_t)>> mOnChangeCallback;
 
         void poll();
 
@@ -51,10 +52,12 @@ class I2CManager {
         /**
          * Call this from your `loop` function. This function is non-blocking
          * (e.g., avoids the use of `delay`).
-         * 
+         *
          * Manages auto-discovery of I2C device connection status.
          */
         void loop();
+        void setCallback(std::shared_ptr<std::function<void(uint8_t)>> f);
+        bool isConnected(uint8_t busAddr);
 };
 
 #endif

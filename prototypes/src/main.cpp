@@ -47,6 +47,17 @@ void setup()
     mqttManager.setup();
 #endif
 
+    manager.setCallback(std::make_shared<std::function<void (uint8_t)>>(
+        [](uint8_t busAddr) {
+            Serial.printf(
+                "%lu %#x changed to %d\n",
+                millis(),
+                busAddr,
+                manager.isConnected(busAddr)
+            );
+        }
+    ));
+
     Serial.printf("%lu Setup completed\n", millis());
 }
 
@@ -64,4 +75,6 @@ void loop()
 #ifdef ENABLE_MQTT
     mqttManager.loop();
 #endif
+
+    manager.loop();
 }
