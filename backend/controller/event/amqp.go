@@ -112,5 +112,5 @@ func rxConfig(s *state.State, parts []string, t time.Time, msg state.AMQPMessage
 	if err != nil {
 		s.Log.Error(err)
 	}
-	s.Log.Printf("[mqtt] TX_Provisioning broadcast busAddr 0x%x", config.BusAddr)
+	s.Log.Printf("[mqtt] broadcast TX_Provisioning, busAddr 0x%x", config.BusAddr)
 }

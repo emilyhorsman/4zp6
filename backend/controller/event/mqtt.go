@@ -137,15 +137,11 @@ func rxPayload(s *state.State, msg *telemetry.Telemetry, wire *state.MQTTMessage
 		return
 	}
 
-	s.Log.Printf("[tanner protobuf] %+v\n", msg.Payload)
-
 	// conert message payload to JSON
 	buff, err := json.Marshal(msg.Payload)
 	if err != nil {
 		s.Log.Error(err)
 	}
-
-	s.Log.Println("[tanner json]", string(buff))
 
 	// routing key: controller.addr.uuid
 	route := "controller." + strconv.Itoa(int(msg.Payload.BusAddr)) + "." + uuid
