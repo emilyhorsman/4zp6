@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE DeriveGeneric #-}
-module Support (subscribe, persist) where
+module Support (interface) where
 
 import Data.Aeson
 import Control.Monad (mzero, void)
@@ -32,6 +32,7 @@ instance FromJSON DataMessage where
 
 e key = T.pack <$> getEnv key
 
+{-
 type RespondFunc = T.Text -> [Word8] -> Maybe BL.ByteString
 
 subscribe :: [T.Text] -> RespondFunc -> IO AMQP.Connection
@@ -70,16 +71,18 @@ handle respondFunc chan (AMQP.Message {AMQP.msgBody}, env@AMQP.Envelope {AMQP.en
                 AMQP.newMsg {AMQP.msgBody = res}
 
     AMQP.ackEnv env
+-}
 
 persist :: AMQP.Connection -> IO ()
 persist conn = getLine >> AMQP.closeConnection conn
 
+type PublishFunc = T.Text -> BL.ByteString -> IO ()
 
-reply :: (T.Text -> BL.ByteString -> IO ()) -> T.Text -> Maybe T.Text -> IO ()
+reply :: PublishFunc -> T.Text -> Maybe T.Text -> IO ()
 reply pub _ Nothing = return ()
 reply pub routingKey (Just s) = pub (T.replace "controller" "data" routingKey) $ BL.fromStrict $ encodeUtf8 s
 
-handleData :: ToJSON a => (T.Text -> BL.ByteString -> IO ()) -> ([Word8] -> Maybe a) -> (AMQP.Message, AMQP.Envelope) -> IO ()
+handleData :: ToJSON a => PublishFunc -> ([Word8] -> Maybe a) -> (AMQP.Message, AMQP.Envelope) -> IO ()
 handleData pub func (AMQP.Message {AMQP.msgBody}, env@AMQP.Envelope {AMQP.envRoutingKey}) = do
     case (decode msgBody :: Maybe DataMessage) of
         Nothing -> putStrLn "Failed to parse"
