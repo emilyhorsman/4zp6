@@ -90,23 +90,6 @@ Peripheral * TelemetryProtocol::provisioning(
     pb_istream_t stream = pb_istream_from_buffer(buffer, size);
     Telemetry message = Telemetry_init_default;
 
-    std::vector<uint8_t> busAddrs;
-    message.provisioning.busAddr.arg = &busAddrs;
-    message.provisioning.busAddr.funcs.decode = [](
-        pb_istream_t *stream,
-        const pb_field_t *field,
-        void **arg
-    ) -> bool {
-        uint8_t buf;
-        while (stream->bytes_left) {
-            if (!pb_read(stream, &buf, 1)) {
-                return false;
-            }
-            ((std::vector<uint8_t> *) (*arg))->push_back(buf);
-        }
-        return true;
-    };
-
     std::vector<ReadDefinition *> readDefs;
     message.provisioning.readDefinitions.arg = &readDefs;
     message.provisioning.readDefinitions.funcs.decode = [](
@@ -135,13 +118,12 @@ Peripheral * TelemetryProtocol::provisioning(
         return NULL;
     }
 
-    if (busAddrs.empty() || readDefs.empty()) {
+    if (readDefs.empty()) {
         return NULL;
     }
     // TODO: Manually free this later
     Peripheral *peripheral = (Peripheral *) malloc(sizeof(Peripheral));
-    // TODO: Support multiple bus addresses
-    peripheral->busAddress = busAddrs[0];
+    peripheral->busAddress = (uint16_t) (0xffff & message.provisioning.busAddr);
     peripheral->setupWriteDefinition = NULL;
     peripheral->numReadDefinitions = readDefs.size();
     peripheral->readDefinitions = (ReadDefinition **) malloc(sizeof(ReadDefinition *) * readDefs.size());
