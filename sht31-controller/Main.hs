@@ -15,8 +15,7 @@ import qualified Data.Text as T
 import Support (interface)
 
 data Reading = Reading
-    { defId       :: Word32
-    , temp        :: Int32
+    { temp        :: Int32
     , humidity    :: Word32
     , denominator :: Word32
     }
@@ -25,13 +24,12 @@ data Reading = Reading
 instance ToJSON Reading where
 
 parse :: [Word8] -> Maybe Reading
-parse [defId, tMsb, tLsb, _, hMsb, hLsb, _] =
+parse [tMsb, tLsb, _, hMsb, hLsb, _] =
     Just $ Reading
         { temp = fromIntegral $
             (4375 * ((tMsb32 `shiftL` 8) .|. tLsb32)) `shiftR` 14 - 4500
         , humidity = shiftR (625 * (shiftL hMsb32 8 .|. hLsb32)) 12
         , denominator = 100
-        , defId = fromIntegral defId
         }
     where
         tMsb32 :: Word32
@@ -57,7 +55,7 @@ capabilities = object
             , "registerId" .= (0x2400 :: Word16)
             , "registerBlockLength" .= (1 :: Word8)
             , "numBytesPerRegister" .= (6 :: Word8)
-            , "readPeriod" .= (1 :: Word32)
+            , "readPeriod" .= (1000 :: Word32)
             ]
         ]
     ]
