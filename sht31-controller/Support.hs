@@ -86,20 +86,28 @@ persist conn = getLine >> AMQP.closeConnection conn
 type PublishFunc = T.Text -> BL.ByteString -> IO ()
 
 reply :: PublishFunc -> T.Text -> Maybe T.Text -> IO ()
-reply pub _ Nothing = return ()
+reply pub _ Nothing = putStrLn "Failed to construct reply"
 reply pub routingKey (Just s) = do
     putStrLn "Sending controller.data"
     pub (T.replace "controller" "data" routingKey) $ BL.fromStrict $ encodeUtf8 s
 
+de :: T.Text -> [Word8]
+de msg = BL.unpack $ B64.decodeLenient $ BL.fromStrict $ encodeUtf8 msg
+
 handleData :: ToJSON a => PublishFunc -> ([Word8] -> Maybe a) -> (AMQP.Message, AMQP.Envelope) -> IO ()
 handleData pub func (AMQP.Message {AMQP.msgBody}, env@AMQP.Envelope {AMQP.envRoutingKey}) = do
+    AMQP.ackEnv env
     putStrLn "Received data message"
     case (decode msgBody :: Maybe DataMessage) of
         Nothing -> putStrLn "Failed to parse"
-        Just result ->
-            reply pub envRoutingKey (decodeUtf8 <$> BL.toStrict <$> encode <$> func (map c2w $ T.unpack $ message result))
-    AMQP.ackEnv env
-    return ()
+        Just result -> do
+            putStrLn "What"
+            print $ busId result
+            print $ busAddr result
+            print $ message result
+            print $ T.length $ message result
+            print $ de $ message result
+            reply pub envRoutingKey (decodeUtf8 <$> BL.toStrict <$> encode <$> func (de (message result)))
 
 interface :: (ToJSON a, ToJSON b) => T.Text -> ([Word8] -> Maybe a) -> b -> IO ()
 interface busAddress handleFunc capabilities = do

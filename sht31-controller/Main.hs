@@ -57,7 +57,7 @@ capabilities = object
             , "registerId" .= (0x2400 :: Word16)
             , "registerBlockLength" .= (1 :: Word8)
             , "numBytesPerRegister" .= (6 :: Word8)
-            , "readPeriod" .= (500 :: Word32)
+            , "readPeriod" .= (1 :: Word32)
             ]
         ]
     ]
