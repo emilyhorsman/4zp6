@@ -8,7 +8,8 @@ I2CReadManager::I2CReadManager(
     ReadDefinition *readDefinition,
     Peripheral *peripheral,
     uint8_t *buffer,
-    TwoWire *wire
+    TwoWire *wire,
+    std::shared_ptr<Func> onCompletedReadCallback
 )
 : mDefinition(readDefinition)
 , mPeripheral(peripheral)
@@ -19,6 +20,7 @@ I2CReadManager::I2CReadManager(
 , mState(NOT_READING_BLOCK)
 , mCursor(0)
 , mWire(wire)
+, mOnCompletedRead(onCompletedReadCallback)
 {
     mInterReadScheduleId = mScheduler.addSchedule(
         std::make_shared<Func>(std::bind(&I2CReadManager::startBlockRead, this)),
@@ -48,6 +50,7 @@ void I2CReadManager::finishBlockRead() {
 
     mScheduler.kickSchedule(mInterReadScheduleId);
     mScheduler.enableSchedule(mInterReadScheduleId);
+    (*mOnCompletedRead)();
 }
 
 void I2CReadManager::read() {

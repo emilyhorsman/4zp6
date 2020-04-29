@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <WiFI.h>
 
+#include "I2CRuntime.h"
 #include "MQTTManager.h"
 #include "TelemetryProtocol.h"
 #include "WiFiProvisioning.h"
 
-MQTTManager::MQTTManager()
-: mPreferences()
+MQTTManager::MQTTManager(I2CRuntime &runtime)
+: mRuntime(runtime)
+, mPreferences()
 , mWiFiClient()
 , mPubSub(mWiFiClient)
 , mScheduler()
@@ -14,12 +16,24 @@ MQTTManager::MQTTManager()
 , mUUID()
 , mTXUUID()
 , mRXUUID()
+, mIsSubscribed(false)
 {
     mScheduleTickId = mScheduler.addSchedule(
         std::make_shared<Func>(std::bind(&MQTTManager::tick, this)),
         1000,
         true
     );
+
+    mRuntime.setPayloadFunc(std::make_shared<PayloadFunc>(
+        std::bind(
+            &MQTTManager::txPayload,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3,
+            std::placeholders::_4
+        )
+    ));
 }
 
 
@@ -34,6 +48,14 @@ void MQTTManager::setup() {
     snprintf(mUUID, 13, "%x%x%x%x%x%x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
     snprintf(mTXUUID, 16, "tx/%s", mUUID);
     snprintf(mRXUUID, 16, "rx/%s", mUUID);
+
+    mPubSub.setCallback(std::bind(
+        &MQTTManager::onPayload,
+        this,
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3
+    ));
 }
 
 
@@ -46,6 +68,24 @@ void MQTTManager::loop() {
 void MQTTManager::tick() {
     if (!mPubSub.connected()) {
         this->attemptConnection();
+    } else if (!mIsSubscribed && mPubSub.state() == MQTT_CONNECTED) {
+        this->subscribe();
+    }
+}
+
+
+void MQTTManager::subscribe() {
+    mIsSubscribed = mPubSub.subscribe(mRXUUID);
+    if (!mIsSubscribed) {
+        Serial.printf("%lu Unable to subscribe to %s topic: %d\n", millis(), mRXUUID, mPubSub.state());
+    }
+}
+
+
+void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
+    Peripheral *p = TelemetryProtocol::provisioning(payload, size);
+    if (p != NULL) {
+        mRuntime.addPeripheral(p);
     }
 }
 
@@ -64,15 +104,30 @@ void MQTTManager::attemptConnection() {
     mPubSub.setServer(host.c_str(), port);
     bool status = mPubSub.connect(mUUID, user.c_str(), pass.c_str());
     if (status) {
-        this->txRegistration();
+        this->txRegistration(NULL);
+        this->subscribe();
     }
 }
 
 
-void MQTTManager::txRegistration() {
+void MQTTManager::txRegistration(std::vector<PeripheralStatus> *statuses) {
+    if (mPubSub.state() != MQTT_CONNECTED) {
+        return;
+    }
+
     Serial.printf("%lu Sending registration\n", millis());
     uint8_t buffer[1024];
-    size_t len = TelemetryProtocol::registration(buffer);
+    size_t len = TelemetryProtocol::registration(statuses, buffer);
+    if (len) {
+        this->publish(buffer, len);
+    }
+}
+
+
+void MQTTManager::txPayload(uint32_t busId, uint16_t busAddress, ReadDefinition *def, uint8_t *payload) {
+    Serial.printf("%lu Sending payload\n", millis());
+    uint8_t buffer[1024];
+    size_t len = TelemetryProtocol::payload(busId, busAddress, def, payload, buffer);
     if (len) {
         this->publish(buffer, len);
     }
