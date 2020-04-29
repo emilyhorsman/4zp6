@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE DeriveGeneric #-}
-module Support (interface) where
+module Support (DataMessage(..), interface) where
 
 import Data.Aeson
 import Control.Monad (mzero, void)
@@ -21,6 +21,13 @@ data DataMessage = DataMessage
     , message :: T.Text
     }
     deriving (Generic, Show)
+
+instance ToJSON DataMessage where
+    toJSON (DataMessage busId busAddr message) = object
+        [ "busId" .= busId
+        , "busAddr" .= busAddr
+        , "data" .= message
+        ]
 
 instance FromJSON DataMessage where
     parseJSON (Object v) =
