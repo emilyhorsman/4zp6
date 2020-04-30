@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 import throttle from './Throttle';
-import {VictoryLine, VictoryChart} from 'victory';
+import {VictoryAxis, VictoryLine, VictoryChart} from 'victory';
 
 function Peripheral({uuid, data}) {
     const {temp, humidity, denominator} = data[data.length - 1].data;
@@ -15,9 +15,21 @@ function Peripheral({uuid, data}) {
                 {' '}
                 {humidity / denominator}% Humidity
             </p>
-            <VictoryChart>
-                <VictoryLine data={series} />
-            </VictoryChart>
+            <div style={{maxWidth: '50%', margin: '0 auto'}}>
+                <VictoryChart>
+                    <VictoryLine
+                        data={series}
+                        scale={{x: "time", y: "linear"}}
+                        label="Temperature (°C)"
+                    />
+                    <VictoryAxis
+                        tickValues={[data[0].timestamp, data[data.length - 1].timestamp]}
+                        tickFormat={['Start', 'End']}
+                        label="Time"
+                    />
+                    <VictoryAxis dependentAxis />
+                </VictoryChart>
+            </div>
         </>
     );
 }
@@ -34,7 +46,7 @@ function App() {
                 const prev = status[data.uuid] || [];
                 setStatus({
                     ...status,
-                    [data.uuid]: prev.concat([{data: data.data, timestamp: data.timestamp}])
+                    [data.uuid]: prev.concat([{data: data.data, timestamp: Date.parse(data.timestamp)}])
                 });
             },
             500
