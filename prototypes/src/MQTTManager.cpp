@@ -66,7 +66,7 @@ void MQTTManager::loop() {
 
 
 void MQTTManager::tick() {
-    if (!mPubSub.connected()) {
+    if (mPubSub.state() != MQTT_CONNECTED) {
         this->attemptConnection();
     } else if (!mIsSubscribed && mPubSub.state() == MQTT_CONNECTED) {
         this->subscribe();
@@ -84,6 +84,7 @@ void MQTTManager::subscribe() {
 
 
 void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) {
+    Serial.printf("%lu MQTT payload from topic: %s\n", millis(), topic);
     Peripheral *p = TelemetryProtocol::provisioning(payload, size);
     if (p != NULL) {
         mRuntime.addPeripheral(p);
@@ -92,6 +93,9 @@ void MQTTManager::onPayload(char * topic, uint8_t * payload, unsigned int size) 
 
 
 void MQTTManager::attemptConnection() {
+    if (!WiFi.isConnected()) {
+        return;
+    }
     String host = mPreferences.getString("mqtt_host");
     String user = mPreferences.getString("mqtt_user");
     String pass = mPreferences.getString("mqtt_password");
@@ -101,7 +105,7 @@ void MQTTManager::attemptConnection() {
         return;
     }
 
-    Serial.printf("%lu Attempting connection\n", millis());
+    Serial.printf("%lu Attempting MQTT connection\n", millis());
     mPubSub.setServer(host.c_str(), port);
     bool status = mPubSub.connect(mUUID, user.c_str(), pass.c_str());
     if (status) {
@@ -116,7 +120,7 @@ void MQTTManager::txRegistration(std::vector<PeripheralStatus> *statuses) {
         return;
     }
 
-    Serial.printf("%lu Sending registration\n", millis());
+    Serial.printf("%lu Sending registration %d\n", millis(), statuses == NULL ? 0 : statuses->size());
     uint8_t buffer[1024];
     size_t len = TelemetryProtocol::registration(statuses, buffer);
     if (len) {

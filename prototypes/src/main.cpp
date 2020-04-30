@@ -72,6 +72,8 @@ void setup()
 
 void loop()
 {
+    manager.loop();
+
 #ifdef ENABLE_PERIPHERALS
     runtime.loop();
     scheduler.loop();
@@ -84,6 +86,4 @@ void loop()
 #ifdef ENABLE_MQTT
     mqttManager.loop();
 #endif
-
-    manager.loop();
 }
