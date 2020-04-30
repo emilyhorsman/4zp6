@@ -667,6 +667,22 @@ Example API call:
 
 Akin to the Websocket interface, the \texttt{data} field will contain the JSON output from the \textbf{peripheral processor}.
 
+\section{Structure viewpoint}
+
+\subsection{C++ package hierarchy}
+TODO
+
+\subsection{Go package hierarchy}
+TODO
+
+\subsection{PostgreSQL relation hierarchy}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{uml.png}
+  \caption{SQL UML Diagram}
+  \label{fig:uml}
+\end{figure}
+
 \section{Interaction viewpoint}
 TODO
 
