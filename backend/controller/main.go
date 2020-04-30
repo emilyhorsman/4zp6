@@ -27,6 +27,7 @@ package main
 
 import (
 	"github.com/emilyhorsman/4zp6/backend/controller/api"
+	"github.com/emilyhorsman/4zp6/backend/controller/db"
 	"github.com/emilyhorsman/4zp6/backend/controller/event"
 	"github.com/emilyhorsman/4zp6/backend/controller/state"
 )
@@ -38,7 +39,13 @@ func main() {
 		s.Log.Fatal(err)
 	}
 
-	// start event loop
+	// initialize database tables
+	err = db.Init(s)
+	if err != nil {
+		s.Log.Fatal(err)
+	}
+
+	// start event loop (async)
 	err = event.Start(s)
 	if err != nil {
 		s.Log.Fatal(err)

@@ -18,6 +18,7 @@ import (
 func Start(s *state.State) error {
 	// create main request router
 	router := mux.NewRouter()
+	api := router.PathPrefix("/api").Subrouter()
 	router.StrictSlash(true)
 
 	// UUID generator
@@ -53,7 +54,15 @@ func Start(s *state.State) error {
 	})
 
 	// register all routes
-	registerRoutes(s, router)
+	registerRoutes(s, api)
+
+	// register websocket handler
+	router.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		websocketHandler(s, w, r)
+	})
+
+	// start websocket event loop
+	go websocketEventLoop(s)
 
 	server := &http.Server{
 		Addr:         ":6060",
@@ -63,13 +72,22 @@ func Start(s *state.State) error {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	s.Log.Info("controller now listening on :6060")
+	s.Log.Info("[api] controller now listening on :6060")
 	return server.ListenAndServe()
 }
 
 // registerRoutes registers all of the HTTP routes.
 func registerRoutes(s *state.State, r *mux.Router) {
 	r.HandleFunc("/", indexHandler)
+	r.HandleFunc("/microcontroller", func(w http.ResponseWriter, r *http.Request) {
+		controllerHandler(s, w, r)
+	})
+	r.HandleFunc("/provisioning", func(w http.ResponseWriter, r *http.Request) {
+		provisioningHandler(s, w, r)
+	})
+	r.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
+		dataHandler(s, w, r)
+	})
 }
 
 // notFoundHandler returns the HTTP 404 response.
