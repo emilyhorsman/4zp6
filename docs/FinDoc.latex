@@ -568,6 +568,8 @@ TODO
 
 Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
 
+All development was done with version control and shared via GitHub: \url{https://github.com/emilyhorsman/4zp6}
+
 \subsection*{Hardware/Software Requirements}
 
 Language Summary: C++, Go, Haskell, JavaScript, Python
@@ -604,6 +606,15 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item Go v1.14.2. This is the primary language the backend is written in. \url{https://golang.org}
 \item Caddy v2. This is a web server which fronts the Go application server. \url{https://caddyserver.com}
 \item PostgreSQL v12. Data from micro controllers is logged to a Postgres database. \url{https://www.postgresql.org}
+\item paho.mqtt.golang v1.2.0 \url{https://github.com/eclipse/paho.mqtt.golang}
+\item mux v1.7.4 \url{https://github.com/gorilla/mux}
+\item websocket v1.4.2 \url{https://github.com/gorilla/websocket}
+\item godotenv v1.3.0 \url{https://github.com/joho/godotenv}
+\item pq v1.3.0 \url{https://github.com/lib/pq}
+\item go.uuid v1.2.0 \url{https://github.com/satori/go.uuid}
+\item logrus v1.4.2 \url{github.com/sirupsen/logrus}
+\item amqp v0.0.0-20200108173154-1c71cc93ed71 \url{https://github.com/streadway/amqp}
+\item protobuf v1.21.0 \url{https://google.golang.org/protobuf}
 \end{enumerate}
 
 \subsubsection*{Peripheral Processors}
@@ -631,6 +642,14 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
 \item A REST API for retrieving logged data from sensors and connectivity information. Includes various filters such as time ranges. \texttt{backend/controller/api/api.go}
 \item A WebSocket API to allow web browsers to receive data in real-time without polling an API. \texttt{backend/controller/api/websocket.go}
+\item A database for logging retrieved data and microcontroller provisioning. \texttt{backend/controller/db/init.go}
+\item Docker configuration to provision the web server, database, and brokers. \texttt{backend/Dockerfile}
+\item A sample processor written in Haskell to decouple application logic involved in using \proto peripherapls. This includes a support library for other processors written in Haskell to use. \texttt{sht31-controller/}
+\item A sample web application which uses WebSockets to display data from a sensor in real-time. \texttt{dashboard/src/App.js}
+\item Automatic discovery of \proto sensors when they are physically connected or disconnected. \texttt{prototypes/src/I2CManager.cpp}
+\item A generic non-blocking scheduler using modern C++11. \texttt{prototypes/src/Scheduler.cpp}
+\item A web application served by the microcontroller to allow a user to configure data without changing the firmware. This data persists on reboot. \texttt{prototypes/src/WiFiProvisioning.cpp}
+\item A runtime on the microcontroller for generalizing \proto behaviour with declarative configurations. \texttt{prototypes/src/I2CRuntime.cpp}
 \end{enumerate}
 
 \subsection*{A Tour of the Simplest Case}
@@ -653,7 +672,7 @@ It is a limited view that aims to highlight aspects of the codebase and how it w
     We wrote a generic scheduler: \texttt{prototypes/src/Scheduler.cpp}.
 \item A message is sent to the backend through the MQTT broker describing the connected sensor.
     \texttt{prototypes/src/MQTTManager.cpp}, \texttt{prototypes/src/TelemetryProtocol.cpp}
-\item The backend asks the online processors if any are responsible for the described sensor. TODO
+\item The backend asks the online processors if any are responsible for the described sensor.
 \item The responsible processor sends a declarative configuration for the sensor to the AMQP broker.
 \item The backend delivers this to the appropriate microcontroller through the MQTT broker.
 \item The firmware's runtime stores this configuration and will use it to poll data from the sensor.
