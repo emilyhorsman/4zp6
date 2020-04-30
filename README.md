@@ -9,3 +9,7 @@
 * Declarative configurations for new peripherals.
 * Write application logic for peripheral data (e.g., interpreting temperature) with no dependencies, in any language, and without firmware updates on your fleet of microcontrollers.
 * Plug-and-play data logging, consumption API, and visualization on a web dashboard.
+
+## Building the project
+
+* Firmware: Refer to [`prototypes/README.md`](./prototypes/README.md)
