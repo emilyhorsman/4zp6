@@ -138,6 +138,8 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 
 \begin{enumerate}
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
+\item A REST API for retrieving logged data from sensors and connectivity information. Includes various filters such as time ranges. \texttt{backend/controller/api/api.go}
+\item A WebSocket API to allow web browsers to receive data in real-time without polling an API. \texttt{backend/controller/api/websocket.go}
 \end{enumerate}
 
 \subsection*{A Tour of the Simplest Case}
