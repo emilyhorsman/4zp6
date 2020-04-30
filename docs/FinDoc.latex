@@ -23,6 +23,8 @@
 
 \maketitle
 
+Note: We have provided \texttt{Code.zip} with the submission as instructed. However, we recommend browsing the repository on GitHub. The README includes instructions for deploying and building the project. \url{https://github.com/emilyhorsman/4zp6}
+
 \section*{Preamble}
 
 \name saves significant development time for common embedded applications.
