@@ -515,6 +515,7 @@ The controller will run this event loop while concurrently responding to HTTP re
 \section{Interface viewpoint}
 \name\ does not provide a graphical user interface.
 The primary interface is through the \textbf{Websocket} and \textbf{API} interfaces.
+\footnote{The final submission does include a sample GUI which utilizes the WebSocket interface. However this is not a primary requirement.}
 
 \subsection{Websocket Interface}
 When \name\ is deployed, the Websocket interface is accessible on \texttt{/api/ws}.
