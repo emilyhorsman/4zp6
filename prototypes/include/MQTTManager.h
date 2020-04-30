@@ -9,6 +9,9 @@
 #include "Scheduler.h"
 #include "TelemetryProtocol.h"
 
+/**
+ * @brief Responsible for publishing and subscribing to topics on the MQTT broker.
+ */
 class MQTTManager {
     private:
         I2CRuntime &mRuntime;

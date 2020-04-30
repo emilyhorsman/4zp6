@@ -16,6 +16,9 @@ typedef std::function<void ()> Func;
 typedef std::size_t ScheduleId;
 
 
+/**
+ * @brief Declarative configuration for a managed schedule.
+ */
 struct Schedule {
     std::shared_ptr<Func> f;
     /**
@@ -32,6 +35,9 @@ struct Schedule {
     void callAndUpdate();
 };
 
+/**
+ * @brief Generic scheduler for non-blocking tasks given schedules for callbacks.
+ */
 class Scheduler {
     private:
         std::vector<Schedule> mSchedules;

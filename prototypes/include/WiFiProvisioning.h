@@ -16,6 +16,8 @@
 void replace(std::string &haystack, std::string needle, const char * replacement);
 
 /**
+ * @brief Manages the web application for provisioning connectivity information.
+ *
  * Responsiblities:
  *
  *     - Connecting to an SSID if one has been stored in Flash memory
