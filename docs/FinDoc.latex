@@ -517,6 +517,8 @@ The controller will run this event loop while concurrently responding to HTTP re
 
 Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
 
+All development was done with version control and shared via GitHub: \url{https://github.com/emilyhorsman/4zp6}
+
 \subsection*{Hardware/Software Requirements}
 
 Language Summary: C++, Go, Haskell, JavaScript, Python
@@ -553,6 +555,15 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item Go v1.14.2. This is the primary language the backend is written in. \url{https://golang.org}
 \item Caddy v2. This is a web server which fronts the Go application server. \url{https://caddyserver.com}
 \item PostgreSQL v12. Data from micro controllers is logged to a Postgres database. \url{https://www.postgresql.org}
+\item paho.mqtt.golang v1.2.0 \url{https://github.com/eclipse/paho.mqtt.golang}
+\item mux v1.7.4 \url{https://github.com/gorilla/mux}
+\item websocket v1.4.2 \url{https://github.com/gorilla/websocket}
+\item godotenv v1.3.0 \url{https://github.com/joho/godotenv}
+\item pq v1.3.0 \url{https://github.com/lib/pq}
+\item go.uuid v1.2.0 \url{https://github.com/satori/go.uuid}
+\item logrus v1.4.2 \url{github.com/sirupsen/logrus}
+\item amqp v0.0.0-20200108173154-1c71cc93ed71 \url{https://github.com/streadway/amqp}
+\item protobuf v1.21.0 \url{https://google.golang.org/protobuf}
 \end{enumerate}
 
 \subsubsection*{Peripheral Processors}
@@ -610,7 +621,7 @@ It is a limited view that aims to highlight aspects of the codebase and how it w
     We wrote a generic scheduler: \texttt{prototypes/src/Scheduler.cpp}.
 \item A message is sent to the backend through the MQTT broker describing the connected sensor.
     \texttt{prototypes/src/MQTTManager.cpp}, \texttt{prototypes/src/TelemetryProtocol.cpp}
-\item The backend asks the online processors if any are responsible for the described sensor. TODO
+\item The backend asks the online processors if any are responsible for the described sensor.
 \item The responsible processor sends a declarative configuration for the sensor to the AMQP broker.
 \item The backend delivers this to the appropriate microcontroller through the MQTT broker.
 \item The firmware's runtime stores this configuration and will use it to poll data from the sensor.
