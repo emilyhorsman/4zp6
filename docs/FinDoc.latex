@@ -69,6 +69,69 @@ Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
 
 \section*{Software Design Description}
 
+\newpage
+
 \section*{Code Guide}
+
+\subsection*{Preamble}
+
+Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
+
+\subsection*{Hardware/Software Requirements}
+
+Language Summary: C++, Go, Haskell, JavaScript, Python
+
+\subsubsection*{Hardware}
+
+\begin{enumerate}
+    \item An ESP32 or other Arduino-compatible microcontroller. We used a HUZZAH32 from Adafruit during development. \url{https://www.adafruit.com/product/3405}
+\item \proto based sensors. We used an SHT31, LIS3DH, TCS34725, and AMG8833 during development to ensure our protocol works on a wide variety of sensors.
+\end{enumerate}
+
+\subsubsection*{Microcontroller Firmware}
+
+\begin{enumerate}
+\item C++11. This is the primary language the firmware is written in.
+\item PlatformIO. This is a development toolchain to target the embedded hardware. \url{https://platformio.org}
+\item nanopb v0.3.9.5. An implementation of Protocol Buffers designed for embedded systems. Included in this repository under \texttt{prototypes/lib/Nanopb}. \url{https://jpa.kapsi.fi/nanopb/}
+\item MQTT Arduino Client. \url{https://github.com/knolleary/pubsubclient/}
+\item Python 3.6. There is some rudimentary templating performed at compile-time for the provisioning web server running on the microcontroller. \url{https://www.python.org}
+\end{enumerate}
+
+\subsubsection*{Protocol and Networking}
+
+\begin{enumerate}
+\item \texttt{protoc} to compile and test Protocol Buffer schemas/messages. \url{https://developers.google.com/protocol-buffers}
+\item VerneMQ. This is an MQTT broker. \url{https://vernemq.com}
+\item RabbitMQ. This is an AMQP broker. \url{https://www.rabbitmq.com}
+\item Docker. The backend, database, web server, and brokers are all provisioned with a Docker configuration file: \texttt{backend/Dockerfile}. \url{https://www.docker.com}
+\end{enumerate}
+
+\subsubsection*{Backend}
+
+\begin{enumerate}
+\item Go v1.14.2. This is the primary language the backend is written in. \url{https://golang.org}
+\item Caddy v2. This is a web server which fronts the Go application server. \url{https://caddyserver.com}
+\item PostgreSQL v12. Data from micro controllers is logged to a Postgres database. \url{https://www.postgresql.org}
+\end{enumerate}
+
+\subsubsection*{Peripheral Processors}
+
+\begin{enumerate}
+\item Haskell 2010. Peripheral processors can be written in any language with an AMQP library. This repo provides an example processor writte in Haskell (\texttt{sht31-controller/}) and includes a support library for other processors written in Haskell. \url{https://www.haskell.org}
+\item Cabal to install Haskell dependencies in a standard way. \url{https://www.haskell.org/cabal/}
+\item Aeson v1.4. \url{https://hackage.haskell.org/package/aeson}
+\item base64-bytestring v1.1. \url{https://hackage.haskell.org/package/base64-bytestring}
+\item AMQP client v0.19. \url{https://hackage.haskell.org/package/amqp}
+\end{enumerate}
+
+\subsubsection*{Dashboard}
+
+\begin{enumerate}
+\item JavaScript following modern ECMA standards is the primary language the dashboard is written in (along with HTML/CSS). One only needs a modern evergreen browser.
+\item \texttt{npm} to install JavaScript packages. \url{https://www.npmjs.com}
+\item React v16. \url{https://reactjs.org}
+\item React Victory v34. \url{https://formidable.com/open-source/victory/}
+\end{enumerate}
 
 \end{document}
