@@ -19,6 +19,10 @@ The following services will be downloaded, configured, and launched:
 The command will also trigger the build process for Telemetry.
 When the build process is complete, Telemetry will also configure itself and launch.
 
+## Configuration
+Inside the `config/` directory there is a `secret.env` file.
+Please replace `username` and `password` with secure credentials for the services to use.
+
 ## Monitoring
 The status of running Docker containers may be checked by running the following:
 ```sh
