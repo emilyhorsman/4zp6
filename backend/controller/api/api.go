@@ -56,6 +56,9 @@ func Start(s *state.State) error {
 	// register all routes
 	registerRoutes(s, api)
 
+	// start websocket event loop
+	go websocketEventLoop(s)
+
 	server := &http.Server{
 		Addr:         ":6060",
 		Handler:      router,
@@ -64,13 +67,6 @@ func Start(s *state.State) error {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	go func() {
-		for {
-			data := <-s.Data
-			s.Log.Println("{api}", string(data))
-		}
-	}()
-
 	s.Log.Info("[api] controller now listening on :6060")
 	return server.ListenAndServe()
 }
@@ -78,9 +74,18 @@ func Start(s *state.State) error {
 // registerRoutes registers all of the HTTP routes.
 func registerRoutes(s *state.State, r *mux.Router) {
 	r.HandleFunc("/", indexHandler)
-	r.HandleFunc("/microcontrollers", controllerHandler)
-	r.HandleFunc("/provisioning", provisioningHandler)
-	r.HandleFunc("/data", dataHandler)
+	r.HandleFunc("/microcontroller", func(w http.ResponseWriter, r *http.Request) {
+		controllerHandler(s, w, r)
+	})
+	r.HandleFunc("/provisioning", func(w http.ResponseWriter, r *http.Request) {
+		provisioningHandler(s, w, r)
+	})
+	r.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
+		dataHandler(s, w, r)
+	})
+	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		websocketHandler(s, w, r)
+	})
 }
 
 // notFoundHandler returns the HTTP 404 response.

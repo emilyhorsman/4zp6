@@ -39,11 +39,12 @@ const (
 	);`
 
 	dataSchema = `CREATE TABLE IF NOT EXISTS Data(
-		uuid 	text 		not null REFERENCES Registration(uuid) ON DELETE CASCADE,
-		busAddr int 		not null REFERENCES Processor(busAddr) ON DELETE CASCADE,
-		time 	timestamptz not null,
-		data 	jsonb 		not null,
-		PRIMARY KEY(uuid, busAddr, time)
+		pollUuid 	text 		not null,
+		uuid 		text 		not null REFERENCES Registration(uuid) ON DELETE CASCADE,
+		busAddr 	int 		not null REFERENCES Processor(busAddr) ON DELETE CASCADE,
+		time 		timestamptz not null,
+		data 		jsonb 		not null,
+		PRIMARY KEY(pollUuid)
 	);`
 )
 

@@ -42,7 +42,7 @@ func consumeMQTT(s *state.State) {
 			s.Log.Println("[mqtt] RX_Registration on", wire.Topic)
 			rxRegistration(s, &msg, &wire)
 		case telemetry.Telemetry_PAYLOAD:
-			s.Log.Println("[mqtt] RX_Payload on", wire.Topic)
+			s.Log.Println("[mqtt] RX_Payload raw on", wire.Topic)
 			rxPayload(s, &msg, &wire)
 		default:
 			s.Log.Printf("[mqtt] RX unsupported message type %s on %s", msg.Message, wire.Topic)

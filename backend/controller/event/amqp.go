@@ -74,7 +74,7 @@ func rxProcessedPayload(s *state.State, parts []string, t time.Time, msg state.A
 		s.Log.Errorln(err)
 	}
 	s.Data <- frame
-	s.Log.Printf("[amqp] RX_Payload processed, indexed db, websocket published, uuid=%s, busAddr=0x%x, ts=%s, data=%s", uuid, addrVal, t, string(msg.Payload))
+	s.Log.Printf("[amqp] Websocket published, database indexed, uuid=%s, busAddr=0x%x, ts=%s, data=%s", uuid, addrVal, t, string(msg.Payload))
 }
 
 // rxConfig is called when a peripheral processor publishes a message on the

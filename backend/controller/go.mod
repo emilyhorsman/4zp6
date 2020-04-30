@@ -6,6 +6,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.2.0
 	github.com/emilyhorsman/4zp6/protocol/go v0.0.0-00010101000000-000000000000
 	github.com/gorilla/mux v1.7.4
+	github.com/gorilla/websocket v1.4.2
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/lib/pq v1.3.0
