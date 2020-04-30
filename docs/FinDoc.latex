@@ -580,6 +580,14 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
 \item A REST API for retrieving logged data from sensors and connectivity information. Includes various filters such as time ranges. \texttt{backend/controller/api/api.go}
 \item A WebSocket API to allow web browsers to receive data in real-time without polling an API. \texttt{backend/controller/api/websocket.go}
+\item A database for logging retrieved data and microcontroller provisioning. \texttt{backend/controller/db/init.go}
+\item Docker configuration to provision the web server, database, and brokers. \texttt{backend/Dockerfile}
+\item A sample processor written in Haskell to decouple application logic involved in using \proto peripherapls. This includes a support library for other processors written in Haskell to use. \texttt{sht31-controller/}
+\item A sample web application which uses WebSockets to display data from a sensor in real-time. \texttt{dashboard/src/App.js}
+\item Automatic discovery of \proto sensors when they are physically connected or disconnected. \texttt{prototypes/src/I2CManager.cpp}
+\item A generic non-blocking scheduler using modern C++11. \texttt{prototypes/src/Scheduler.cpp}
+\item A web application served by the microcontroller to allow a user to configure data without changing the firmware. This data persists on reboot. \texttt{prototypes/src/WiFiProvisioning.cpp}
+\item A runtime on the microcontroller for generalizing \proto behaviour with declarative configurations. \texttt{prototypes/src/I2CRuntime.cpp}
 \end{enumerate}
 
 \subsection*{A Tour of the Simplest Case}
