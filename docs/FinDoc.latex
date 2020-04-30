@@ -110,6 +110,7 @@ November 2, 2019  & 1.0              & Initial document.                        
 November 6, 2019  & 1.1              & \begin{tabular}[c]{@{}l@{}}Extend project background,\\ system overview.\end{tabular}                                                                                                                                                                                                                                                 & Emily Horsman                                                        \\ \hline
 December 31, 2019 & 2.0              & \begin{tabular}[c]{@{}l@{}}Add software design specification,\\ architecture.\end{tabular}                                                                                                                                                                                                                                            & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
 April 29, 2020    & 2.1              & \begin{tabular}[c]{@{}l@{}}Update network protocols to\\ reflect changes in implementation.\\ \\ Minor corrections to software design\\ specification.\\ \\ Add requested viewpoints: interface,\\ structure, interaction, resource.\\ \\ Add user (application) interface\\ specifications.\\ \\ Add programming guide.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
+April 30, 2020    & 2.1              & \begin{tabular}[c]{@{}l@{}}Add API interface information.\\ \\ Finalize code guide.\\ \\ Update viewpoints.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
 \end{tabular}
 \end{figure}
 \newpage
@@ -671,7 +672,8 @@ Akin to the Websocket interface, the \texttt{data} field will contain the JSON o
 \section{Structure viewpoint}
 
 \subsection{C++ package hierarchy}
-TODO
+
+\includepdf[pages=-]{../prototypes/latex/main_8cpp__incl.pdf}
 
 \subsection{Go package hierarchy}
 The diagram describes the programming structure of \name's controller.
@@ -680,11 +682,7 @@ Red lines denote local packages dependant of global state, stored in \texttt{sta
 Green lines denote local packages dependant of the database interface, stored in \texttt{db} package.
 Blue nodes denote third party packages.
 
-\begin{figure}[H]
-  \includegraphics[angle=90,height=500pt]{gohierarchy.png}
-  \caption{Go package hierarchy}
-  \label{fig:gopackage}
-\end{figure}
+\includepdf[pages=-]{../backend/latex/packages.pdf}
 
 \subsection{PostgreSQL relation hierarchy}
 All data for \name\ is stored utilizing the following schema.
@@ -714,30 +712,29 @@ If the buffer of acknowledged messages exceeds available memory constraints of t
 There are no applicable algorithmic viewpoints for \name.
 
 \section{Resource viewpoint}
-TODO
-
+There are no applicable resource viewpoints for \name.
 \newpage
 
-\section*{Code Guide}
+\section{Code Guide}
 
-\subsection*{Preamble}
+\subsection{Preamble}
 
 Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
 
 All development was done with version control and shared via GitHub: \url{https://github.com/emilyhorsman/4zp6}
 
-\subsection*{Hardware/Software Requirements}
+\subsection{Hardware/Software Requirements}
 
 Language Summary: C++, Go, Haskell, JavaScript, Python
 
-\subsubsection*{Hardware}
+\subsubsection{Hardware}
 
 \begin{enumerate}
     \item An ESP32 or other Arduino-compatible microcontroller. We used a HUZZAH32 from Adafruit during development. \url{https://www.adafruit.com/product/3405}
 \item \proto based sensors. We used an SHT31, LIS3DH, TCS34725, and AMG8833 during development to ensure our protocol works on a wide variety of sensors.
 \end{enumerate}
 
-\subsubsection*{Microcontroller Firmware}
+\subsubsection{Microcontroller Firmware}
 
 \begin{enumerate}
 \item C++11. This is the primary language the firmware is written in.
@@ -747,7 +744,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item Python 3.6. There is some rudimentary templating performed at compile-time for the provisioning web server running on the microcontroller. \url{https://www.python.org}
 \end{enumerate}
 
-\subsubsection*{Protocol and Networking}
+\subsubsection{Protocol and Networking}
 
 \begin{enumerate}
 \item \texttt{protoc} to compile and test Protocol Buffer schemas/messages. \url{https://developers.google.com/protocol-buffers}
@@ -756,7 +753,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item Docker. The backend, database, web server, and brokers are all provisioned with a Docker configuration file: \texttt{backend/Dockerfile}. \url{https://www.docker.com}
 \end{enumerate}
 
-\subsubsection*{Backend}
+\subsubsection{Backend}
 
 \begin{enumerate}
 \item Go v1.14.2. This is the primary language the backend is written in. \url{https://golang.org}
@@ -773,7 +770,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item protobuf v1.21.0 \url{https://google.golang.org/protobuf}
 \end{enumerate}
 
-\subsubsection*{Peripheral Processors}
+\subsubsection{Peripheral Processors}
 
 \begin{enumerate}
 \item Haskell 2010. Peripheral processors can be written in any language with an AMQP library. This repo provides an example processor writte in Haskell (\texttt{sht31-controller/}) and includes a support library for other processors written in Haskell. \url{https://www.haskell.org}
@@ -783,7 +780,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item AMQP client v0.19. \url{https://hackage.haskell.org/package/amqp}
 \end{enumerate}
 
-\subsubsection*{Dashboard}
+\subsubsection{Dashboard}
 
 \begin{enumerate}
 \item JavaScript following modern ECMA standards is the primary language the dashboard is written in (along with HTML/CSS). One only needs a modern evergreen browser.
@@ -792,7 +789,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item React Victory v34. \url{https://formidable.com/open-source/victory/}
 \end{enumerate}
 
-\subsection*{Completed Features and Details}
+\subsection{Completed Features and Details}
 
 \begin{enumerate}
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
@@ -808,7 +805,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item A runtime on the microcontroller for generalizing \proto behaviour with declarative configurations. \texttt{prototypes/src/I2CRuntime.cpp}
 \end{enumerate}
 
-\subsection*{A Tour of the Simplest Case}
+\subsection{A Tour of the Simplest Case}
 
 Below is a description of the components involved in the simplest task of Telemetry: reading data from a sensor connected to a microcontroller, storing it in a database, and serving it through a REST and WebSockets API.
 The primary feature of Telemetry is the architecture that allows \proto peripherals to be generalized and used without custom application logic.
@@ -844,7 +841,7 @@ It is a limited view that aims to highlight aspects of the codebase and how it w
     \texttt{dashboard/src/App.js}
 \end{enumerate}
 
-\subsection*{Statistics}
+\subsection{Statistics}
 
 Using the tool \texttt{sloc} to quantify `significant' lines of code:
 
@@ -859,6 +856,277 @@ Using the tool \texttt{sloc} to quantify `significant' lines of code:
 \end{verbatim}
 
 \section{Appendix}
+
+\subsection{Telemetry Protobuf Definition}
+
+\begin{minted}[breaklines,frame=single]{protobuf}
+// BSD 2-Clause License
+//
+// Copyright (c) 2020 Emily Horsman, Tanner Ryan. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+option go_package = ".;telemetry";
+import "nanopb.proto";
+
+/**
+ * Telemetry wire protocol for MQTT communication between microcontrollers and the backend.
+ */
+message Telemetry {
+    /**
+     * Type of frame message encoded.
+     */
+    Message message = 1;
+    enum Message {
+        ZERO = 0;
+        REGISTRATION = 1;
+        PROVISIONING = 2;
+        PAYLOAD = 3;
+        REQUEST = 4;
+    }
+
+    /**
+     * Registration frame notifes backend of microcontroller firmware, IP addresses, and connected peripherals.
+     */
+    Registration registration = 2;
+
+    /**
+     * Provisioning frame provides microcontroller with peripheral read definitions.
+     */
+    Provisioning provisioning = 3;
+
+    /**
+     * Payload frame provides backend with raw peripheral byte data collected from microcontrollers.
+     */
+    Payload payload = 4;
+
+    /**
+     * Request frame notifes microcontroller to perform one-off requests.
+     */
+    Request request = 5;
+}
+
+/**
+ * Registration frame (microcontroller -> backend).
+ *
+ * The microcontroller UUID (MAC address) will be sent in the MQTT topic.
+ *
+ * Conditions:
+ *  - MQTT connection established, re-established
+ *  - Peripheral connected, disconnected
+ */
+message Registration {
+    /**
+     * Firmware version identifier.
+     */
+    uint32 version = 1;
+
+    /**
+     * Microcontroller unique identifier (MAC address).
+     */
+    string uuid = 2 [(nanopb).max_size = 13];
+
+    /**
+     * Microcontroller IPv4 address.
+     */
+    string ipv4 = 3 [(nanopb).max_size = 16];
+
+    /**
+     * Microcontroller IPv6 address.
+     */
+    string ipv6 = 4 [(nanopb).max_size = 40];
+
+    /**
+     * List of connected peripherals.
+     */
+    repeated Peripheral peripherals = 5;
+    message Peripheral {
+        /**
+         * The I2C bus this peripheral is connected to on the microcontroller. Represented by the SDA line pin.
+         */
+        uint32 busId = 1;
+
+        /**
+         * The I2C bus address this peripheral is connected to on the microcontroller.
+         */
+        uint32 busAddr = 2;
+
+        /**
+         * I2C general call response.
+         */
+        bytes generalCallResp = 3;
+    }
+}
+
+/**
+ * Provisioning frame (backend -> microcontroller).
+ *
+ * Conditions:
+ *  - Received Registration frame from microcontroller.
+ *  - Received new read definitions from corresponding peripheral controller.
+ */
+message Provisioning {
+    /**
+     * Default bus address for peripheral.
+     */
+    uint32 busAddr = 1;
+
+    /**
+     * Display name of peripheral processor, displayed on dashboard.
+     */
+    string name = 2;
+
+    /*
+     * Peripheral read definitions.
+     */
+    repeated ReadDef readDefinitions = 3;
+    message ReadDef {
+        /**
+         * An arbitrary ID for external reference. This does not relate to the
+         * hardware or any application logic in the I2CRuntime. This is used
+         * externally to track read definitions.
+         */
+        uint32 definitionId = 1;
+
+        /**
+         * Some peripherals have 16-bit register IDs and some have 8-bit register
+         * IDs.
+         */
+        RegLength registerIdLength = 2;
+        enum RegLength {
+            RL16 = 0;
+            RL8 = 1;
+        }
+
+        /**
+         * Data is read on this output from a contiguous block of register IDs.
+         * e.g., 0x80 to 0xFF. This is the first register ID of the block.
+         */
+        uint32 registerId = 3;
+
+        /**
+         * Data is read on this output from a contiguous block of register IDs.
+         * e.g., 0x80 to 0xFF. This defines the number of register IDs in the block.
+         * This is essentially how many times the loop will read bytes at a register
+         * and then advance to the next register. For many peripherals this value is
+         * simple 1 (i.e., there is no need to advance).
+         */
+        uint32 registerBlockLength = 4;
+
+        /**
+         * The number of bytes that will be read at each register ID in the
+         * contiguous block. This means that the total number of bytes retrieved
+         * from one ReadDefinition instance is:
+         * 
+         *     numBytesPerRegister * registerBlockLength
+         */
+        uint32 numBytesPerRegister = 5;
+
+        /**
+         * How many milliseconds between reading all bytes from the block of
+         * registers?
+         */
+        uint32 readPeriod = 6;
+    }
+}
+
+/**
+ * Payload frame (microcontroller -> backend).
+ *
+ * The microcontroller UUID (MAC address) will be sent in the MQTT topic.
+ *
+ * Conditions:
+ *  - Data collected from peripheral.
+ */
+message Payload {
+    /**
+     * I2C bus ID payload was collected from.
+     */
+    uint32 busId = 1;
+
+    /**
+     * I2C bus address payload was collected from.
+     */
+    uint32 busAddr = 2;
+
+    /**
+     * Payload collection definition identifier, matching ReadDef.
+     */
+    uint32 definitionId = 3;
+
+    /**
+     * Contents of peripheral read.
+     */
+    bytes data = 4;
+}
+
+/**
+ * Request frame (backend -> microcontroller).
+ *
+ * Conditions:
+ *  - Request microcontroller to reboot.
+ *  - Request microcontroller to poll peripherals, send Payload frame(s).
+ *  - Request microcontroller to send heartbeat (Registration frame).
+ */
+message Request {
+    Action action = 1;
+    enum Action {
+        /**
+         * Request microcontroller reboot.
+         */
+        REBOOT = 0;
+
+        /**
+         * Request manual schedule execution and Payload frame(s).
+         */
+        FORCE_READS = 1;
+
+        /**
+         * Request microcontroller to rescan I2C bus and resend Registration.
+         */
+        FORCE_SCAN = 2;
+
+        /**
+         * Request manual Registration frame.
+         */
+        REQUEST_REGISTRATION = 3;
+
+        /**
+         * Request microcontroller to clear preferences stored in flash.
+         */
+        CLEAR_PREFERENCES = 4;
+    }
+}
+\end{minted}
+\newpage
+
+\subsection{Telemetry Backend Documentation}
+
+\includepdf[pages=-]{../backend/latex/godoc1.pdf}
+\includepdf[pages=-]{../backend/latex/godoc2.pdf}
+\includepdf[pages=-]{../backend/latex/godoc3.pdf}
+\includepdf[pages=-]{../backend/latex/godoc4.pdf}
+\newpage
 
 \subsection{Telemetry Firmware Doxygen Documentation}
 
