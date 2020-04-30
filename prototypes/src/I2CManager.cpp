@@ -51,7 +51,7 @@ void I2CManager::poll()
 
     if (mDidTransmit) {
         mWire->requestFrom(mCurPollingAddress, 1u);
-        bool status = mWire->available() == 1;
+        bool status = mCurPollingAddress == 0x44 || mWire->available() == 1;
         bool old = mAddressStatus[mCurPollingAddress];
         mAddressStatus[mCurPollingAddress] = status;
         if (status) {
