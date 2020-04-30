@@ -12,4 +12,4 @@
 
 ## Building the project
 
-* Firmware: Refer to [`prototypes/README.md`](./prototypes/README.md)
+* Firmware: Refer to [`prototypes/README.md`](./prototypes/)
