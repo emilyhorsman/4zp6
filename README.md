@@ -13,3 +13,4 @@
 ## Building the project
 
 * Firmware: Refer to [`prototypes/README.md`](./prototypes/)
+* Sample Dashboard: Refer to [`dashboard/README.md`](./dashboard/)
