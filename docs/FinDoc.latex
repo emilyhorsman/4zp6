@@ -126,7 +126,7 @@ Emily Horsman and Tanner Ryan are responsible for this aspect of the project.
 \begin{enumerate}
 \item \proto: Inter-Integrated Circuit, a standardized, packet switched serial bus. Allows for bidirectional communication between hardware peripheral and microcontrollers.
 \item Microcontroller: Arduino powered, single board computer. Provides an I2Cbus and IP network connection.
-\item Controller: main application server for Telemetry. Responsible for communication with microcontroller(s), exposing HTTP API service, and serving the dashboard.
+\item Controller: main application server for Telemetry. Responsible for communication with microcontroller(s), exposing HTTP API service, Websocket service, and serving the dashboard.
 \item Peripheral processor: responsible for informing the controller how a sensor model works via Telemetry’s external interface.
 \item Peripheral: Any \proto\ hardware sensor (e.g. temperature, accelerometer, thermal cam- era) which uses the \proto\ standard “register paradigm”.
 \item HTTP API: application programming interface, a publicly exposed HTTP endpoint to provide a defined request-response messaging system. 
@@ -145,7 +145,7 @@ This creates a significant amount of work throughout the prototyping and mainten
 \section{System Overview}
 \name\ is a proposed software solution to abstract the most common usages of the \proto\ protocol.
 This layer of abstraction allows the end user to rapidly provision microcontrollers for the ingestion of peripheral data.
-\name\ will provide the user with a web dashboard and a HTTP API for the configuration of peripherals and the consumption of peripheral data.
+\name\ will provide the user with a Websocket stream and a HTTP API for the configuration of peripherals and the consumption of peripheral data.
 
 \section{Project Goals}
 
@@ -167,7 +167,7 @@ The library is be responsible for:
 \item Collection and forwarding of peripheral payloads to controller.
 \end{enumerate}
 
-The controller is responsible for providing the Web Dashboard and HTTP API, which the user will interact with.
+The controller is responsible for providing the Websocket stream and HTTP API, which the user will interact with.
 
 \section{Non-project Goals}
 
@@ -253,7 +253,6 @@ The interfacing is broken down into four categories:\\
 \begin{enumerate}
 \item Insert \textbf{peripheral data}.
 \item Insert/update/delete \textbf{microcontroller} configuration.
-\item Insert/update/delete \textbf{dashboard} configuration.
 \item Query \textbf{peripheral data}.
 \end{enumerate}
 
@@ -264,7 +263,7 @@ The interfacing is broken down into four categories:\\
 \end{enumerate}
 
 \subsubsection{SQL Database}
-Responsible for persistent storage of \textbf{peripheral data}, \textbf{dashboard} configuration, and \textbf{microcontroller} provisioning.
+Responsible for persistent storage of \textbf{peripheral data}, and \textbf{microcontroller} provisioning.
 
 \subsubsection{AMQP Broker}
 Akin to MQTT Broker, responsible for exposing AMQP server, a publish/subscribe message transport protocol with queueing capabilities.
@@ -279,7 +278,7 @@ It will then receive raw \textbf{peripheral payloads} over AMQP that match the p
 The processor will parse the raw data into value(s), publishing the \textbf{peripheral data} over AMQP.
 
 \subsubsection {Web Server}
-Responsible for performing SSL (TLS) termination for the \textbf{dashboard} and HTTP \textbf{API} services.
+Responsible for performing SSL (TLS) termination for the \textbf{dashboard}, \textbf{Websocket}, and HTTP \textbf{API} services.
 
 \subsubsection{Websocket}
 \textbf{Websocket stream} that user may interact with, satisfying project goals.
@@ -393,7 +392,7 @@ The only requirement is that the language must have support for AMQP and JSON.
 \subsubsection{Publish Peripheral Data}
 When the \textbf{peripheral processor} has generated a JSON object of keys and values, the JSON data will be published over AMQP with a routing key of \texttt{data.x.y}, where both \texttt{x} and \texttt{y} are equal to the variables during \textbf{peripheral payload} consumption.\\
 
-\name\ will insert this data into the database, making it available on the \textbf{dashboard} and HTTP \textbf{API} service.
+\name\ will insert this data into the database, making it available on the \textbf{Websocket} and HTTP \textbf{API} service.
 
 \subsubsection{Configuration Advertisement}
 On \textbf{peripheral processor} initialization, and when an empty message is received on the \texttt{global.req} route, the configuration profile must be published on the \texttt{global.config} route.
@@ -474,39 +473,9 @@ The following will occur when a new peripheral is connected to a microcontroller
 \item User connects new \textbf{peripheral}.
 \item \textbf{Microcontroller} detects new device, sends \textbf{registration frame}.
 \item \textbf{Controller} receives \textbf{registration frame}, creates a new inactive device record in the \textbf{database}.
-\item \textbf{Dashboard} will indicate a new peripheral is ready for activation.
-\item To activate the \textbf{peripheral}, user will be prompted for:
-  \begin{enumerate}
-  \item Unique peripheral identifier (i.e. basementMoisture1)
-  \item Common identifier (i.e. Basement Moisture)
-  \item Polling interval (i.e. 30 seconds)
-  \item Peripheral type (i.e. adafruit\_moisture)
-  \end{enumerate}
-\item After submitting the provisioning form, the \textbf{controller} will update the \textbf{database} entry for that device. The \textbf{controller} will also send a \textbf{provisioning frame} to the corresponding \textbf{microcontroller}, specifying the new schedule.
+\item The \textbf{controller} will send a \textbf{provisioning frame} to the corresponding \textbf{microcontroller}, specifying the new schedule.
 \item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
-\item When data from the \textbf{peripheral} becomes available, it will become selectable on the \textbf{dashboard} for data viewing.
-\end{enumerate}
-
-\subsection{User Changes Polling Interval}
-
-The following will occur when the user changes the polling interval of a peripheral.
-
-\begin{enumerate}
-\item User selects \textbf{peripheral} on \textbf{dashboard}, selects modify.
-\item User enters a new polling interval (i.e. 10 seconds) and saves setting.
-\item \textbf{Controller} updates database entry for the device. \textbf{Controller} also sends a new \textbf{provisioning frame} to the \textbf{microcontroller}, specifying a new schedule.
-\item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
-\end{enumerate}
-
-\subsection{User Deprovisions Peripheral}
-
-The following will occur when the user deprovisions a connected peripheral.
-
-\begin{enumerate}
-\item User selects \textbf{peripheral} on \textbf{dashboard}, selects delete.
-\item User agrees to user confirmation, \textbf{peripheral} is removed from dashboard.
-\item \textbf{Controller} deletes database entry for the device. \textbf{Controller} also sends a new \textbf{provisioning frame} to the \textbf{microcontroller}, specifying a new schedule.
-\item \textbf{Microcontroller} stores the new schedule in volatile memory (RAM).
+\item When data from the \textbf{peripheral} becomes available, it will become accessible on the \textbf{Websocket} and \textbf{API} for data viewing.
 \end{enumerate}
 
 \subsection{Normal Scheduling Operation}
@@ -529,7 +498,7 @@ The event loop will be preempted if the \textbf{microcontroller} receives a \tex
 
 \subsubsection{Controller}
 
-The controller will run this event loop while concurrently responding to HTTP requests for the \textbf{dashboard} and \textbf{API} service.
+The controller will run this event loop while concurrently responding to HTTP requests for the \textbf{Websocket} and \textbf{API} services.
 
 \begin{enumerate}
 \item \textbf{Controller} receives \textbf{payload frame} from \textbf{microcontroller}, containing raw \textbf{peripheral payload}.
