@@ -26,6 +26,7 @@
 \section*{Preamble}
 
 \name saves significant development time for common embedded applications.
+It offers a ``plug-and-play'' experience for \proto-based sensors, with immediate data logging and real-time streaming.
 
 There is a large market of hardware peripherals which use an \proto bus to communicate with a computer.
 They usually interface with an embedded device.\footnote{``Arduino-compatible'' microcontrollers are popular choices amongst hobbyists and industrial prototypers.}
