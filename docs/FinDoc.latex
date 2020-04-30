@@ -134,4 +134,60 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \item React Victory v34. \url{https://formidable.com/open-source/victory/}
 \end{enumerate}
 
+\subsection*{Completed Features and Details}
+
+\begin{enumerate}
+\item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
+\end{enumerate}
+
+\subsection*{A Tour of the Simplest Case}
+
+Below is a description of the components involved in the simplest task of Telemetry: reading data from a sensor connected to a microcontroller, storing it in a database, and serving it through a REST and WebSockets API.
+The primary feature of Telemetry is the architecture that allows \proto peripherals to be generalized and used without custom application logic.
+The following tour is only showing one path of what this architecture allows.
+It is a limited view that aims to highlight aspects of the codebase and how it works together --- not the entire scope of the project.
+
+\begin{enumerate}
+\item A microcontroller running the Telemetry firmware is powered on.
+\item It broadcasts a WiFi access point and serves a web application.
+    This allows users to provision the microcontroller with network connection information without needing to hard-code values in firmware and have physical access to the microcontroller.
+    \texttt{prototypes/src/WiFiProvisioning.cpp}
+\item A user provisions the microcontroller and the microcontroller connects to the given WiFi access point.
+\item A sensor is plugged into the microcontroller.
+    The sensor is automatically discovered.
+    The Telemetry firmware consists of an event loop and state machine which poll the \proto bus for peripherals connecting and disconnecting --- \texttt{prototypes/src/I2CManager.cpp}.
+    It also manages the firmware's multiple tasks by loosely emulating threads --- the microcontroller is not running an operating system that gives threads.
+    We wrote a generic scheduler: \texttt{prototypes/src/Scheduler.cpp}.
+\item A message is sent to the backend through the MQTT broker describing the connected sensor.
+    \texttt{prototypes/src/MQTTManager.cpp}, \texttt{prototypes/src/TelemetryProtocol.cpp}
+\item The backend asks the online processors if any are responsible for the described sensor. TODO
+\item The responsible processor sends a declarative configuration for the sensor to the AMQP broker.
+\item The backend delivers this to the appropriate microcontroller through the MQTT broker.
+\item The firmware's runtime stores this configuration and will use it to poll data from the sensor.
+        \texttt{prototypes/src/I2CRuntime.cpp}
+\item The microcontroller reads data from the \proto bus and sends the raw bytes to the backend through MQTT.
+\item The backend proliferates this to the appropriate processor through AMQP.
+\item The processor converts the raw bytes to semantically correct data (such as a temperature value).
+    \texttt{sht31-controller/Main.hs}
+\item The processor sends this data to the backend through AMQP. \texttt{sht31-controller/Support.hs}
+\item The backend writes this data to the database. \texttt{backend/controller/db/}
+\item The backend pushes this new data to any open WebSocket connections. \texttt{backend/controller/api/websocket.go}
+\item A dashboard with an open WebSocket connection reads this message and graphs the data over time.
+    \texttt{dashboard/src/App.js}
+\end{enumerate}
+
+\subsection*{Statistics}
+
+Using the tool \texttt{sloc} to quantify `significant' lines of code:
+
+\begin{verbatim}
+> sloc --exclude 'binary|docs|.*\.pio.*|.*vendor.*|Nanopb|.*node_modules.*' .
+
+---------- Result ------------
+
+  Physical :  5674
+    Source :  4140
+   Comment :  974
+\end{verbatim}
+
 \end{document}
