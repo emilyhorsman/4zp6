@@ -425,14 +425,14 @@ All data requested and returned by \textbf{API} is to be in valid JSON format.
 
 \section{Languages and Frameworks}
 
-\subsection{Frontend :: React}
+\subsection{Frontend: React}
 React is an open source JavaScript framework, allowing for the creation of interactive, modular user interfaces.
 React allows us to write a lightweight user interface in a declarative fashion with modern functional-style JavaScript.
 Typed JavaScript has good support for React.
 The \textbf{dashboard} includes many state transitions (e.g., \textbf{microcontrollers} and \textbf{peripherals} coming online and offline) which are better handled in a declarative fashion than an imperative one, where synchronization bugs are common.
 The React community offers many well-written open-source ``batteries'' for data visualization that will aide in a rapid development process.
 
-\subsection{Transport Layer :: MQTT}
+\subsection{Transport Layer: MQTT}
 MQTT is a low-overhead messaging protocol.
 MQTT enables \name\ to reliably and efficiently collected data from remote Arduino \textbf{microcontrollers}.
 It ensures that data sent between \textbf{microcontroller(s)} and the \textbf{controller} is delivered.
@@ -440,18 +440,18 @@ Such delivery reports are essential on networks that contain packet loss.\\
 
 VerneMQ is an open source, industry standard MQTT broker.
 
-\subsection{Processor Layer :: AMQP}
+\subsection{Processor Layer: AMQP}
 AMQP is very similar to MQTT, except for the addition of queuing capabilities.
 Message queuing is used for \name\ to process \textbf{peripheral payloads} in a distrbuted manner.
 AMQP also allows \name\ to have interoperability with many programming languages, allowing for \textbf{peripheral processors} to be language agnostic.\\
 
 RabbitMQ is an open source, industry standard AMQP broker.
 
-\subsection{Application Layer :: JSON}
+\subsection{Application Layer: JSON}
 JSON is a human-readable, object encoding format.
 It is an industry standard format utilized in web applications.
 
-\subsection{Controller :: Go}
+\subsection{Controller: Go}
 Go is statically typed, memory safe programming language.
 Go was chosen for the following features:
 \begin{enumerate}
@@ -609,11 +609,8 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 
 \begin{enumerate}
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
-<<<<<<< Updated upstream
 \item A REST API for retrieving logged data from sensors and connectivity information. Includes various filters such as time ranges. \texttt{backend/controller/api/api.go}
 \item A WebSocket API to allow web browsers to receive data in real-time without polling an API. \texttt{backend/controller/api/websocket.go}
-=======
->>>>>>> Stashed changes
 \end{enumerate}
 
 \subsection*{A Tour of the Simplest Case}
