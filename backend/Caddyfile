@@ -13,6 +13,10 @@ localhost:80 127.0.0.1:80 telemetry.0xt.ca:80 {
       transparent
       without /amqp
     }
+    proxy /ws http://engine:6060 {
+      websocket
+      transparent
+    }
     proxy /api http://engine:6060 {
       keepalive 32
       transparent

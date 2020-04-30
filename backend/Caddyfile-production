@@ -14,6 +14,10 @@ telemetry.0xt.ca {
       transparent
       without /amqp
     }
+    proxy /ws http://engine:6060 {
+      websocket
+      transparent
+    }
     proxy /api http://engine:6060 {
       keepalive 32
       transparent

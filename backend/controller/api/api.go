@@ -56,6 +56,11 @@ func Start(s *state.State) error {
 	// register all routes
 	registerRoutes(s, api)
 
+	// register websocket handler
+	router.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		websocketHandler(s, w, r)
+	})
+
 	// start websocket event loop
 	go websocketEventLoop(s)
 
@@ -82,9 +87,6 @@ func registerRoutes(s *state.State, r *mux.Router) {
 	})
 	r.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
 		dataHandler(s, w, r)
-	})
-	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		websocketHandler(s, w, r)
 	})
 }
 

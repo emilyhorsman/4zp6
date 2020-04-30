@@ -41,7 +41,7 @@ func websocketEventLoop(s *state.State) {
 	for {
 		data := <-s.Data
 		for client := range clients {
-			// send data in separat go routine
+			// send data in separate go routine
 			go func(s *state.State, clients map[*websocket.Conn]bool, client *websocket.Conn, data []byte) {
 				err := client.WriteMessage(websocket.TextMessage, data)
 				if err != nil {
