@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 import throttle from './Throttle';
 
 function App() {
     const [status, setStatus] = useState({});
+    const socket = useRef(null);
 
     useEffect(() => {
-        const socket = new WebSocket("wss://telemetry.0xt.ca/ws");
-        socket.onmessage = throttle(
+        socket.current = new WebSocket("wss://telemetry.0xt.ca/ws");
+        socket.current.onmessage = throttle(
             function(event) {
                 const data = JSON.parse(event.data);
                 setStatus({
@@ -17,6 +18,10 @@ function App() {
             },
             500
         );
+
+        return () => {
+            socket.current.close();
+        }
     });
 
     return (
