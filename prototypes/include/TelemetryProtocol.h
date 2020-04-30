@@ -11,6 +11,9 @@
 typedef std::function<void (uint32_t, uint16_t, ReadDefinition *, uint8_t *)> PayloadFunc;
 
 
+/**
+ * @brief Intermediate object for protobuf encoding.
+ */
 struct PeripheralStatus {
     uint32_t busId;
     uint32_t busAddr;
@@ -20,6 +23,9 @@ struct PeripheralStatus {
 typedef struct PeripheralStatus PeripheralStatus;
 
 
+/**
+ * @brief Responsible for encoding and decoding protobuf/nanopb payloads.
+ */
 class TelemetryProtocol {
     public:
         static size_t registration(std::vector<PeripheralStatus> *statuses, uint8_t *buffer);

@@ -12,6 +12,8 @@
 class I2CRuntime;
 
 /**
+ * @brief Manages all the read managers and memory allocation for a single peripheral.
+ *
  * Only intended to be used by an I2CRuntime instance.
  *
  * A peripheral manager will manage the read managers for each read definition
@@ -36,6 +38,9 @@ class I2CPeripheralManager {
         uint8_t getBusAddr();
 };
 
+/**
+ * @brief Responsible for the primary event loop for all peripherals on the bus.
+ */
 class I2CRuntime {
     private:
         std::vector<I2CPeripheralManager *> mManagers;

@@ -5,10 +5,10 @@
 
 /**
  * This value can be very important.
- * 
+ *
  * Too low: Insufficient time between the register ID transmission and a request
  *          to read bytes. No data will be read.
- * 
+ *
  * Too high: Performance will suffer for read definitions that have a long
  *           contiguous register block length. (e.g., something like the thermal
  *           camera that reads from 128 different registers.)
@@ -20,6 +20,9 @@ enum RegisterLength {
     RL8,
 };
 
+/**
+ * @brief Declarative configuration for reading a contiguous register block from a peripheral on the I2C bus.
+ */
 struct ReadDefinition {
     /**
      * An arbitrary ID for external reference. This does not relate to the
@@ -53,7 +56,7 @@ struct ReadDefinition {
      * The number of bytes that will be read at each register ID in the
      * contiguous block. This means that the total number of bytes retrieved
      * from one ReadDefinition instance is:
-     * 
+     *
      *     numBytesPerRegister * registerBlockLength
      */
     uint8_t numBytesPerRegister;
@@ -76,6 +79,9 @@ struct SetupWriteDefinition {
 
 typedef struct SetupWriteDefinition SetupWriteDefinition;
 
+/**
+ * @brief Declarative configuration for the behaviour of a peripheral on the I2C bus.
+ */
 struct Peripheral {
     /**
      * The address on the I2C bus. There is only one bus address per peripheral.

@@ -7,6 +7,9 @@
 #include "I2CPeripheral.h"
 #include "TelemetryProtocol.h"
 
+/**
+ * @brief Buffer/size pair.
+ */
 struct Sized {
     const uint8_t *buf;
     size_t size;

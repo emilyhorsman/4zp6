@@ -25,6 +25,9 @@ enum ReadManagerState {
     REQUESTED_SINGLE_READ,
 };
 
+/**
+ * @brief Responsible for a state machine which reads data from the I2C bus in a non-blocking fashion.
+ */
 class I2CReadManager {
     private:
         ReadDefinition *mDefinition;
