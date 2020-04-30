@@ -674,9 +674,20 @@ Akin to the Websocket interface, the \texttt{data} field will contain the JSON o
 TODO
 
 \subsection{Go package hierarchy}
-TODO
+The diagram describes the programming structure of \name's controller.
+Bold nodes denote the functions executed when the program executes.
+Red lines denote local packages dependant of global state, stored in \texttt{state} package.
+Green lines denote local packages dependant of the database interface, stored in \texttt{db} package.
+Blue nodes denote third party packages.
+
+\begin{figure}[H]
+  \includegraphics[angle=90,height=500pt]{gohierarchy.png}
+  \caption{Go package hierarchy}
+  \label{fig:gopackage}
+\end{figure}
 
 \subsection{PostgreSQL relation hierarchy}
+All data for \name\ is stored utilizing the following schema.
 
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{uml.png}
