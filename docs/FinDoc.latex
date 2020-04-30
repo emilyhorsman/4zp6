@@ -35,7 +35,7 @@ These embedded controllers need to be flashed to change application logic and th
 There are thousands of such peripherals including sensors that measure temperature, moisture, colour, current, etc.
 Hobbyists and industrial prototypers buy these sensors from distributors such as Adafruit and Sparkfun.
 These distributors often share libraries that allow these sensors to be used with common embedded controllers with little development time.\footnote{e.g., For the SHT31 temperature and humidity sensor: \url{https://github.com/adafruit/Adafruit_SHT31}}
-However, these libraries have a lot of redundancy amongst them and often contain technical tradeoffs.\footnote{e.g., calling functions which sleep the device instead of using an event loop that would allow other tasks to be performed.}
+However, these libraries have a lot of redundancy amongst them and choose unacceptable technical tradeoffs for complex projects.\footnote{e.g., calling functions which sleep the device instead of using an event loop that would allow other tasks to be performed.}
 
 Writing a program for embedded controllers that reads and writes to \proto-based hardware peripherals traditionally involves three tasks:
 
