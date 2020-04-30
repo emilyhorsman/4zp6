@@ -549,7 +549,123 @@ The following is an example of a Websocket frame:
 Multiple subscribers may bind to the Websocket interface at once.
 
 \subsection{API Interface}
-API documentation.
+The HTTP API exposes three endpoints for accessing \name\ data.
+
+\subsubsection{/api/microcontroller}
+The microcontroller interface returns a list of connected microcontrollers and their connected peripherals.
+
+\textbf{Request}
+\texttt{GET /api/microcontroller}
+
+No query parameters shall be provided in the request.
+
+\textbf{Response}
+200 OK (Content-type: application/json)
+\begin{minted}[breaklines,frame=single]{json}
+[
+  {
+    "uuid": "807d3abcad84",
+    "firmware": 1,
+    "ipv4": "192.168.1.9",
+    "ipv6": "00:00:00:00:00:00:00:00",
+    "peripherals": [
+      {
+        "busId": 1,
+        "busAddr": 68,
+        "callResp": ""
+      }
+    ]
+  }
+]
+\end{minted}
+
+\subsubsection{/api/provisioning}
+The provisioning interface returns a list of peripheral provisioning profiles.
+These profiles are populated by the peripheral processors.
+
+\textbf{Request}
+\texttt{GET /api/provisioning}
+
+No query parameters shall be provided in the request.
+
+\textbf{Response}
+200 OK (Content-type: application/json)
+
+\begin{minted}[breaklines,frame=single]{json}
+[
+  {
+    "busAddr": 68,
+    "name": "SHT31",
+    "definitionId": 1,
+    "regIdLength": 0,
+    "regId": 9216,
+    "regBlockLength": 1,
+    "bytesPerReg": 6,
+    "readPeriod": 1000
+  }
+]
+\end{minted}
+
+\subsubsection{/api/data}
+The data interface returns the processed peripheral data.
+The endpoint requires a microcontroller UUID and a bus address to be provided.
+Optionally, a start and/or stop parameter may be provided to filter peripheral data by time.
+
+\textbf{Request}
+\texttt{GET /api/data?uuid=\&busAddr=}
+
+Parameters:
+\begin{itemize}
+\item[1.] [Required] \texttt{uuid}: Microcontroller UUID (MAC address) where data originates from.
+\item[2.] [Required] \texttt{busAddr}: Bus address where data originates from.
+\item[3.] [Optional] \texttt{start}: RFC3339 start time. Returns data collected after this timestamp.
+\item[4.] [Optional] \texttt{stop}: RFC3339 stop time. Returns data collected before this timestamp.
+\end{itemize}
+
+If a required parameter is missing, or if a optional parameter is not correctly formatted, an error will be returned.
+
+Example API call:
+\texttt{/api/data?uuid=807d3abcad84\&busAddr=68\\\&start=2020-04-30T02:29:15Z\&stop=2020-04-30T02:29:17Z}
+
+\textbf{Response}
+200 OK (Content-type: application/json)
+
+\begin{minted}[breaklines,frame=single]{json}
+[
+  {
+    "uuid": "807d3abcad84",
+    "busAddr": 68,
+    "timestamp": "2020-04-30T02:29:15Z",
+    "data": {
+      "denominator": 100,
+      "humidity": 4795,
+      "temp": 2460
+    }
+  },
+  {
+    "uuid": "807d3abcad84",
+    "busAddr": 68,
+    "timestamp": "2020-04-30T02:29:16Z",
+    "data": {
+      "denominator": 100,
+      "humidity": 4792,
+      "temp": 2460
+    }
+  },
+  {
+    "uuid": "807d3abcad84",
+    "busAddr": 68,
+    "timestamp": "2020-04-30T02:29:17Z",
+    "data": {
+      "denominator": 100,
+      "humidity": 4798,
+      "temp": 2460
+    }
+  }
+]
+\end{minted}
+
+Akin to the Websocket interface, the \texttt{data} field will contain the JSON output from the \textbf{peripheral processor}.
 
 \section{Interaction viewpoint}
 TODO
