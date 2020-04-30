@@ -27,6 +27,7 @@
 
 \name saves significant development time for common embedded applications.
 It offers a ``plug-and-play'' experience for \proto-based sensors, with immediate data logging and real-time streaming.
+Refer to section ~\ref{sec:features} for a complete list of features.
 
 There is a large market of hardware peripherals which use an \proto bus to communicate with a computer.
 They usually interface with an embedded device.\footnote{``Arduino-compatible'' microcontrollers are popular choices amongst hobbyists and industrial prototypers.}
@@ -791,6 +792,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \end{enumerate}
 
 \subsection{Completed Features and Details}
+\label{sec:features}
 
 \begin{enumerate}
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
