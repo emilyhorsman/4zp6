@@ -1,3 +1,12 @@
+# Sample Dashboard Using the Telemetry WebSockets API
+
+This codebase shows how one can use the provided WebSockets API to visualize sensor data in real-time.
+
+![Sample Dashboard](./Sample.png)
+
+
+# create-react-app
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
