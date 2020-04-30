@@ -1,0 +1,66 @@
+\hypertarget{struct_peripheral}{}\section{Peripheral Struct Reference}
+\label{struct_peripheral}\index{Peripheral@{Peripheral}}
+
+
+Declarative configuration for the behaviour of a peripheral on the I2C bus.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Peripheral.\+h$>$}
+
+
+
+Collaboration diagram for Peripheral\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{struct_peripheral__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{struct_peripheral_aeb9b037f7be4b84e967382c046077046}{bus\+Address}}
+\item 
+\mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}} $\ast$ \mbox{\hyperlink{struct_peripheral_ab2a550bc5d7e03dcba843bf6f6367e12}{setup\+Write\+Definition}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct_peripheral_ae8a8523c12a7df87f2a0ebbce23658fe}{num\+Read\+Definitions}}
+\item 
+\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$$\ast$ \mbox{\hyperlink{struct_peripheral_a140bc115ee96fd0ab21ab1127beac7af}{read\+Definitions}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Declarative configuration for the behaviour of a peripheral on the I2C bus. 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_peripheral_aeb9b037f7be4b84e967382c046077046}\label{struct_peripheral_aeb9b037f7be4b84e967382c046077046}} 
+\index{Peripheral@{Peripheral}!bus\+Address@{bus\+Address}}
+\index{bus\+Address@{bus\+Address}!Peripheral@{Peripheral}}
+\subsubsection{\texorpdfstring{bus\+Address}{busAddress}}
+{\footnotesize\ttfamily uint16\+\_\+t Peripheral\+::bus\+Address}
+
+The address on the I2C bus. There is only one bus address per peripheral. This is not tied to {\ttfamily \mbox{\hyperlink{struct_read_definition}{Read\+Definition}}}s. \mbox{\Hypertarget{struct_peripheral_ae8a8523c12a7df87f2a0ebbce23658fe}\label{struct_peripheral_ae8a8523c12a7df87f2a0ebbce23658fe}} 
+\index{Peripheral@{Peripheral}!num\+Read\+Definitions@{num\+Read\+Definitions}}
+\index{num\+Read\+Definitions@{num\+Read\+Definitions}!Peripheral@{Peripheral}}
+\subsubsection{\texorpdfstring{num\+Read\+Definitions}{numReadDefinitions}}
+{\footnotesize\ttfamily uint8\+\_\+t Peripheral\+::num\+Read\+Definitions}
+
+A \mbox{\hyperlink{struct_peripheral}{Peripheral}} can define multiple things to read. e.\+g., a peripheral may provide accelerometer and gyroscope data at non-\/contiguous register I\+Ds. \mbox{\Hypertarget{struct_peripheral_a140bc115ee96fd0ab21ab1127beac7af}\label{struct_peripheral_a140bc115ee96fd0ab21ab1127beac7af}} 
+\index{Peripheral@{Peripheral}!read\+Definitions@{read\+Definitions}}
+\index{read\+Definitions@{read\+Definitions}!Peripheral@{Peripheral}}
+\subsubsection{\texorpdfstring{read\+Definitions}{readDefinitions}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_read_definition}{Read\+Definition}}$\ast$$\ast$ Peripheral\+::read\+Definitions}
+
+\mbox{\Hypertarget{struct_peripheral_ab2a550bc5d7e03dcba843bf6f6367e12}\label{struct_peripheral_ab2a550bc5d7e03dcba843bf6f6367e12}} 
+\index{Peripheral@{Peripheral}!setup\+Write\+Definition@{setup\+Write\+Definition}}
+\index{setup\+Write\+Definition@{setup\+Write\+Definition}!Peripheral@{Peripheral}}
+\subsubsection{\texorpdfstring{setup\+Write\+Definition}{setupWriteDefinition}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}}$\ast$ Peripheral\+::setup\+Write\+Definition}
+
+Some peripherals require configuration in the form of bytes sent to the peripheral at startup. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_peripheral_8h}{I2\+C\+Peripheral.\+h}}\end{DoxyCompactItemize}

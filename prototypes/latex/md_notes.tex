@@ -1,0 +1,15 @@
+
+\begin{DoxyItemize}
+\item {\ttfamily S\+T\+A\+T\+U\+S\+\_\+\+R\+EG} before checking data (proven unnecessary in the end)
+\item Setting accelerometer range (\href{https://github.com/adafruit/Adafruit_LIS3DH/blob/master/examples/acceldemo/acceldemo.ino#L36}{\tt https\+://github.\+com/adafruit/\+Adafruit\+\_\+\+L\+I\+S3\+D\+H/blob/master/examples/acceldemo/acceldemo.\+ino\#\+L36})
+\item Autoincrement support but as far as processor is concerned this is simply a different register/num bytes
+\item Number of things to write on setup
+\end{DoxyItemize}
+
+\section*{Misc}
+
+
+\begin{DoxyItemize}
+\item Do we need to set a current config or have I\+Ds for configs that can then be updated/removed/pushed?
+\item Translators/controllers/processors should include a predicate that allows them to confirm that the user assigned the correct sensor to this routing key (e.\+g., addr 0x18 on I2C bus 1 on \$\+M\+A\+C\+\_\+\+A\+D\+Dr is actually a L\+I\+S3\+D4) 
+\end{DoxyItemize}

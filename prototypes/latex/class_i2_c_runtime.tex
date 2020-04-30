@@ -1,0 +1,119 @@
+\hypertarget{class_i2_c_runtime}{}\section{I2\+C\+Runtime Class Reference}
+\label{class_i2_c_runtime}\index{I2\+C\+Runtime@{I2\+C\+Runtime}}
+
+
+Responsible for the primary event loop for all peripherals on the bus.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Runtime.\+h$>$}
+
+
+
+Collaboration diagram for I2\+C\+Runtime\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{class_i2_c_runtime__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_i2_c_runtime_aa68ca8901478720ad84ec7fb5f7f1494}{I2\+C\+Runtime}} (Two\+Wire $\ast$)
+\item 
+std\+::size\+\_\+t \mbox{\hyperlink{class_i2_c_runtime_aba281d78dfd704b614f0e126e9f846e5}{add\+Peripheral}} (\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$peripheral)
+\item 
+bool \mbox{\hyperlink{class_i2_c_runtime_a945f727b6d885e2c191d547b9f66f679}{has\+Peripheral}} (std\+::size\+\_\+t)
+\item 
+uint8\+\_\+t $\ast$$\ast$ \mbox{\hyperlink{class_i2_c_runtime_a68052a5397fdb5a1cd408d2e6ff0bac2}{get\+Peripheral\+Buffer}} (std\+::size\+\_\+t)
+\item 
+void \mbox{\hyperlink{class_i2_c_runtime_a7fd85af000f8d514f94c2f92db1ddfaa}{loop}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_runtime_a1ce8a62c677e64e8113376fc1264c6e6}{set\+Payload\+Func}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}} $>$)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}} $>$ \mbox{\hyperlink{class_i2_c_runtime_a2e84a62078fc0169f8abd9e126ed5f38}{m\+Payload\+Func}}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_i2_c_peripheral_manager}{I2\+C\+Peripheral\+Manager}} $\ast$ $>$ \mbox{\hyperlink{class_i2_c_runtime_a399a771421014539f95a53e58debc341}{m\+Managers}}
+\item 
+Two\+Wire $\ast$ \mbox{\hyperlink{class_i2_c_runtime_a89c15b30195945ec61834ee3f7f8ac88}{m\+Wire}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Responsible for the primary event loop for all peripherals on the bus. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_i2_c_runtime_aa68ca8901478720ad84ec7fb5f7f1494}\label{class_i2_c_runtime_aa68ca8901478720ad84ec7fb5f7f1494}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{I2\+C\+Runtime()}{I2CRuntime()}}
+{\footnotesize\ttfamily I2\+C\+Runtime\+::\+I2\+C\+Runtime (\begin{DoxyParamCaption}\item[{Two\+Wire $\ast$}]{wire }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_i2_c_runtime_aba281d78dfd704b614f0e126e9f846e5}\label{class_i2_c_runtime_aba281d78dfd704b614f0e126e9f846e5}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!add\+Peripheral@{add\+Peripheral}}
+\index{add\+Peripheral@{add\+Peripheral}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{add\+Peripheral()}{addPeripheral()}}
+{\footnotesize\ttfamily std\+::size\+\_\+t I2\+C\+Runtime\+::add\+Peripheral (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$}]{peripheral }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a68052a5397fdb5a1cd408d2e6ff0bac2}\label{class_i2_c_runtime_a68052a5397fdb5a1cd408d2e6ff0bac2}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!get\+Peripheral\+Buffer@{get\+Peripheral\+Buffer}}
+\index{get\+Peripheral\+Buffer@{get\+Peripheral\+Buffer}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{get\+Peripheral\+Buffer()}{getPeripheralBuffer()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$$\ast$ I2\+C\+Runtime\+::get\+Peripheral\+Buffer (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{peripheral\+Id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a945f727b6d885e2c191d547b9f66f679}\label{class_i2_c_runtime_a945f727b6d885e2c191d547b9f66f679}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!has\+Peripheral@{has\+Peripheral}}
+\index{has\+Peripheral@{has\+Peripheral}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{has\+Peripheral()}{hasPeripheral()}}
+{\footnotesize\ttfamily bool I2\+C\+Runtime\+::has\+Peripheral (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{peripheral\+Id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a7fd85af000f8d514f94c2f92db1ddfaa}\label{class_i2_c_runtime_a7fd85af000f8d514f94c2f92db1ddfaa}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!loop@{loop}}
+\index{loop@{loop}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void I2\+C\+Runtime\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a1ce8a62c677e64e8113376fc1264c6e6}\label{class_i2_c_runtime_a1ce8a62c677e64e8113376fc1264c6e6}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!set\+Payload\+Func@{set\+Payload\+Func}}
+\index{set\+Payload\+Func@{set\+Payload\+Func}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{set\+Payload\+Func()}{setPayloadFunc()}}
+{\footnotesize\ttfamily void I2\+C\+Runtime\+::set\+Payload\+Func (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}} $>$}]{func }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_i2_c_runtime_a399a771421014539f95a53e58debc341}\label{class_i2_c_runtime_a399a771421014539f95a53e58debc341}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!m\+Managers@{m\+Managers}}
+\index{m\+Managers@{m\+Managers}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{m\+Managers}{mManagers}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_i2_c_peripheral_manager}{I2\+C\+Peripheral\+Manager}} $\ast$$>$ I2\+C\+Runtime\+::m\+Managers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a2e84a62078fc0169f8abd9e126ed5f38}\label{class_i2_c_runtime_a2e84a62078fc0169f8abd9e126ed5f38}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!m\+Payload\+Func@{m\+Payload\+Func}}
+\index{m\+Payload\+Func@{m\+Payload\+Func}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{m\+Payload\+Func}{mPayloadFunc}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}}$>$ I2\+C\+Runtime\+::m\+Payload\+Func}
+
+\mbox{\Hypertarget{class_i2_c_runtime_a89c15b30195945ec61834ee3f7f8ac88}\label{class_i2_c_runtime_a89c15b30195945ec61834ee3f7f8ac88}} 
+\index{I2\+C\+Runtime@{I2\+C\+Runtime}!m\+Wire@{m\+Wire}}
+\index{m\+Wire@{m\+Wire}!I2\+C\+Runtime@{I2\+C\+Runtime}}
+\subsubsection{\texorpdfstring{m\+Wire}{mWire}}
+{\footnotesize\ttfamily Two\+Wire$\ast$ I2\+C\+Runtime\+::m\+Wire\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_runtime_8h}{I2\+C\+Runtime.\+h}}\item 
+src/\mbox{\hyperlink{_i2_c_runtime_8cpp}{I2\+C\+Runtime.\+cpp}}\end{DoxyCompactItemize}

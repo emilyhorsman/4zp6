@@ -1,0 +1,199 @@
+\hypertarget{class_i2_c_read_manager}{}\section{I2\+C\+Read\+Manager Class Reference}
+\label{class_i2_c_read_manager}\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+
+
+Responsible for a state machine which reads data from the I2C bus in a non-\/blocking fashion.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Read\+Manager.\+h$>$}
+
+
+
+Collaboration diagram for I2\+C\+Read\+Manager\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_i2_c_read_manager__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_i2_c_read_manager_a32c36b6f8c14cc7c8d845b2c9e4e3884}{I2\+C\+Read\+Manager}} (\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$, \mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$, uint8\+\_\+t $\ast$, Two\+Wire $\ast$, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$)
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_a5ce39fa21f4cba4e6ea32899991d327e}{loop}} ()
+\item 
+bool \mbox{\hyperlink{class_i2_c_read_manager_a570077135c889571f51a1b68b30faaad}{is\+Writing}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_a478faffbf411c694c81668c9687177bd}{start\+Block\+Read}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_ab56d84786e053cd555e11c67eeed1d27}{finish\+Block\+Read}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_a069f4a54d98b35f365b04f7272b30cd3}{request\+Read\+At\+Cursor}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_ad9b045650b074a8b10ea472dec42cf71}{read\+At\+Cursor}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_a3b901ae787a7e5c94004ed70fea67c49}{advance\+Cursor}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_read_manager_a7d4d8b3241291a25c7e82821d33df4db}{read}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$ \mbox{\hyperlink{class_i2_c_read_manager_a9a3f55a2c1fed16d7e17b16c153f0b32}{m\+Definition}}
+\item 
+\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$ \mbox{\hyperlink{class_i2_c_read_manager_a013d5feaf3f4d648b7ee840bd600aaf6}{m\+Peripheral}}
+\item 
+\mbox{\hyperlink{class_scheduler}{Scheduler}} \mbox{\hyperlink{class_i2_c_read_manager_a948854518d1720e57ce3980308e47f23}{m\+Scheduler}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_i2_c_read_manager_abdf4bf35894f1b91f8af92b2de6ef709}{m\+Inter\+Read\+Schedule\+Id}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_i2_c_read_manager_ad8505529aa2361af0e89087f679b0f80}{m\+Intra\+Read\+Schedule\+Id}}
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{class_i2_c_read_manager_af4df317c2ac86fa929f85c96b5d9a56b}{m\+Buffer}}
+\item 
+\mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}{Read\+Manager\+State}} \mbox{\hyperlink{class_i2_c_read_manager_ad3377b1f52aceee0bd2aa4597521b20a}{m\+State}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{class_i2_c_read_manager_a38cc98d6047836aec409733a8591ce2e}{m\+Cursor}}
+\item 
+Two\+Wire $\ast$ \mbox{\hyperlink{class_i2_c_read_manager_ab030eaa59d0661eb7b980a0419236788}{m\+Wire}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$ \mbox{\hyperlink{class_i2_c_read_manager_a60fc6315a6e4bb48341c095907a36941}{m\+On\+Completed\+Read}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Responsible for a state machine which reads data from the I2C bus in a non-\/blocking fashion. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_i2_c_read_manager_a32c36b6f8c14cc7c8d845b2c9e4e3884}\label{class_i2_c_read_manager_a32c36b6f8c14cc7c8d845b2c9e4e3884}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{I2\+C\+Read\+Manager()}{I2CReadManager()}}
+{\footnotesize\ttfamily I2\+C\+Read\+Manager\+::\+I2\+C\+Read\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$}]{read\+Definition,  }\item[{\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$}]{peripheral,  }\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{Two\+Wire $\ast$}]{wire,  }\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$}]{on\+Completed\+Read\+Callback }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_i2_c_read_manager_a3b901ae787a7e5c94004ed70fea67c49}\label{class_i2_c_read_manager_a3b901ae787a7e5c94004ed70fea67c49}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!advance\+Cursor@{advance\+Cursor}}
+\index{advance\+Cursor@{advance\+Cursor}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{advance\+Cursor()}{advanceCursor()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::advance\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_ab56d84786e053cd555e11c67eeed1d27}\label{class_i2_c_read_manager_ab56d84786e053cd555e11c67eeed1d27}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!finish\+Block\+Read@{finish\+Block\+Read}}
+\index{finish\+Block\+Read@{finish\+Block\+Read}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{finish\+Block\+Read()}{finishBlockRead()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::finish\+Block\+Read (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+We\textquotesingle{}ve finished reading a from a contiguous block of register I\+Ds and can disable the intra-\/read schedule and switch back to the inter-\/read schedule. \mbox{\Hypertarget{class_i2_c_read_manager_a570077135c889571f51a1b68b30faaad}\label{class_i2_c_read_manager_a570077135c889571f51a1b68b30faaad}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!is\+Writing@{is\+Writing}}
+\index{is\+Writing@{is\+Writing}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{is\+Writing()}{isWriting()}}
+{\footnotesize\ttfamily bool I2\+C\+Read\+Manager\+::is\+Writing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a5ce39fa21f4cba4e6ea32899991d327e}\label{class_i2_c_read_manager_a5ce39fa21f4cba4e6ea32899991d327e}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!loop@{loop}}
+\index{loop@{loop}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a7d4d8b3241291a25c7e82821d33df4db}\label{class_i2_c_read_manager_a7d4d8b3241291a25c7e82821d33df4db}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!read@{read}}
+\index{read@{read}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::read (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_ad9b045650b074a8b10ea472dec42cf71}\label{class_i2_c_read_manager_ad9b045650b074a8b10ea472dec42cf71}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!read\+At\+Cursor@{read\+At\+Cursor}}
+\index{read\+At\+Cursor@{read\+At\+Cursor}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{read\+At\+Cursor()}{readAtCursor()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::read\+At\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a069f4a54d98b35f365b04f7272b30cd3}\label{class_i2_c_read_manager_a069f4a54d98b35f365b04f7272b30cd3}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!request\+Read\+At\+Cursor@{request\+Read\+At\+Cursor}}
+\index{request\+Read\+At\+Cursor@{request\+Read\+At\+Cursor}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{request\+Read\+At\+Cursor()}{requestReadAtCursor()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::request\+Read\+At\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a478faffbf411c694c81668c9687177bd}\label{class_i2_c_read_manager_a478faffbf411c694c81668c9687177bd}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!start\+Block\+Read@{start\+Block\+Read}}
+\index{start\+Block\+Read@{start\+Block\+Read}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{start\+Block\+Read()}{startBlockRead()}}
+{\footnotesize\ttfamily void I2\+C\+Read\+Manager\+::start\+Block\+Read (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_i2_c_read_manager_af4df317c2ac86fa929f85c96b5d9a56b}\label{class_i2_c_read_manager_af4df317c2ac86fa929f85c96b5d9a56b}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Buffer@{m\+Buffer}}
+\index{m\+Buffer@{m\+Buffer}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Buffer}{mBuffer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ I2\+C\+Read\+Manager\+::m\+Buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+The buffer for the whole peripheral is a 2D array that manages bytes per read definition. A single Read\+Manager instance only manages a single Rea\+Definition. This is the buffer for the single instance. \mbox{\Hypertarget{class_i2_c_read_manager_a38cc98d6047836aec409733a8591ce2e}\label{class_i2_c_read_manager_a38cc98d6047836aec409733a8591ce2e}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Cursor@{m\+Cursor}}
+\index{m\+Cursor@{m\+Cursor}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Cursor}{mCursor}}
+{\footnotesize\ttfamily uint16\+\_\+t I2\+C\+Read\+Manager\+::m\+Cursor\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a9a3f55a2c1fed16d7e17b16c153f0b32}\label{class_i2_c_read_manager_a9a3f55a2c1fed16d7e17b16c153f0b32}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Definition@{m\+Definition}}
+\index{m\+Definition@{m\+Definition}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Definition}{mDefinition}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_read_definition}{Read\+Definition}}$\ast$ I2\+C\+Read\+Manager\+::m\+Definition\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_abdf4bf35894f1b91f8af92b2de6ef709}\label{class_i2_c_read_manager_abdf4bf35894f1b91f8af92b2de6ef709}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Inter\+Read\+Schedule\+Id@{m\+Inter\+Read\+Schedule\+Id}}
+\index{m\+Inter\+Read\+Schedule\+Id@{m\+Inter\+Read\+Schedule\+Id}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Inter\+Read\+Schedule\+Id}{mInterReadScheduleId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} I2\+C\+Read\+Manager\+::m\+Inter\+Read\+Schedule\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_ad8505529aa2361af0e89087f679b0f80}\label{class_i2_c_read_manager_ad8505529aa2361af0e89087f679b0f80}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Intra\+Read\+Schedule\+Id@{m\+Intra\+Read\+Schedule\+Id}}
+\index{m\+Intra\+Read\+Schedule\+Id@{m\+Intra\+Read\+Schedule\+Id}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Intra\+Read\+Schedule\+Id}{mIntraReadScheduleId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} I2\+C\+Read\+Manager\+::m\+Intra\+Read\+Schedule\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a60fc6315a6e4bb48341c095907a36941}\label{class_i2_c_read_manager_a60fc6315a6e4bb48341c095907a36941}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+On\+Completed\+Read@{m\+On\+Completed\+Read}}
+\index{m\+On\+Completed\+Read@{m\+On\+Completed\+Read}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+On\+Completed\+Read}{mOnCompletedRead}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}}$>$ I2\+C\+Read\+Manager\+::m\+On\+Completed\+Read\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a013d5feaf3f4d648b7ee840bd600aaf6}\label{class_i2_c_read_manager_a013d5feaf3f4d648b7ee840bd600aaf6}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Peripheral@{m\+Peripheral}}
+\index{m\+Peripheral@{m\+Peripheral}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Peripheral}{mPeripheral}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_peripheral}{Peripheral}}$\ast$ I2\+C\+Read\+Manager\+::m\+Peripheral\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_a948854518d1720e57ce3980308e47f23}\label{class_i2_c_read_manager_a948854518d1720e57ce3980308e47f23}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Scheduler@{m\+Scheduler}}
+\index{m\+Scheduler@{m\+Scheduler}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Scheduler}{mScheduler}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_scheduler}{Scheduler}} I2\+C\+Read\+Manager\+::m\+Scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_ad3377b1f52aceee0bd2aa4597521b20a}\label{class_i2_c_read_manager_ad3377b1f52aceee0bd2aa4597521b20a}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+State@{m\+State}}
+\index{m\+State@{m\+State}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+State}{mState}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}{Read\+Manager\+State}} I2\+C\+Read\+Manager\+::m\+State\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_read_manager_ab030eaa59d0661eb7b980a0419236788}\label{class_i2_c_read_manager_ab030eaa59d0661eb7b980a0419236788}} 
+\index{I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}!m\+Wire@{m\+Wire}}
+\index{m\+Wire@{m\+Wire}!I2\+C\+Read\+Manager@{I2\+C\+Read\+Manager}}
+\subsubsection{\texorpdfstring{m\+Wire}{mWire}}
+{\footnotesize\ttfamily Two\+Wire$\ast$ I2\+C\+Read\+Manager\+::m\+Wire\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_read_manager_8h}{I2\+C\+Read\+Manager.\+h}}\item 
+src/\mbox{\hyperlink{_i2_c_read_manager_8cpp}{I2\+C\+Read\+Manager.\+cpp}}\end{DoxyCompactItemize}

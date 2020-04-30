@@ -1,0 +1,134 @@
+\hypertarget{main_8cpp}{}\section{src/main.cpp File Reference}
+\label{main_8cpp}\index{src/main.\+cpp@{src/main.\+cpp}}
+{\ttfamily \#include $<$Arduino.\+h$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$Wi\+Fi.\+h$>$}\newline
+{\ttfamily \#include $<$Wire.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}I2\+C\+Manager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}I2\+C\+Runtime.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}M\+Q\+T\+T\+Manager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Scheduler.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Wi\+Fi\+Provisioning.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Telemetry\+Protocol.\+h\char`\"{}}\newline
+Include dependency graph for main.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{main_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{main_8cpp_aa68f159f20de602f702ea3d20b170d48}{E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG}}
+\item 
+\#define \mbox{\hyperlink{main_8cpp_adcb54b1cb18cbbd88740c59e0d218dd3}{E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS}}
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a29f56c86e44d58984056615782d3908c}{E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d}{setup}} ()
+\item 
+void \mbox{\hyperlink{main_8cpp_afe461d27b9c48d5921c00d521181f12f}{loop}} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Two\+Wire $\ast$ \mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}} = \&Wire
+\item 
+\mbox{\hyperlink{class_scheduler}{Scheduler}} \mbox{\hyperlink{main_8cpp_a7714de4b56e9edd12c75f4781688edef}{scheduler}}
+\item 
+\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} \mbox{\hyperlink{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}{runtime}} (\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}})
+\item 
+\mbox{\hyperlink{class_i2_c_manager}{I2\+C\+Manager}} \mbox{\hyperlink{main_8cpp_a4bd7b89b7f58f26e84f7492132fa0300}{manager}} (\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}})
+\item 
+uint8\+\_\+t $\ast$$\ast$ \mbox{\hyperlink{main_8cpp_acbfc37f5d7a96b409173aafea19b3835}{sht\+Buffer}} = N\+U\+LL
+\item 
+\mbox{\hyperlink{class_wi_fi_provisioning}{Wi\+Fi\+Provisioning}} \mbox{\hyperlink{main_8cpp_a95595a8a87900e88776af9025f5707de}{provisioning}}
+\item 
+\mbox{\hyperlink{class_m_q_t_t_manager}{M\+Q\+T\+T\+Manager}} \mbox{\hyperlink{main_8cpp_ac0d9ae636df973dc6a130e24b87cb19c}{mqtt\+Manager}} (\mbox{\hyperlink{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}{runtime}})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{main_8cpp_a29f56c86e44d58984056615782d3908c}\label{main_8cpp_a29f56c86e44d58984056615782d3908c}} 
+\index{main.\+cpp@{main.\+cpp}!E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT@{E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT}}
+\index{E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT@{E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT}{ENABLE\_MQTT}}
+{\footnotesize\ttfamily \#define E\+N\+A\+B\+L\+E\+\_\+\+M\+Q\+TT}
+
+\mbox{\Hypertarget{main_8cpp_adcb54b1cb18cbbd88740c59e0d218dd3}\label{main_8cpp_adcb54b1cb18cbbd88740c59e0d218dd3}} 
+\index{main.\+cpp@{main.\+cpp}!E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS@{E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS}}
+\index{E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS@{E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS}{ENABLE\_PERIPHERALS}}
+{\footnotesize\ttfamily \#define E\+N\+A\+B\+L\+E\+\_\+\+P\+E\+R\+I\+P\+H\+E\+R\+A\+LS}
+
+\mbox{\Hypertarget{main_8cpp_aa68f159f20de602f702ea3d20b170d48}\label{main_8cpp_aa68f159f20de602f702ea3d20b170d48}} 
+\index{main.\+cpp@{main.\+cpp}!E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG@{E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG}}
+\index{E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG@{E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG}{ENABLE\_PROVISIONING}}
+{\footnotesize\ttfamily \#define E\+N\+A\+B\+L\+E\+\_\+\+P\+R\+O\+V\+I\+S\+I\+O\+N\+I\+NG}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{main_8cpp_afe461d27b9c48d5921c00d521181f12f}\label{main_8cpp_afe461d27b9c48d5921c00d521181f12f}} 
+\index{main.\+cpp@{main.\+cpp}!loop@{loop}}
+\index{loop@{loop}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d}\label{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d}} 
+\index{main.\+cpp@{main.\+cpp}!setup@{setup}}
+\index{setup@{setup}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily void setup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{main_8cpp_a4bd7b89b7f58f26e84f7492132fa0300}\label{main_8cpp_a4bd7b89b7f58f26e84f7492132fa0300}} 
+\index{main.\+cpp@{main.\+cpp}!manager@{manager}}
+\index{manager@{manager}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{manager}{manager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_i2_c_manager}{I2\+C\+Manager}} manager(\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}})}
+
+\mbox{\Hypertarget{main_8cpp_ac0d9ae636df973dc6a130e24b87cb19c}\label{main_8cpp_ac0d9ae636df973dc6a130e24b87cb19c}} 
+\index{main.\+cpp@{main.\+cpp}!mqtt\+Manager@{mqtt\+Manager}}
+\index{mqtt\+Manager@{mqtt\+Manager}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{mqtt\+Manager}{mqttManager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_m_q_t_t_manager}{M\+Q\+T\+T\+Manager}} mqtt\+Manager(\mbox{\hyperlink{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}{runtime}})}
+
+\mbox{\Hypertarget{main_8cpp_a95595a8a87900e88776af9025f5707de}\label{main_8cpp_a95595a8a87900e88776af9025f5707de}} 
+\index{main.\+cpp@{main.\+cpp}!provisioning@{provisioning}}
+\index{provisioning@{provisioning}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{provisioning}{provisioning}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_wi_fi_provisioning}{Wi\+Fi\+Provisioning}} provisioning}
+
+\mbox{\Hypertarget{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}\label{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}} 
+\index{main.\+cpp@{main.\+cpp}!runtime@{runtime}}
+\index{runtime@{runtime}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{runtime}{runtime}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} runtime(\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}})}
+
+\mbox{\Hypertarget{main_8cpp_a7714de4b56e9edd12c75f4781688edef}\label{main_8cpp_a7714de4b56e9edd12c75f4781688edef}} 
+\index{main.\+cpp@{main.\+cpp}!scheduler@{scheduler}}
+\index{scheduler@{scheduler}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{scheduler}{scheduler}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_scheduler}{Scheduler}} scheduler}
+
+\mbox{\Hypertarget{main_8cpp_acbfc37f5d7a96b409173aafea19b3835}\label{main_8cpp_acbfc37f5d7a96b409173aafea19b3835}} 
+\index{main.\+cpp@{main.\+cpp}!sht\+Buffer@{sht\+Buffer}}
+\index{sht\+Buffer@{sht\+Buffer}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{sht\+Buffer}{shtBuffer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$$\ast$ sht\+Buffer = N\+U\+LL}
+
+\mbox{\Hypertarget{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}\label{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}} 
+\index{main.\+cpp@{main.\+cpp}!wire@{wire}}
+\index{wire@{wire}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{wire}{wire}}
+{\footnotesize\ttfamily Two\+Wire$\ast$ wire = \&Wire}
+

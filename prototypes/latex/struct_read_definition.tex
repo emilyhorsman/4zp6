@@ -1,0 +1,98 @@
+\hypertarget{struct_read_definition}{}\section{Read\+Definition Struct Reference}
+\label{struct_read_definition}\index{Read\+Definition@{Read\+Definition}}
+
+
+Declarative configuration for reading a contiguous register block from a peripheral on the I2C bus.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Peripheral.\+h$>$}
+
+
+
+Collaboration diagram for Read\+Definition\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{struct_read_definition__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{struct_read_definition_a0cd8f09fd884f9d1f3c8638fafd47c82}{get\+Num\+Block\+Bytes}} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{struct_read_definition_ad38fa1092da3ab3fbc4543b306392b0e}{definition\+Id}}
+\item 
+\mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}{Register\+Length}} \mbox{\hyperlink{struct_read_definition_a842c09b580d962b7c8b8ce979c25c0e7}{register\+Id\+Length}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{struct_read_definition_af46d93354ce1dc2f413439b41b46eaa1}{register\+Id}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct_read_definition_a0b480fa0fee8d4651383ec6cf48bd7f0}{register\+Block\+Length}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct_read_definition_a3c13b2c7c3fb73632c856480621d32d6}{num\+Bytes\+Per\+Register}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} \mbox{\hyperlink{struct_read_definition_aff14d6c02cce669e70bf4e7f45fb6ae0}{read\+Period}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Declarative configuration for reading a contiguous register block from a peripheral on the I2C bus. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_read_definition_a0cd8f09fd884f9d1f3c8638fafd47c82}\label{struct_read_definition_a0cd8f09fd884f9d1f3c8638fafd47c82}} 
+\index{Read\+Definition@{Read\+Definition}!get\+Num\+Block\+Bytes@{get\+Num\+Block\+Bytes}}
+\index{get\+Num\+Block\+Bytes@{get\+Num\+Block\+Bytes}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{get\+Num\+Block\+Bytes()}{getNumBlockBytes()}}
+{\footnotesize\ttfamily uint16\+\_\+t Read\+Definition\+::get\+Num\+Block\+Bytes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_read_definition_ad38fa1092da3ab3fbc4543b306392b0e}\label{struct_read_definition_ad38fa1092da3ab3fbc4543b306392b0e}} 
+\index{Read\+Definition@{Read\+Definition}!definition\+Id@{definition\+Id}}
+\index{definition\+Id@{definition\+Id}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{definition\+Id}{definitionId}}
+{\footnotesize\ttfamily uint16\+\_\+t Read\+Definition\+::definition\+Id}
+
+An arbitrary ID for external reference. This does not relate to the hardware or any application logic in the \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}}. This is used externally to track read definitions. \mbox{\Hypertarget{struct_read_definition_a3c13b2c7c3fb73632c856480621d32d6}\label{struct_read_definition_a3c13b2c7c3fb73632c856480621d32d6}} 
+\index{Read\+Definition@{Read\+Definition}!num\+Bytes\+Per\+Register@{num\+Bytes\+Per\+Register}}
+\index{num\+Bytes\+Per\+Register@{num\+Bytes\+Per\+Register}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{num\+Bytes\+Per\+Register}{numBytesPerRegister}}
+{\footnotesize\ttfamily uint8\+\_\+t Read\+Definition\+::num\+Bytes\+Per\+Register}
+
+The number of bytes that will be read at each register ID in the contiguous block. This means that the total number of bytes retrieved from one \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} instance is\+: \begin{DoxyVerb}numBytesPerRegister * registerBlockLength\end{DoxyVerb}
+ \mbox{\Hypertarget{struct_read_definition_aff14d6c02cce669e70bf4e7f45fb6ae0}\label{struct_read_definition_aff14d6c02cce669e70bf4e7f45fb6ae0}} 
+\index{Read\+Definition@{Read\+Definition}!read\+Period@{read\+Period}}
+\index{read\+Period@{read\+Period}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{read\+Period}{readPeriod}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} Read\+Definition\+::read\+Period}
+
+How many milliseconds between reading all bytes from the block of registers? \mbox{\Hypertarget{struct_read_definition_a0b480fa0fee8d4651383ec6cf48bd7f0}\label{struct_read_definition_a0b480fa0fee8d4651383ec6cf48bd7f0}} 
+\index{Read\+Definition@{Read\+Definition}!register\+Block\+Length@{register\+Block\+Length}}
+\index{register\+Block\+Length@{register\+Block\+Length}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{register\+Block\+Length}{registerBlockLength}}
+{\footnotesize\ttfamily uint8\+\_\+t Read\+Definition\+::register\+Block\+Length}
+
+Data is read on this output from a contiguous block of register I\+Ds. e.\+g., 0x80 to 0x\+FF. This defines the number of register I\+Ds in the block. This is essentially how many times the loop will read bytes at a register and then advance to the next register. For many peripherals this value is simple 1 (i.\+e., there is no need to advance). \mbox{\Hypertarget{struct_read_definition_af46d93354ce1dc2f413439b41b46eaa1}\label{struct_read_definition_af46d93354ce1dc2f413439b41b46eaa1}} 
+\index{Read\+Definition@{Read\+Definition}!register\+Id@{register\+Id}}
+\index{register\+Id@{register\+Id}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{register\+Id}{registerId}}
+{\footnotesize\ttfamily uint16\+\_\+t Read\+Definition\+::register\+Id}
+
+Data is read on this output from a contiguous block of register I\+Ds. e.\+g., 0x80 to 0x\+FF. This is the first register ID of the block. \mbox{\Hypertarget{struct_read_definition_a842c09b580d962b7c8b8ce979c25c0e7}\label{struct_read_definition_a842c09b580d962b7c8b8ce979c25c0e7}} 
+\index{Read\+Definition@{Read\+Definition}!register\+Id\+Length@{register\+Id\+Length}}
+\index{register\+Id\+Length@{register\+Id\+Length}!Read\+Definition@{Read\+Definition}}
+\subsubsection{\texorpdfstring{register\+Id\+Length}{registerIdLength}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}{Register\+Length}} Read\+Definition\+::register\+Id\+Length}
+
+Some peripherals have 16-\/bit register I\+Ds and some have 8-\/bit register I\+Ds. 
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_peripheral_8h}{I2\+C\+Peripheral.\+h}}\item 
+src/\mbox{\hyperlink{_i2_c_runtime_8cpp}{I2\+C\+Runtime.\+cpp}}\end{DoxyCompactItemize}

@@ -7,6 +7,7 @@
 \usepackage{float}
 \usepackage{enumerate}
 \usepackage{minted}
+\usepackage{pdfpages}
 \pagestyle{fancy}
 \fancyhead[L]{COMPSCI 4ZP6}
 \fancyhead[R]{Emily Horsman <horsmane>, Tanner Ryan <ryant3>}
@@ -833,5 +834,11 @@ Using the tool \texttt{sloc} to quantify `significant' lines of code:
     Source :  4140
    Comment :  974
 \end{verbatim}
+
+\section*{Appendix}
+
+\subsection*{Telemetry Firmware Doxygen Documentation}
+
+\includepdf[pages=-]{../prototypes/latex/refman.pdf}
 
 \end{document}

@@ -1,0 +1,67 @@
+\hypertarget{class_telemetry_protocol}{}\section{Telemetry\+Protocol Class Reference}
+\label{class_telemetry_protocol}\index{Telemetry\+Protocol@{Telemetry\+Protocol}}
+
+
+Responsible for encoding and decoding protobuf/nanopb payloads.  
+
+
+
+
+{\ttfamily \#include $<$Telemetry\+Protocol.\+h$>$}
+
+
+
+Collaboration diagram for Telemetry\+Protocol\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=210pt]{class_telemetry_protocol__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static size\+\_\+t \mbox{\hyperlink{class_telemetry_protocol_ad8584639767a19015907168116f21c4b}{registration}} (std\+::vector$<$ \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} $>$ $\ast$statuses, uint8\+\_\+t $\ast$buffer)
+\item 
+static size\+\_\+t \mbox{\hyperlink{class_telemetry_protocol_a9b14fc6a3f0942bdc9d91e45604c082a}{payload}} (uint32\+\_\+t bus\+Id, uint16\+\_\+t bus\+Address, \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$def, uint8\+\_\+t $\ast$payload, uint8\+\_\+t $\ast$buffer)
+\item 
+static \mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$ \mbox{\hyperlink{class_telemetry_protocol_a2425d455bed0b9b994c1de41b334fca5}{provisioning}} (uint8\+\_\+t $\ast$buffer, unsigned int size)
+\item 
+static \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$ \mbox{\hyperlink{class_telemetry_protocol_a90e74801cf6d35be65276720839165ab}{read\+Definition\+From\+PB}} (Provisioning\+\_\+\+Read\+Def \&msg)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Responsible for encoding and decoding protobuf/nanopb payloads. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_telemetry_protocol_a9b14fc6a3f0942bdc9d91e45604c082a}\label{class_telemetry_protocol_a9b14fc6a3f0942bdc9d91e45604c082a}} 
+\index{Telemetry\+Protocol@{Telemetry\+Protocol}!payload@{payload}}
+\index{payload@{payload}!Telemetry\+Protocol@{Telemetry\+Protocol}}
+\subsubsection{\texorpdfstring{payload()}{payload()}}
+{\footnotesize\ttfamily size\+\_\+t Telemetry\+Protocol\+::payload (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{bus\+Id,  }\item[{uint16\+\_\+t}]{bus\+Address,  }\item[{\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$}]{def,  }\item[{uint8\+\_\+t $\ast$}]{payload,  }\item[{uint8\+\_\+t $\ast$}]{buffer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_telemetry_protocol_a2425d455bed0b9b994c1de41b334fca5}\label{class_telemetry_protocol_a2425d455bed0b9b994c1de41b334fca5}} 
+\index{Telemetry\+Protocol@{Telemetry\+Protocol}!provisioning@{provisioning}}
+\index{provisioning@{provisioning}!Telemetry\+Protocol@{Telemetry\+Protocol}}
+\subsubsection{\texorpdfstring{provisioning()}{provisioning()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$ Telemetry\+Protocol\+::provisioning (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{unsigned int}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_telemetry_protocol_a90e74801cf6d35be65276720839165ab}\label{class_telemetry_protocol_a90e74801cf6d35be65276720839165ab}} 
+\index{Telemetry\+Protocol@{Telemetry\+Protocol}!read\+Definition\+From\+PB@{read\+Definition\+From\+PB}}
+\index{read\+Definition\+From\+PB@{read\+Definition\+From\+PB}!Telemetry\+Protocol@{Telemetry\+Protocol}}
+\subsubsection{\texorpdfstring{read\+Definition\+From\+P\+B()}{readDefinitionFromPB()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$ Telemetry\+Protocol\+::read\+Definition\+From\+PB (\begin{DoxyParamCaption}\item[{Provisioning\+\_\+\+Read\+Def \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_telemetry_protocol_ad8584639767a19015907168116f21c4b}\label{class_telemetry_protocol_ad8584639767a19015907168116f21c4b}} 
+\index{Telemetry\+Protocol@{Telemetry\+Protocol}!registration@{registration}}
+\index{registration@{registration}!Telemetry\+Protocol@{Telemetry\+Protocol}}
+\subsubsection{\texorpdfstring{registration()}{registration()}}
+{\footnotesize\ttfamily size\+\_\+t Telemetry\+Protocol\+::registration (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} $>$ $\ast$}]{statuses,  }\item[{uint8\+\_\+t $\ast$}]{buffer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_telemetry_protocol_8h}{Telemetry\+Protocol.\+h}}\item 
+src/\mbox{\hyperlink{_telemetry_protocol_8cc}{Telemetry\+Protocol.\+cc}}\end{DoxyCompactItemize}

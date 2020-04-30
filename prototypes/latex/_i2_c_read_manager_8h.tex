@@ -1,0 +1,55 @@
+\hypertarget{_i2_c_read_manager_8h}{}\section{include/\+I2\+C\+Read\+Manager.h File Reference}
+\label{_i2_c_read_manager_8h}\index{include/\+I2\+C\+Read\+Manager.\+h@{include/\+I2\+C\+Read\+Manager.\+h}}
+{\ttfamily \#include $<$Wire.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}I2\+C\+Peripheral.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Scheduler.\+h\char`\"{}}\newline
+Include dependency graph for I2\+C\+Read\+Manager.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=308pt]{_i2_c_read_manager_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_i2_c_read_manager_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_i2_c_read_manager}{I2\+C\+Read\+Manager}}
+\begin{DoxyCompactList}\small\item\em Responsible for a state machine which reads data from the I2C bus in a non-\/blocking fashion. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}{Read\+Manager\+State}} \{ \mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaae37ab7bd34b9e999f50359d981240173}{N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK}}, 
+\mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaa99614153608b27d690f0d91b4aed7e6b}{R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}}, 
+\mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaabc3795837fd1e51d56a81344dc98a862}{R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}\label{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}} 
+\index{I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}!Read\+Manager\+State@{Read\+Manager\+State}}
+\index{Read\+Manager\+State@{Read\+Manager\+State}!I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}}
+\subsubsection{\texorpdfstring{Read\+Manager\+State}{ReadManagerState}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aa}{Read\+Manager\+State}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK@{N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK}!I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}}\index{I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}!N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK@{N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK}}}\mbox{\Hypertarget{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaae37ab7bd34b9e999f50359d981240173}\label{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaae37ab7bd34b9e999f50359d981240173}} 
+N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK&We haven\textquotesingle{}t started reading a block of register I\+Ds from the peripheral. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD@{R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}!I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}}\index{I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}!R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD@{R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}}}\mbox{\Hypertarget{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaa99614153608b27d690f0d91b4aed7e6b}\label{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaa99614153608b27d690f0d91b4aed7e6b}} 
+R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD&We\textquotesingle{}re going to inform the peripheral which register we want to perform a read on. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD@{R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}!I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}}\index{I2\+C\+Read\+Manager.\+h@{I2\+C\+Read\+Manager.\+h}!R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD@{R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD}}}\mbox{\Hypertarget{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaabc3795837fd1e51d56a81344dc98a862}\label{_i2_c_read_manager_8h_a6fa8ade9cf010a4fd9f7a36c4a4566aaabc3795837fd1e51d56a81344dc98a862}} 
+R\+E\+Q\+U\+E\+S\+T\+E\+D\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD&We\textquotesingle{}re going to request the bytes and read them and then either advance the cursor and go to R\+E\+Q\+U\+E\+S\+T\+I\+N\+G\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+E\+AD if the block isn\textquotesingle{}t finished or go to N\+O\+T\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+B\+L\+O\+CK and reset the schedules if the block is finished. \\
+\hline
+
+\end{DoxyEnumFields}

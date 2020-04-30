@@ -1,0 +1,86 @@
+\hypertarget{_scheduler_8h}{}\section{include/\+Scheduler.h File Reference}
+\label{_scheduler_8h}\index{include/\+Scheduler.\+h@{include/\+Scheduler.\+h}}
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for Scheduler.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{_scheduler_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_scheduler_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_schedule}{Schedule}}
+\begin{DoxyCompactList}\small\item\em Declarative configuration for a managed schedule. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_scheduler}{Scheduler}}
+\begin{DoxyCompactList}\small\item\em Generic scheduler for non-\/blocking tasks given schedules for callbacks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_scheduler_8h_a240827577ed9cf28cff316085ea5fb16}{H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP}}~0
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}}
+\item 
+typedef \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}} \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}
+\item 
+typedef \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}} \mbox{\hyperlink{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}{Timestamp}}
+\item 
+typedef std\+::function$<$ void()$>$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}}
+\item 
+typedef std\+::size\+\_\+t \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_scheduler_8h_a240827577ed9cf28cff316085ea5fb16}\label{_scheduler_8h_a240827577ed9cf28cff316085ea5fb16}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP@{H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP}}
+\index{H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP@{H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP}{HAS\_NEVER\_RAN\_TIMESTAMP}}
+{\footnotesize\ttfamily \#define H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP~0}
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}\label{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!Duration@{Duration}}
+\index{Duration@{Duration}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{Duration}{Duration}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}} \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}}
+
+\mbox{\Hypertarget{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}\label{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!Func@{Func}}
+\index{Func@{Func}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{Func}{Func}}
+{\footnotesize\ttfamily typedef std\+::function$<$void ()$>$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}}}
+
+\mbox{\Hypertarget{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}\label{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!Milli@{Milli}}
+\index{Milli@{Milli}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{Milli}{Milli}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}}}
+
+\mbox{\Hypertarget{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}\label{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!Schedule\+Id@{Schedule\+Id}}
+\index{Schedule\+Id@{Schedule\+Id}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{Schedule\+Id}{ScheduleId}}
+{\footnotesize\ttfamily typedef std\+::size\+\_\+t \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}}}
+
+\mbox{\Hypertarget{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}\label{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}} 
+\index{Scheduler.\+h@{Scheduler.\+h}!Timestamp@{Timestamp}}
+\index{Timestamp@{Timestamp}!Scheduler.\+h@{Scheduler.\+h}}
+\subsubsection{\texorpdfstring{Timestamp}{Timestamp}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{_scheduler_8h_a7ea5c3593e888e0396e712316a491ab7}{Milli}} \mbox{\hyperlink{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}{Timestamp}}}
+

@@ -1,0 +1,231 @@
+\hypertarget{class_wi_fi_provisioning}{}\section{Wi\+Fi\+Provisioning Class Reference}
+\label{class_wi_fi_provisioning}\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+
+
+Manages the web application for provisioning connectivity information.  
+
+
+
+
+{\ttfamily \#include $<$Wi\+Fi\+Provisioning.\+h$>$}
+
+
+
+Collaboration diagram for Wi\+Fi\+Provisioning\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{class_wi_fi_provisioning__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_wi_fi_provisioning_afbbef380855199c9b26fbd8c57c3b6e1}{Wi\+Fi\+Provisioning}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_a82297da1523e801f8173337091bb72ee}{setup}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_afe176c8aa10c718471ea8608d335d1c4}{loop}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_wi_fi_provisioning_a407f25abd209fbadc4385b02ea9cf7ed}{try\+Connection\+From\+Preferences}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_ab117eb89658dbbaebf6b940ef2fbf66c}{broadcast\+AP}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_a6ab4c333ef20388b336310bcd7edec6a}{tick}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_a482d01497b2e4319c427658dd036a5a9}{stop\+Client}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_a6cb7ce7ff15da1fefee419e33a43459c}{controller}} ()
+\item 
+std\+::string \mbox{\hyperlink{class_wi_fi_provisioning_ae3cfba93792f975df0bddf6328330d68}{get\+Content}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_a3d0b39ab0ec9cf3260e82d19c471d0fe}{view\+Get}} ()
+\item 
+void \mbox{\hyperlink{class_wi_fi_provisioning_ac27fd34f6f6dd317f2fba2d4bb7e609e}{view\+Post}} ()
+\item 
+bool \mbox{\hyperlink{class_wi_fi_provisioning_abab0aebc8cca7590962e6e513010fb43}{is\+Post\+Request\+Complete}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Wi\+Fi\+Server \mbox{\hyperlink{class_wi_fi_provisioning_a88e571f1efd1e428e43209112b8c7171}{m\+Server}}
+\item 
+Wi\+Fi\+Client \mbox{\hyperlink{class_wi_fi_provisioning_a1a54c3ca59fb3c3cc9c0762a90ac19b8}{m\+Client}}
+\item 
+bool \mbox{\hyperlink{class_wi_fi_provisioning_a48db3ee3b21d4fa713871b0dda70aa8b}{m\+Has\+Connected\+Client}}
+\item 
+std\+::string \mbox{\hyperlink{class_wi_fi_provisioning_a1f5a015d51939cb267c52cf8e2343925}{m\+Request\+Buffer}}
+\item 
+Preferences \mbox{\hyperlink{class_wi_fi_provisioning_a7008915e029e3ccaa96d3a90cb54b23f}{m\+Preferences}}
+\item 
+size\+\_\+t \mbox{\hyperlink{class_wi_fi_provisioning_ac1a07586d838aaba494f632fbc860720}{m\+Request\+Start}}
+\item 
+bool \mbox{\hyperlink{class_wi_fi_provisioning_a4866e3ed981a3c39bd68019704e19334}{m\+Is\+Networked}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{class_wi_fi_provisioning_a9dbf21d2662da425ce4e5fc04f25baac}{m\+Connection\+Attempts}}
+\item 
+\mbox{\hyperlink{class_scheduler}{Scheduler}} \mbox{\hyperlink{class_wi_fi_provisioning_a526e09058cb137d8b5b05830584317d8}{m\+Scheduler}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_wi_fi_provisioning_a53fd157ea3bae357292188eba8dc81b6}{m\+Schedule\+Tick\+Id}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Manages the web application for provisioning connectivity information. 
+
+Responsiblities\+: \begin{DoxyVerb}- Connecting to an SSID if one has been stored in Flash memory
+  (Preferences).
+- Broadcasting an AP if a network cannot be successfully connected to.
+- Serving a webpage that allows configuration of WiFi and MQTT
+  parameters.
+- Writing Preferences to Flash memory.\end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_wi_fi_provisioning_afbbef380855199c9b26fbd8c57c3b6e1}\label{class_wi_fi_provisioning_afbbef380855199c9b26fbd8c57c3b6e1}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{Wi\+Fi\+Provisioning()}{WiFiProvisioning()}}
+{\footnotesize\ttfamily Wi\+Fi\+Provisioning\+::\+Wi\+Fi\+Provisioning (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_wi_fi_provisioning_ab117eb89658dbbaebf6b940ef2fbf66c}\label{class_wi_fi_provisioning_ab117eb89658dbbaebf6b940ef2fbf66c}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!broadcast\+AP@{broadcast\+AP}}
+\index{broadcast\+AP@{broadcast\+AP}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{broadcast\+A\+P()}{broadcastAP()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::broadcast\+AP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a6cb7ce7ff15da1fefee419e33a43459c}\label{class_wi_fi_provisioning_a6cb7ce7ff15da1fefee419e33a43459c}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!controller@{controller}}
+\index{controller@{controller}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{controller()}{controller()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::controller (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} Parse an incoming request and dispatch to either the G\+ET or P\+O\+ST view if we\textquotesingle{}ve received a complete request. \mbox{\Hypertarget{class_wi_fi_provisioning_ae3cfba93792f975df0bddf6328330d68}\label{class_wi_fi_provisioning_ae3cfba93792f975df0bddf6328330d68}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!get\+Content@{get\+Content}}
+\index{get\+Content@{get\+Content}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{get\+Content()}{getContent()}}
+{\footnotesize\ttfamily std\+::string Wi\+Fi\+Provisioning\+::get\+Content (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} Get the form page and populate default values from Flash memory. \mbox{\Hypertarget{class_wi_fi_provisioning_abab0aebc8cca7590962e6e513010fb43}\label{class_wi_fi_provisioning_abab0aebc8cca7590962e6e513010fb43}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!is\+Post\+Request\+Complete@{is\+Post\+Request\+Complete}}
+\index{is\+Post\+Request\+Complete@{is\+Post\+Request\+Complete}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{is\+Post\+Request\+Complete()}{isPostRequestComplete()}}
+{\footnotesize\ttfamily bool Wi\+Fi\+Provisioning\+::is\+Post\+Request\+Complete (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} Determine if we\textquotesingle{}ve received Content-\/\+Length amount of payload. \mbox{\Hypertarget{class_wi_fi_provisioning_afe176c8aa10c718471ea8608d335d1c4}\label{class_wi_fi_provisioning_afe176c8aa10c718471ea8608d335d1c4}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!loop@{loop}}
+\index{loop@{loop}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a82297da1523e801f8173337091bb72ee}\label{class_wi_fi_provisioning_a82297da1523e801f8173337091bb72ee}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!setup@{setup}}
+\index{setup@{setup}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::setup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a482d01497b2e4319c427658dd036a5a9}\label{class_wi_fi_provisioning_a482d01497b2e4319c427658dd036a5a9}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!stop\+Client@{stop\+Client}}
+\index{stop\+Client@{stop\+Client}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{stop\+Client()}{stopClient()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::stop\+Client (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} \mbox{\Hypertarget{class_wi_fi_provisioning_a6ab4c333ef20388b336310bcd7edec6a}\label{class_wi_fi_provisioning_a6ab4c333ef20388b336310bcd7edec6a}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!tick@{tick}}
+\index{tick@{tick}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{tick()}{tick()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::tick (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Check to see if we\textquotesingle{}re connected yet. If we exceed the connection attempts then we should bail and just broadcast an AP. \mbox{\Hypertarget{class_wi_fi_provisioning_a407f25abd209fbadc4385b02ea9cf7ed}\label{class_wi_fi_provisioning_a407f25abd209fbadc4385b02ea9cf7ed}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!try\+Connection\+From\+Preferences@{try\+Connection\+From\+Preferences}}
+\index{try\+Connection\+From\+Preferences@{try\+Connection\+From\+Preferences}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{try\+Connection\+From\+Preferences()}{tryConnectionFromPreferences()}}
+{\footnotesize\ttfamily bool Wi\+Fi\+Provisioning\+::try\+Connection\+From\+Preferences (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Returns false if S\+S\+ID and password are not set. \mbox{\Hypertarget{class_wi_fi_provisioning_a3d0b39ab0ec9cf3260e82d19c471d0fe}\label{class_wi_fi_provisioning_a3d0b39ab0ec9cf3260e82d19c471d0fe}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!view\+Get@{view\+Get}}
+\index{view\+Get@{view\+Get}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{view\+Get()}{viewGet()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::view\+Get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} \mbox{\Hypertarget{class_wi_fi_provisioning_ac27fd34f6f6dd317f2fba2d4bb7e609e}\label{class_wi_fi_provisioning_ac27fd34f6f6dd317f2fba2d4bb7e609e}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!view\+Post@{view\+Post}}
+\index{view\+Post@{view\+Post}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{view\+Post()}{viewPost()}}
+{\footnotesize\ttfamily void Wi\+Fi\+Provisioning\+::view\+Post (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{[}Web Server\mbox{]} 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_wi_fi_provisioning_a1a54c3ca59fb3c3cc9c0762a90ac19b8}\label{class_wi_fi_provisioning_a1a54c3ca59fb3c3cc9c0762a90ac19b8}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Client@{m\+Client}}
+\index{m\+Client@{m\+Client}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Client}{mClient}}
+{\footnotesize\ttfamily Wi\+Fi\+Client Wi\+Fi\+Provisioning\+::m\+Client\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a9dbf21d2662da425ce4e5fc04f25baac}\label{class_wi_fi_provisioning_a9dbf21d2662da425ce4e5fc04f25baac}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Connection\+Attempts@{m\+Connection\+Attempts}}
+\index{m\+Connection\+Attempts@{m\+Connection\+Attempts}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Connection\+Attempts}{mConnectionAttempts}}
+{\footnotesize\ttfamily uint8\+\_\+t Wi\+Fi\+Provisioning\+::m\+Connection\+Attempts\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a48db3ee3b21d4fa713871b0dda70aa8b}\label{class_wi_fi_provisioning_a48db3ee3b21d4fa713871b0dda70aa8b}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Has\+Connected\+Client@{m\+Has\+Connected\+Client}}
+\index{m\+Has\+Connected\+Client@{m\+Has\+Connected\+Client}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Has\+Connected\+Client}{mHasConnectedClient}}
+{\footnotesize\ttfamily bool Wi\+Fi\+Provisioning\+::m\+Has\+Connected\+Client\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a4866e3ed981a3c39bd68019704e19334}\label{class_wi_fi_provisioning_a4866e3ed981a3c39bd68019704e19334}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Is\+Networked@{m\+Is\+Networked}}
+\index{m\+Is\+Networked@{m\+Is\+Networked}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Is\+Networked}{mIsNetworked}}
+{\footnotesize\ttfamily bool Wi\+Fi\+Provisioning\+::m\+Is\+Networked\hspace{0.3cm}{\ttfamily [private]}}
+
+Are we connected to a network or broadcasting an AP? \mbox{\Hypertarget{class_wi_fi_provisioning_a7008915e029e3ccaa96d3a90cb54b23f}\label{class_wi_fi_provisioning_a7008915e029e3ccaa96d3a90cb54b23f}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Preferences@{m\+Preferences}}
+\index{m\+Preferences@{m\+Preferences}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Preferences}{mPreferences}}
+{\footnotesize\ttfamily Preferences Wi\+Fi\+Provisioning\+::m\+Preferences\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a1f5a015d51939cb267c52cf8e2343925}\label{class_wi_fi_provisioning_a1f5a015d51939cb267c52cf8e2343925}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Request\+Buffer@{m\+Request\+Buffer}}
+\index{m\+Request\+Buffer@{m\+Request\+Buffer}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Request\+Buffer}{mRequestBuffer}}
+{\footnotesize\ttfamily std\+::string Wi\+Fi\+Provisioning\+::m\+Request\+Buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_ac1a07586d838aaba494f632fbc860720}\label{class_wi_fi_provisioning_ac1a07586d838aaba494f632fbc860720}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Request\+Start@{m\+Request\+Start}}
+\index{m\+Request\+Start@{m\+Request\+Start}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Request\+Start}{mRequestStart}}
+{\footnotesize\ttfamily size\+\_\+t Wi\+Fi\+Provisioning\+::m\+Request\+Start\hspace{0.3cm}{\ttfamily [private]}}
+
+Allow us to timeout a H\+T\+TP request. \mbox{\Hypertarget{class_wi_fi_provisioning_a526e09058cb137d8b5b05830584317d8}\label{class_wi_fi_provisioning_a526e09058cb137d8b5b05830584317d8}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Scheduler@{m\+Scheduler}}
+\index{m\+Scheduler@{m\+Scheduler}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Scheduler}{mScheduler}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_scheduler}{Scheduler}} Wi\+Fi\+Provisioning\+::m\+Scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a53fd157ea3bae357292188eba8dc81b6}\label{class_wi_fi_provisioning_a53fd157ea3bae357292188eba8dc81b6}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Schedule\+Tick\+Id@{m\+Schedule\+Tick\+Id}}
+\index{m\+Schedule\+Tick\+Id@{m\+Schedule\+Tick\+Id}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Schedule\+Tick\+Id}{mScheduleTickId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} Wi\+Fi\+Provisioning\+::m\+Schedule\+Tick\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_wi_fi_provisioning_a88e571f1efd1e428e43209112b8c7171}\label{class_wi_fi_provisioning_a88e571f1efd1e428e43209112b8c7171}} 
+\index{Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}!m\+Server@{m\+Server}}
+\index{m\+Server@{m\+Server}!Wi\+Fi\+Provisioning@{Wi\+Fi\+Provisioning}}
+\subsubsection{\texorpdfstring{m\+Server}{mServer}}
+{\footnotesize\ttfamily Wi\+Fi\+Server Wi\+Fi\+Provisioning\+::m\+Server\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_wi_fi_provisioning_8h}{Wi\+Fi\+Provisioning.\+h}}\item 
+src/\mbox{\hyperlink{_wi_fi_provisioning_8cpp}{Wi\+Fi\+Provisioning.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,28 @@
+\hypertarget{namespacestring}{}\section{string Namespace Reference}
+\label{namespacestring}\index{string@{string}}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{namespacestring_ac3a0eac796909f16fb4fcf5a8be33ce2}{contents}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Take an input file and produce an concatenation of C-style string literals.
+\end{DoxyVerb}
+ 
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacestring_ac3a0eac796909f16fb4fcf5a8be33ce2}\label{namespacestring_ac3a0eac796909f16fb4fcf5a8be33ce2}} 
+\index{string@{string}!contents@{contents}}
+\index{contents@{contents}!string@{string}}
+\subsubsection{\texorpdfstring{contents}{contents}}
+{\footnotesize\ttfamily string string.\+contents}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 =  \textcolor{stringliteral}{'\(\backslash\)n'}.join([
+2         \textcolor{stringliteral}{'"\{\}"'}.format(l.strip().replace(\textcolor{stringliteral}{'"'}, \textcolor{stringliteral}{'\(\backslash\)\(\backslash\)"'}))
+3         \textcolor{keywordflow}{for} l \textcolor{keywordflow}{in} f.readlines()
+4     ])
+\end{DoxyCode}

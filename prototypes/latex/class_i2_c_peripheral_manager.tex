@@ -1,0 +1,147 @@
+\hypertarget{class_i2_c_peripheral_manager}{}\section{I2\+C\+Peripheral\+Manager Class Reference}
+\label{class_i2_c_peripheral_manager}\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+
+
+Manages all the read managers and memory allocation for a single peripheral.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Runtime.\+h$>$}
+
+
+
+Collaboration diagram for I2\+C\+Peripheral\+Manager\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_i2_c_peripheral_manager__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_i2_c_peripheral_manager_a1e0399fb1723c895e13997275b686790}{I2\+C\+Peripheral\+Manager}} (\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$peripheral, Two\+Wire $\ast$\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}}, \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} $\ast$\mbox{\hyperlink{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}{runtime}})
+\item 
+\mbox{\hyperlink{class_i2_c_peripheral_manager_aee8ee79532efd6cfd2e684f0528bf1ba}{$\sim$\+I2\+C\+Peripheral\+Manager}} ()
+\item 
+void \mbox{\hyperlink{class_i2_c_peripheral_manager_a528b94dd1fbb9271a0e8bf7d4c4e53b6}{loop}} ()
+\item 
+uint8\+\_\+t $\ast$$\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_a0405f2a121ad0c1c62a34104ebf8adff}{get\+Buffer}} ()
+\item 
+uint8\+\_\+t \mbox{\hyperlink{class_i2_c_peripheral_manager_ab0491e2a0f08b02533a96aae26003542}{get\+Bus\+Addr}} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static uint8\+\_\+t $\ast$$\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_ac97eada0dc89503e0cc9ea56a6124ad0}{allocate\+Bytes}} (\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$)
+\item 
+static void \mbox{\hyperlink{class_i2_c_peripheral_manager_a4b1ea76c3c967214a21e1470c0176920}{deallocate\+Bytes}} (\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$, uint8\+\_\+t $\ast$$\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_a758e4afa2027a73681b171219ba4cd50}{m\+Peripheral}}
+\item 
+uint8\+\_\+t $\ast$$\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_a2460262d9bdd68a81f2dee42651a1ad8}{m\+Buffer}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_i2_c_read_manager}{I2\+C\+Read\+Manager}} $\ast$ $>$ \mbox{\hyperlink{class_i2_c_peripheral_manager_adf8ae8159cf193f1b004c6a2158ddf2d}{m\+Read\+Managers}}
+\item 
+Two\+Wire $\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_a348d218edc48d69e21f8a0e204fde50a}{m\+Wire}}
+\item 
+\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} $\ast$ \mbox{\hyperlink{class_i2_c_peripheral_manager_a7dbb8937bebdd3e21d88728f02656422}{m\+Runtime}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Manages all the read managers and memory allocation for a single peripheral. 
+
+Only intended to be used by an \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} instance.
+
+A peripheral manager will manage the read managers for each read definition on a single peripheral. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a1e0399fb1723c895e13997275b686790}\label{class_i2_c_peripheral_manager_a1e0399fb1723c895e13997275b686790}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{I2\+C\+Peripheral\+Manager()}{I2CPeripheralManager()}}
+{\footnotesize\ttfamily I2\+C\+Peripheral\+Manager\+::\+I2\+C\+Peripheral\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$}]{peripheral,  }\item[{Two\+Wire $\ast$}]{wire,  }\item[{\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} $\ast$}]{runtime }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_aee8ee79532efd6cfd2e684f0528bf1ba}\label{class_i2_c_peripheral_manager_aee8ee79532efd6cfd2e684f0528bf1ba}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!````~I2\+C\+Peripheral\+Manager@{$\sim$\+I2\+C\+Peripheral\+Manager}}
+\index{````~I2\+C\+Peripheral\+Manager@{$\sim$\+I2\+C\+Peripheral\+Manager}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{$\sim$\+I2\+C\+Peripheral\+Manager()}{~I2CPeripheralManager()}}
+{\footnotesize\ttfamily I2\+C\+Peripheral\+Manager\+::$\sim$\+I2\+C\+Peripheral\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_ac97eada0dc89503e0cc9ea56a6124ad0}\label{class_i2_c_peripheral_manager_ac97eada0dc89503e0cc9ea56a6124ad0}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!allocate\+Bytes@{allocate\+Bytes}}
+\index{allocate\+Bytes@{allocate\+Bytes}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{allocate\+Bytes()}{allocateBytes()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$$\ast$ I2\+C\+Peripheral\+Manager\+::allocate\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$}]{peripheral }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a4b1ea76c3c967214a21e1470c0176920}\label{class_i2_c_peripheral_manager_a4b1ea76c3c967214a21e1470c0176920}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!deallocate\+Bytes@{deallocate\+Bytes}}
+\index{deallocate\+Bytes@{deallocate\+Bytes}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{deallocate\+Bytes()}{deallocateBytes()}}
+{\footnotesize\ttfamily void I2\+C\+Peripheral\+Manager\+::deallocate\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_peripheral}{Peripheral}} $\ast$}]{peripheral,  }\item[{uint8\+\_\+t $\ast$$\ast$}]{bytes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a0405f2a121ad0c1c62a34104ebf8adff}\label{class_i2_c_peripheral_manager_a0405f2a121ad0c1c62a34104ebf8adff}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!get\+Buffer@{get\+Buffer}}
+\index{get\+Buffer@{get\+Buffer}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{get\+Buffer()}{getBuffer()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$$\ast$ I2\+C\+Peripheral\+Manager\+::get\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_ab0491e2a0f08b02533a96aae26003542}\label{class_i2_c_peripheral_manager_ab0491e2a0f08b02533a96aae26003542}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!get\+Bus\+Addr@{get\+Bus\+Addr}}
+\index{get\+Bus\+Addr@{get\+Bus\+Addr}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{get\+Bus\+Addr()}{getBusAddr()}}
+{\footnotesize\ttfamily uint8\+\_\+t I2\+C\+Peripheral\+Manager\+::get\+Bus\+Addr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a528b94dd1fbb9271a0e8bf7d4c4e53b6}\label{class_i2_c_peripheral_manager_a528b94dd1fbb9271a0e8bf7d4c4e53b6}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!loop@{loop}}
+\index{loop@{loop}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void I2\+C\+Peripheral\+Manager\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a2460262d9bdd68a81f2dee42651a1ad8}\label{class_i2_c_peripheral_manager_a2460262d9bdd68a81f2dee42651a1ad8}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!m\+Buffer@{m\+Buffer}}
+\index{m\+Buffer@{m\+Buffer}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{m\+Buffer}{mBuffer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$$\ast$ I2\+C\+Peripheral\+Manager\+::m\+Buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a758e4afa2027a73681b171219ba4cd50}\label{class_i2_c_peripheral_manager_a758e4afa2027a73681b171219ba4cd50}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!m\+Peripheral@{m\+Peripheral}}
+\index{m\+Peripheral@{m\+Peripheral}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{m\+Peripheral}{mPeripheral}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_peripheral}{Peripheral}}$\ast$ I2\+C\+Peripheral\+Manager\+::m\+Peripheral\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_adf8ae8159cf193f1b004c6a2158ddf2d}\label{class_i2_c_peripheral_manager_adf8ae8159cf193f1b004c6a2158ddf2d}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!m\+Read\+Managers@{m\+Read\+Managers}}
+\index{m\+Read\+Managers@{m\+Read\+Managers}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{m\+Read\+Managers}{mReadManagers}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_i2_c_read_manager}{I2\+C\+Read\+Manager}} $\ast$$>$ I2\+C\+Peripheral\+Manager\+::m\+Read\+Managers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a7dbb8937bebdd3e21d88728f02656422}\label{class_i2_c_peripheral_manager_a7dbb8937bebdd3e21d88728f02656422}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!m\+Runtime@{m\+Runtime}}
+\index{m\+Runtime@{m\+Runtime}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{m\+Runtime}{mRuntime}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}}$\ast$ I2\+C\+Peripheral\+Manager\+::m\+Runtime\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_peripheral_manager_a348d218edc48d69e21f8a0e204fde50a}\label{class_i2_c_peripheral_manager_a348d218edc48d69e21f8a0e204fde50a}} 
+\index{I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}!m\+Wire@{m\+Wire}}
+\index{m\+Wire@{m\+Wire}!I2\+C\+Peripheral\+Manager@{I2\+C\+Peripheral\+Manager}}
+\subsubsection{\texorpdfstring{m\+Wire}{mWire}}
+{\footnotesize\ttfamily Two\+Wire$\ast$ I2\+C\+Peripheral\+Manager\+::m\+Wire\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_runtime_8h}{I2\+C\+Runtime.\+h}}\item 
+src/\mbox{\hyperlink{_i2_c_runtime_8cpp}{I2\+C\+Runtime.\+cpp}}\end{DoxyCompactItemize}

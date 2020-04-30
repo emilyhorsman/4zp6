@@ -1,0 +1,116 @@
+\hypertarget{class_scheduler}{}\section{Scheduler Class Reference}
+\label{class_scheduler}\index{Scheduler@{Scheduler}}
+
+
+Generic scheduler for non-\/blocking tasks given schedules for callbacks.  
+
+
+
+
+{\ttfamily \#include $<$Scheduler.\+h$>$}
+
+
+
+Collaboration diagram for Scheduler\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_scheduler__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_scheduler_a28d9d19644657da9902e52f2901fbc15}{add\+Schedule}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$, \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}, bool is\+Enabled=true)
+\item 
+void \mbox{\hyperlink{class_scheduler_a552dae97cbcd7c621f793311cf151717}{disable\+Schedule}} (\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}})
+\item 
+void \mbox{\hyperlink{class_scheduler_a9df1991d93b673de51cbb4a9d15fe985}{enable\+Schedule}} (\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}})
+\item 
+void \mbox{\hyperlink{class_scheduler_a7d3c44c9a4ca6c35e9970f3c67ac1349}{kick\+Schedule}} (\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}})
+\item 
+void \mbox{\hyperlink{class_scheduler_a81607abe2905dee2e7cf9222a9e35b8f}{loop}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_scheduler_ac44493a482b70bbe93a296a910377a2d}{advance\+Cursor}} ()
+\item 
+bool \mbox{\hyperlink{class_scheduler_a83c09d5b44ccce582ac2b699b1808a0f}{can\+Execute\+Cursor}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_schedule}{Schedule}} $>$ \mbox{\hyperlink{class_scheduler_a785bcdb6ecc1f238540e554e45aace7c}{m\+Schedules}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_schedule}{Schedule}} $>$\+::iterator \mbox{\hyperlink{class_scheduler_a34d96eedc75db87662e70cc2c3ee0263}{m\+Cursor}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Generic scheduler for non-\/blocking tasks given schedules for callbacks. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scheduler_a28d9d19644657da9902e52f2901fbc15}\label{class_scheduler_a28d9d19644657da9902e52f2901fbc15}} 
+\index{Scheduler@{Scheduler}!add\+Schedule@{add\+Schedule}}
+\index{add\+Schedule@{add\+Schedule}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{add\+Schedule()}{addSchedule()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} Scheduler\+::add\+Schedule (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$}]{f,  }\item[{\mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}}]{period,  }\item[{bool}]{is\+Enabled = {\ttfamily true} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_scheduler_ac44493a482b70bbe93a296a910377a2d}\label{class_scheduler_ac44493a482b70bbe93a296a910377a2d}} 
+\index{Scheduler@{Scheduler}!advance\+Cursor@{advance\+Cursor}}
+\index{advance\+Cursor@{advance\+Cursor}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{advance\+Cursor()}{advanceCursor()}}
+{\footnotesize\ttfamily void Scheduler\+::advance\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_scheduler_a83c09d5b44ccce582ac2b699b1808a0f}\label{class_scheduler_a83c09d5b44ccce582ac2b699b1808a0f}} 
+\index{Scheduler@{Scheduler}!can\+Execute\+Cursor@{can\+Execute\+Cursor}}
+\index{can\+Execute\+Cursor@{can\+Execute\+Cursor}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{can\+Execute\+Cursor()}{canExecuteCursor()}}
+{\footnotesize\ttfamily bool Scheduler\+::can\+Execute\+Cursor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_scheduler_a552dae97cbcd7c621f793311cf151717}\label{class_scheduler_a552dae97cbcd7c621f793311cf151717}} 
+\index{Scheduler@{Scheduler}!disable\+Schedule@{disable\+Schedule}}
+\index{disable\+Schedule@{disable\+Schedule}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{disable\+Schedule()}{disableSchedule()}}
+{\footnotesize\ttfamily void Scheduler\+::disable\+Schedule (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}}}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_scheduler_a9df1991d93b673de51cbb4a9d15fe985}\label{class_scheduler_a9df1991d93b673de51cbb4a9d15fe985}} 
+\index{Scheduler@{Scheduler}!enable\+Schedule@{enable\+Schedule}}
+\index{enable\+Schedule@{enable\+Schedule}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{enable\+Schedule()}{enableSchedule()}}
+{\footnotesize\ttfamily void Scheduler\+::enable\+Schedule (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}}}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_scheduler_a7d3c44c9a4ca6c35e9970f3c67ac1349}\label{class_scheduler_a7d3c44c9a4ca6c35e9970f3c67ac1349}} 
+\index{Scheduler@{Scheduler}!kick\+Schedule@{kick\+Schedule}}
+\index{kick\+Schedule@{kick\+Schedule}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{kick\+Schedule()}{kickSchedule()}}
+{\footnotesize\ttfamily void Scheduler\+::kick\+Schedule (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}}}]{id }\end{DoxyParamCaption})}
+
+Update the schedule such that it will run after its period relative to the call of {\ttfamily kick\+Schedule}. e.\+g., if {\ttfamily kick\+Schedule} is called at t = 40 with a period of 500 then the schedule will be executed at t = 540. \mbox{\Hypertarget{class_scheduler_a81607abe2905dee2e7cf9222a9e35b8f}\label{class_scheduler_a81607abe2905dee2e7cf9222a9e35b8f}} 
+\index{Scheduler@{Scheduler}!loop@{loop}}
+\index{loop@{loop}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void Scheduler\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+This call should be non-\/blocking and consume as little C\+PU time as possible per execution. {\ttfamily m\+Cursor} is used to cycle through the schedules and check one schedule for execution per call. 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_scheduler_a34d96eedc75db87662e70cc2c3ee0263}\label{class_scheduler_a34d96eedc75db87662e70cc2c3ee0263}} 
+\index{Scheduler@{Scheduler}!m\+Cursor@{m\+Cursor}}
+\index{m\+Cursor@{m\+Cursor}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{m\+Cursor}{mCursor}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{struct_schedule}{Schedule}}$>$\+::iterator Scheduler\+::m\+Cursor\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_scheduler_a785bcdb6ecc1f238540e554e45aace7c}\label{class_scheduler_a785bcdb6ecc1f238540e554e45aace7c}} 
+\index{Scheduler@{Scheduler}!m\+Schedules@{m\+Schedules}}
+\index{m\+Schedules@{m\+Schedules}!Scheduler@{Scheduler}}
+\subsubsection{\texorpdfstring{m\+Schedules}{mSchedules}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{struct_schedule}{Schedule}}$>$ Scheduler\+::m\+Schedules\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_scheduler_8h}{Scheduler.\+h}}\item 
+src/\mbox{\hyperlink{_scheduler_8cpp}{Scheduler.\+cpp}}\end{DoxyCompactItemize}

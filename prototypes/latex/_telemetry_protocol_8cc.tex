@@ -1,0 +1,57 @@
+\hypertarget{_telemetry_protocol_8cc}{}\section{src/\+Telemetry\+Protocol.cc File Reference}
+\label{_telemetry_protocol_8cc}\index{src/\+Telemetry\+Protocol.\+cc@{src/\+Telemetry\+Protocol.\+cc}}
+{\ttfamily \#include $<$Telemetry.\+pb.\+h$>$}\newline
+{\ttfamily \#include $<$Wi\+Fi.\+h$>$}\newline
+{\ttfamily \#include $<$pb\+\_\+decode.\+h$>$}\newline
+{\ttfamily \#include $<$pb\+\_\+encode.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}I2\+C\+Peripheral.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Telemetry\+Protocol.\+h\char`\"{}}\newline
+Include dependency graph for Telemetry\+Protocol.\+cc\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_telemetry_protocol_8cc__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_sized}{Sized}}
+\begin{DoxyCompactList}\small\item\em Buffer/size pair. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_sized}{Sized}} \mbox{\hyperlink{_telemetry_protocol_8cc_aea229c8162412d1b2d018d2b3cf77356}{Sized}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{_telemetry_protocol_8cc_ab4e6ec2bc915c97e7261fb3cedc19c22}{encode\+\_\+string}} (pb\+\_\+ostream\+\_\+t $\ast$stream, const pb\+\_\+field\+\_\+t $\ast$field, void $\ast$const $\ast$arg)
+\item 
+bool \mbox{\hyperlink{_telemetry_protocol_8cc_ac526c7d2d7942260c6b09d485dba06e5}{encode\+\_\+statuses}} (pb\+\_\+ostream\+\_\+t $\ast$stream, const pb\+\_\+field\+\_\+t $\ast$field, void $\ast$const $\ast$arg)
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_telemetry_protocol_8cc_aea229c8162412d1b2d018d2b3cf77356}\label{_telemetry_protocol_8cc_aea229c8162412d1b2d018d2b3cf77356}} 
+\index{Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}!Sized@{Sized}}
+\index{Sized@{Sized}!Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}}
+\subsubsection{\texorpdfstring{Sized}{Sized}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_sized}{Sized}} \mbox{\hyperlink{struct_sized}{Sized}}}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_telemetry_protocol_8cc_ac526c7d2d7942260c6b09d485dba06e5}\label{_telemetry_protocol_8cc_ac526c7d2d7942260c6b09d485dba06e5}} 
+\index{Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}!encode\+\_\+statuses@{encode\+\_\+statuses}}
+\index{encode\+\_\+statuses@{encode\+\_\+statuses}!Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}}
+\subsubsection{\texorpdfstring{encode\+\_\+statuses()}{encode\_statuses()}}
+{\footnotesize\ttfamily bool encode\+\_\+statuses (\begin{DoxyParamCaption}\item[{pb\+\_\+ostream\+\_\+t $\ast$}]{stream,  }\item[{const pb\+\_\+field\+\_\+t $\ast$}]{field,  }\item[{void $\ast$const $\ast$}]{arg }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_telemetry_protocol_8cc_ab4e6ec2bc915c97e7261fb3cedc19c22}\label{_telemetry_protocol_8cc_ab4e6ec2bc915c97e7261fb3cedc19c22}} 
+\index{Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}!encode\+\_\+string@{encode\+\_\+string}}
+\index{encode\+\_\+string@{encode\+\_\+string}!Telemetry\+Protocol.\+cc@{Telemetry\+Protocol.\+cc}}
+\subsubsection{\texorpdfstring{encode\+\_\+string()}{encode\_string()}}
+{\footnotesize\ttfamily bool encode\+\_\+string (\begin{DoxyParamCaption}\item[{pb\+\_\+ostream\+\_\+t $\ast$}]{stream,  }\item[{const pb\+\_\+field\+\_\+t $\ast$}]{field,  }\item[{void $\ast$const $\ast$}]{arg }\end{DoxyParamCaption})}
+

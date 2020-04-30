@@ -1,0 +1,190 @@
+\hypertarget{class_i2_c_manager}{}\section{I2\+C\+Manager Class Reference}
+\label{class_i2_c_manager}\index{I2\+C\+Manager@{I2\+C\+Manager}}
+
+
+Responsible for discovering the connectivity status of I2C peripherals.  
+
+
+
+
+{\ttfamily \#include $<$I2\+C\+Manager.\+h$>$}
+
+
+
+Collaboration diagram for I2\+C\+Manager\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=203pt]{class_i2_c_manager__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_i2_c_manager_a2d806ad3a65969077b436f0d3a9a70f2}{I2\+C\+Manager}} (Two\+Wire $\ast$\mbox{\hyperlink{main_8cpp_ab8d8f9af97a698a5a73132c347acbaf4}{wire}}, \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} inter\+Scan\+Period=\mbox{\hyperlink{_i2_c_manager_8h_a5aa8afc0ad4792d13a6cb089c9d50537}{I2\+C\+M\+A\+N\+A\+G\+E\+R\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+I\+N\+T\+E\+R\+\_\+\+S\+C\+A\+N\+\_\+\+P\+E\+R\+I\+OD}}, \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} intra\+Scan\+Period=\mbox{\hyperlink{_i2_c_manager_8h_a9b3d76aae3ebcca37db7e5d8cae3053e}{I2\+C\+M\+A\+N\+A\+G\+E\+R\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+I\+N\+T\+R\+A\+\_\+\+S\+C\+A\+N\+\_\+\+P\+E\+R\+I\+OD}})
+\item 
+void \mbox{\hyperlink{class_i2_c_manager_a0fcbab8677f2abcd3febe6b809f8f062}{print\+Report}} (Stream $\ast$stream)
+\item 
+void \mbox{\hyperlink{class_i2_c_manager_aa7cce07ffa6d2e5e7eb0ac9d5d237d69}{loop}} ()
+\begin{DoxyCompactList}\small\item\em Standard Arduino style {\ttfamily loop} function. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_i2_c_manager_a1e027a9de421a28a606dedd366858bd8}{set\+Callback}} (std\+::shared\+\_\+ptr$<$ std\+::function$<$ void(uint8\+\_\+t)$>$$>$ f)
+\begin{DoxyCompactList}\small\item\em Set a callback for when connectivity status changes. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_i2_c_manager_a5d82cb322527d9ebea41277899fe7558}{is\+Connected}} (uint8\+\_\+t bus\+Addr)
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_i2_c_manager_a54a85fded61d8faab6428e1fc1c90c8f}{poll}} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::bitset$<$ 128 $>$ \mbox{\hyperlink{class_i2_c_manager_a82811d5e2ea4a92fa7c6016c9411b9a8}{m\+Address\+Status}}
+\item 
+\mbox{\hyperlink{class_scheduler}{Scheduler}} \mbox{\hyperlink{class_i2_c_manager_a75983e46a08ab8c2887617bf6c4a7c5c}{m\+Scheduler}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_i2_c_manager_a1c998eaf811dfda07e0385ac2ac1b6e8}{m\+Inter\+Scan\+Schedule\+Id}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_i2_c_manager_a412189638428a3fb988e00b33b2a5a62}{m\+Intra\+Scan\+Schedule\+Id}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{class_i2_c_manager_ac98624d02c284e76f93179b2bb3d699e}{m\+Cur\+Polling\+Address}}
+\item 
+Two\+Wire $\ast$ \mbox{\hyperlink{class_i2_c_manager_a48ffd617c38c357bc24bc58182608276}{m\+Wire}}
+\item 
+bool \mbox{\hyperlink{class_i2_c_manager_ab8109f2cffe7ad1674068cea58afa6e7}{m\+Did\+Transmit}}
+\item 
+std\+::shared\+\_\+ptr$<$ std\+::function$<$ void(uint8\+\_\+t)$>$ $>$ \mbox{\hyperlink{class_i2_c_manager_a12b17989c484ad7e3c8cbf59786811a5}{m\+On\+Change\+Callback}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Responsible for discovering the connectivity status of I2C peripherals. 
+
+\begin{DoxyVerb}*        @@ <- Intra Scan Period
+*           @@          &&&&&&&&&&&&&& <- Inter Scan Period
+*                                      @@
+*       |  |  | ...... | ............ |  | ....
+* Start ^  |  |        |              |  |
+*   Poll 1 ^  |        |              |  |
+*      Poll 2 ^        |              |  |
+* Finish address range ^              |  |
+*                               Start ^  |
+*                                 Poll 1 ^
+*                                          continues...
+* \end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_i2_c_manager_a2d806ad3a65969077b436f0d3a9a70f2}\label{class_i2_c_manager_a2d806ad3a65969077b436f0d3a9a70f2}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!I2\+C\+Manager@{I2\+C\+Manager}}
+\index{I2\+C\+Manager@{I2\+C\+Manager}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{I2\+C\+Manager()}{I2CManager()}}
+{\footnotesize\ttfamily I2\+C\+Manager\+::\+I2\+C\+Manager (\begin{DoxyParamCaption}\item[{Two\+Wire $\ast$}]{wire,  }\item[{\mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}}]{inter\+Scan\+Period = {\ttfamily \mbox{\hyperlink{_i2_c_manager_8h_a5aa8afc0ad4792d13a6cb089c9d50537}{I2\+C\+M\+A\+N\+A\+G\+E\+R\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+I\+N\+T\+E\+R\+\_\+\+S\+C\+A\+N\+\_\+\+P\+E\+R\+I\+OD}}},  }\item[{\mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}}}]{intra\+Scan\+Period = {\ttfamily \mbox{\hyperlink{_i2_c_manager_8h_a9b3d76aae3ebcca37db7e5d8cae3053e}{I2\+C\+M\+A\+N\+A\+G\+E\+R\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+I\+N\+T\+R\+A\+\_\+\+S\+C\+A\+N\+\_\+\+P\+E\+R\+I\+OD}}} }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em inter\+Scan\+Period} & Time betweeen the start and end of a full poll across the address range. \\
+\hline
+{\em intra\+Scan\+Period} & Time between scanning single addresses within a full poll. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_i2_c_manager_a5d82cb322527d9ebea41277899fe7558}\label{class_i2_c_manager_a5d82cb322527d9ebea41277899fe7558}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!is\+Connected@{is\+Connected}}
+\index{is\+Connected@{is\+Connected}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{is\+Connected()}{isConnected()}}
+{\footnotesize\ttfamily bool I2\+C\+Manager\+::is\+Connected (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{bus\+Addr }\end{DoxyParamCaption})}
+
+Check whether a peripheral is connected at a particular bus address. \mbox{\Hypertarget{class_i2_c_manager_aa7cce07ffa6d2e5e7eb0ac9d5d237d69}\label{class_i2_c_manager_aa7cce07ffa6d2e5e7eb0ac9d5d237d69}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!loop@{loop}}
+\index{loop@{loop}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void I2\+C\+Manager\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Standard Arduino style {\ttfamily loop} function. 
+
+Call this from your {\ttfamily loop} function. This function is non-\/blocking (e.\+g., avoids the use of {\ttfamily delay}).
+
+Manages auto-\/discovery of I2C device connection status. \mbox{\Hypertarget{class_i2_c_manager_a54a85fded61d8faab6428e1fc1c90c8f}\label{class_i2_c_manager_a54a85fded61d8faab6428e1fc1c90c8f}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!poll@{poll}}
+\index{poll@{poll}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{poll()}{poll()}}
+{\footnotesize\ttfamily void I2\+C\+Manager\+::poll (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a0fcbab8677f2abcd3febe6b809f8f062}\label{class_i2_c_manager_a0fcbab8677f2abcd3febe6b809f8f062}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!print\+Report@{print\+Report}}
+\index{print\+Report@{print\+Report}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{print\+Report()}{printReport()}}
+{\footnotesize\ttfamily void I2\+C\+Manager\+::print\+Report (\begin{DoxyParamCaption}\item[{Stream $\ast$}]{stream }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_i2_c_manager_a1e027a9de421a28a606dedd366858bd8}\label{class_i2_c_manager_a1e027a9de421a28a606dedd366858bd8}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!set\+Callback@{set\+Callback}}
+\index{set\+Callback@{set\+Callback}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{set\+Callback()}{setCallback()}}
+{\footnotesize\ttfamily void I2\+C\+Manager\+::set\+Callback (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ std\+::function$<$ void(uint8\+\_\+t)$>$$>$}]{f }\end{DoxyParamCaption})}
+
+
+
+Set a callback for when connectivity status changes. 
+
+The callback will receive the bus address that changed. 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_i2_c_manager_a82811d5e2ea4a92fa7c6016c9411b9a8}\label{class_i2_c_manager_a82811d5e2ea4a92fa7c6016c9411b9a8}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Address\+Status@{m\+Address\+Status}}
+\index{m\+Address\+Status@{m\+Address\+Status}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Address\+Status}{mAddressStatus}}
+{\footnotesize\ttfamily std\+::bitset$<$128$>$ I2\+C\+Manager\+::m\+Address\+Status\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_ac98624d02c284e76f93179b2bb3d699e}\label{class_i2_c_manager_ac98624d02c284e76f93179b2bb3d699e}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Cur\+Polling\+Address@{m\+Cur\+Polling\+Address}}
+\index{m\+Cur\+Polling\+Address@{m\+Cur\+Polling\+Address}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Cur\+Polling\+Address}{mCurPollingAddress}}
+{\footnotesize\ttfamily uint8\+\_\+t I2\+C\+Manager\+::m\+Cur\+Polling\+Address\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_ab8109f2cffe7ad1674068cea58afa6e7}\label{class_i2_c_manager_ab8109f2cffe7ad1674068cea58afa6e7}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Did\+Transmit@{m\+Did\+Transmit}}
+\index{m\+Did\+Transmit@{m\+Did\+Transmit}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Did\+Transmit}{mDidTransmit}}
+{\footnotesize\ttfamily bool I2\+C\+Manager\+::m\+Did\+Transmit\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a1c998eaf811dfda07e0385ac2ac1b6e8}\label{class_i2_c_manager_a1c998eaf811dfda07e0385ac2ac1b6e8}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Inter\+Scan\+Schedule\+Id@{m\+Inter\+Scan\+Schedule\+Id}}
+\index{m\+Inter\+Scan\+Schedule\+Id@{m\+Inter\+Scan\+Schedule\+Id}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Inter\+Scan\+Schedule\+Id}{mInterScanScheduleId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} I2\+C\+Manager\+::m\+Inter\+Scan\+Schedule\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a412189638428a3fb988e00b33b2a5a62}\label{class_i2_c_manager_a412189638428a3fb988e00b33b2a5a62}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Intra\+Scan\+Schedule\+Id@{m\+Intra\+Scan\+Schedule\+Id}}
+\index{m\+Intra\+Scan\+Schedule\+Id@{m\+Intra\+Scan\+Schedule\+Id}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Intra\+Scan\+Schedule\+Id}{mIntraScanScheduleId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} I2\+C\+Manager\+::m\+Intra\+Scan\+Schedule\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a12b17989c484ad7e3c8cbf59786811a5}\label{class_i2_c_manager_a12b17989c484ad7e3c8cbf59786811a5}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+On\+Change\+Callback@{m\+On\+Change\+Callback}}
+\index{m\+On\+Change\+Callback@{m\+On\+Change\+Callback}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+On\+Change\+Callback}{mOnChangeCallback}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$std\+::function$<$void(uint8\+\_\+t)$>$ $>$ I2\+C\+Manager\+::m\+On\+Change\+Callback\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a75983e46a08ab8c2887617bf6c4a7c5c}\label{class_i2_c_manager_a75983e46a08ab8c2887617bf6c4a7c5c}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Scheduler@{m\+Scheduler}}
+\index{m\+Scheduler@{m\+Scheduler}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Scheduler}{mScheduler}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_scheduler}{Scheduler}} I2\+C\+Manager\+::m\+Scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_i2_c_manager_a48ffd617c38c357bc24bc58182608276}\label{class_i2_c_manager_a48ffd617c38c357bc24bc58182608276}} 
+\index{I2\+C\+Manager@{I2\+C\+Manager}!m\+Wire@{m\+Wire}}
+\index{m\+Wire@{m\+Wire}!I2\+C\+Manager@{I2\+C\+Manager}}
+\subsubsection{\texorpdfstring{m\+Wire}{mWire}}
+{\footnotesize\ttfamily Two\+Wire$\ast$ I2\+C\+Manager\+::m\+Wire\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_i2_c_manager_8h}{I2\+C\+Manager.\+h}}\item 
+src/\mbox{\hyperlink{_i2_c_manager_8cpp}{I2\+C\+Manager.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,81 @@
+\hypertarget{struct_schedule}{}\section{Schedule Struct Reference}
+\label{struct_schedule}\index{Schedule@{Schedule}}
+
+
+Declarative configuration for a managed schedule.  
+
+
+
+
+{\ttfamily \#include $<$Scheduler.\+h$>$}
+
+
+
+Collaboration diagram for Schedule\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=176pt]{struct_schedule__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_schedule_a13d8ce84c7b38bf5366e5512e2a55e23}{call\+And\+Update}} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}} $>$ \mbox{\hyperlink{struct_schedule_a9d9c9f5ecb6213eea85e061b900ac398}{f}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} \mbox{\hyperlink{struct_schedule_a63741d77dabb232150e334168a4c72c2}{period}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}{Timestamp}} \mbox{\hyperlink{struct_schedule_ab512e16f533bdc7a1c9d8c5c2bad0f7a}{previous\+Call}}
+\item 
+bool \mbox{\hyperlink{struct_schedule_a799716253aaa56ab67ceacee1a727a28}{is\+Enabled}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Declarative configuration for a managed schedule. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_schedule_a13d8ce84c7b38bf5366e5512e2a55e23}\label{struct_schedule_a13d8ce84c7b38bf5366e5512e2a55e23}} 
+\index{Schedule@{Schedule}!call\+And\+Update@{call\+And\+Update}}
+\index{call\+And\+Update@{call\+And\+Update}!Schedule@{Schedule}}
+\subsubsection{\texorpdfstring{call\+And\+Update()}{callAndUpdate()}}
+{\footnotesize\ttfamily void Schedule\+::call\+And\+Update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_schedule_a9d9c9f5ecb6213eea85e061b900ac398}\label{struct_schedule_a9d9c9f5ecb6213eea85e061b900ac398}} 
+\index{Schedule@{Schedule}!f@{f}}
+\index{f@{f}!Schedule@{Schedule}}
+\subsubsection{\texorpdfstring{f}{f}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{_scheduler_8h_a2125a5a2949d6ee13163b671159c0d4d}{Func}}$>$ Schedule\+::f}
+
+\mbox{\Hypertarget{struct_schedule_a799716253aaa56ab67ceacee1a727a28}\label{struct_schedule_a799716253aaa56ab67ceacee1a727a28}} 
+\index{Schedule@{Schedule}!is\+Enabled@{is\+Enabled}}
+\index{is\+Enabled@{is\+Enabled}!Schedule@{Schedule}}
+\subsubsection{\texorpdfstring{is\+Enabled}{isEnabled}}
+{\footnotesize\ttfamily bool Schedule\+::is\+Enabled}
+
+\mbox{\Hypertarget{struct_schedule_a63741d77dabb232150e334168a4c72c2}\label{struct_schedule_a63741d77dabb232150e334168a4c72c2}} 
+\index{Schedule@{Schedule}!period@{period}}
+\index{period@{period}!Schedule@{Schedule}}
+\subsubsection{\texorpdfstring{period}{period}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_aca1fa1a7edde6bf9e22c7617400fad31}{Duration}} Schedule\+::period}
+
+How many milliseconds between executions of {\ttfamily f}? \mbox{\Hypertarget{struct_schedule_ab512e16f533bdc7a1c9d8c5c2bad0f7a}\label{struct_schedule_ab512e16f533bdc7a1c9d8c5c2bad0f7a}} 
+\index{Schedule@{Schedule}!previous\+Call@{previous\+Call}}
+\index{previous\+Call@{previous\+Call}!Schedule@{Schedule}}
+\subsubsection{\texorpdfstring{previous\+Call}{previousCall}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a67c6ac2398ae81344762ebb1b71fc9a7}{Timestamp}} Schedule\+::previous\+Call}
+
+When was the previous call of {\ttfamily f}? If {\ttfamily f} has never been called then this will be {\ttfamily H\+A\+S\+\_\+\+N\+E\+V\+E\+R\+\_\+\+R\+A\+N\+\_\+\+T\+I\+M\+E\+S\+T\+A\+MP}. 
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_scheduler_8h}{Scheduler.\+h}}\item 
+src/\mbox{\hyperlink{_scheduler_8cpp}{Scheduler.\+cpp}}\end{DoxyCompactItemize}

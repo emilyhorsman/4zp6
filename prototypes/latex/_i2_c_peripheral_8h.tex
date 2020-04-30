@@ -1,0 +1,100 @@
+\hypertarget{_i2_c_peripheral_8h}{}\section{include/\+I2\+C\+Peripheral.h File Reference}
+\label{_i2_c_peripheral_8h}\index{include/\+I2\+C\+Peripheral.\+h@{include/\+I2\+C\+Peripheral.\+h}}
+{\ttfamily \#include \char`\"{}Scheduler.\+h\char`\"{}}\newline
+Include dependency graph for I2\+C\+Peripheral.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{_i2_c_peripheral_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_i2_c_peripheral_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_read_definition}{Read\+Definition}}
+\begin{DoxyCompactList}\small\item\em Declarative configuration for reading a contiguous register block from a peripheral on the I2C bus. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}}
+\item 
+struct \mbox{\hyperlink{struct_peripheral}{Peripheral}}
+\begin{DoxyCompactList}\small\item\em Declarative configuration for the behaviour of a peripheral on the I2C bus. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_i2_c_peripheral_8h_a844808a972fe52f905460a2e611f96af}{R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI}}~15
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} \mbox{\hyperlink{_i2_c_peripheral_8h_ae09d4fb5ac84b480bc5f785562e0bc3b}{Read\+Definition}}
+\item 
+typedef struct \mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}} \mbox{\hyperlink{_i2_c_peripheral_8h_aedb5e72c14b49628073e1d0c881d850b}{Setup\+Write\+Definition}}
+\item 
+typedef struct \mbox{\hyperlink{struct_peripheral}{Peripheral}} \mbox{\hyperlink{_i2_c_peripheral_8h_adb61d3f4d9c37b38b0746b9fa539a1c3}{Peripheral}}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}{Register\+Length}} \{ \mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ae0e4fac35509ec53d2e8aecb33f3cb45}{R\+L16}}, 
+\mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ac2c6b7ffba3b85b1a4990575466fc484}{R\+L8}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_i2_c_peripheral_8h_a844808a972fe52f905460a2e611f96af}\label{_i2_c_peripheral_8h_a844808a972fe52f905460a2e611f96af}} 
+\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI@{R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI}}
+\index{R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI@{R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}
+\subsubsection{\texorpdfstring{R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI}{REGISTER\_REQ\_DELAY\_MILLI}}
+{\footnotesize\ttfamily \#define R\+E\+G\+I\+S\+T\+E\+R\+\_\+\+R\+E\+Q\+\_\+\+D\+E\+L\+A\+Y\+\_\+\+M\+I\+L\+LI~15}
+
+This value can be very important.
+
+Too low\+: Insufficient time between the register ID transmission and a request to read bytes. No data will be read.
+
+Too high\+: Performance will suffer for read definitions that have a long contiguous register block length. (e.\+g., something like the thermal camera that reads from 128 different registers.) 
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_i2_c_peripheral_8h_adb61d3f4d9c37b38b0746b9fa539a1c3}\label{_i2_c_peripheral_8h_adb61d3f4d9c37b38b0746b9fa539a1c3}} 
+\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!Peripheral@{Peripheral}}
+\index{Peripheral@{Peripheral}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}
+\subsubsection{\texorpdfstring{Peripheral}{Peripheral}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_peripheral}{Peripheral}} \mbox{\hyperlink{struct_peripheral}{Peripheral}}}
+
+\mbox{\Hypertarget{_i2_c_peripheral_8h_ae09d4fb5ac84b480bc5f785562e0bc3b}\label{_i2_c_peripheral_8h_ae09d4fb5ac84b480bc5f785562e0bc3b}} 
+\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!Read\+Definition@{Read\+Definition}}
+\index{Read\+Definition@{Read\+Definition}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}
+\subsubsection{\texorpdfstring{Read\+Definition}{ReadDefinition}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} \mbox{\hyperlink{struct_read_definition}{Read\+Definition}}}
+
+\mbox{\Hypertarget{_i2_c_peripheral_8h_aedb5e72c14b49628073e1d0c881d850b}\label{_i2_c_peripheral_8h_aedb5e72c14b49628073e1d0c881d850b}} 
+\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!Setup\+Write\+Definition@{Setup\+Write\+Definition}}
+\index{Setup\+Write\+Definition@{Setup\+Write\+Definition}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}
+\subsubsection{\texorpdfstring{Setup\+Write\+Definition}{SetupWriteDefinition}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}} \mbox{\hyperlink{struct_setup_write_definition}{Setup\+Write\+Definition}}}
+
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}\label{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}} 
+\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!Register\+Length@{Register\+Length}}
+\index{Register\+Length@{Register\+Length}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}
+\subsubsection{\texorpdfstring{Register\+Length}{RegisterLength}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383}{Register\+Length}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+L16@{R\+L16}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!R\+L16@{R\+L16}}}\mbox{\Hypertarget{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ae0e4fac35509ec53d2e8aecb33f3cb45}\label{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ae0e4fac35509ec53d2e8aecb33f3cb45}} 
+R\+L16&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+L8@{R\+L8}!I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}}\index{I2\+C\+Peripheral.\+h@{I2\+C\+Peripheral.\+h}!R\+L8@{R\+L8}}}\mbox{\Hypertarget{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ac2c6b7ffba3b85b1a4990575466fc484}\label{_i2_c_peripheral_8h_ae0efcb4a72d88c76f03e57ed26b03383ac2c6b7ffba3b85b1a4990575466fc484}} 
+R\+L8&\\
+\hline
+
+\end{DoxyEnumFields}

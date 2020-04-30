@@ -1,0 +1,49 @@
+\hypertarget{_telemetry_protocol_8h}{}\section{include/\+Telemetry\+Protocol.h File Reference}
+\label{_telemetry_protocol_8h}\index{include/\+Telemetry\+Protocol.\+h@{include/\+Telemetry\+Protocol.\+h}}
+{\ttfamily \#include $<$Arduino.\+h$>$}\newline
+{\ttfamily \#include $<$Telemetry.\+pb.\+h$>$}\newline
+{\ttfamily \#include $<$Wi\+Fi.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}I2\+C\+Peripheral.\+h\char`\"{}}\newline
+Include dependency graph for Telemetry\+Protocol.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_telemetry_protocol_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_telemetry_protocol_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}}
+\begin{DoxyCompactList}\small\item\em Intermediate object for protobuf encoding. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_telemetry_protocol}{Telemetry\+Protocol}}
+\begin{DoxyCompactList}\small\item\em Responsible for encoding and decoding protobuf/nanopb payloads. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::function$<$ void(uint32\+\_\+t, uint16\+\_\+t, \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$, uint8\+\_\+t $\ast$)$>$ \mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}}
+\item 
+typedef struct \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} \mbox{\hyperlink{_telemetry_protocol_8h_a2b53b967d745b3b918f0d6f97305d109}{Peripheral\+Status}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}\label{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}} 
+\index{Telemetry\+Protocol.\+h@{Telemetry\+Protocol.\+h}!Payload\+Func@{Payload\+Func}}
+\index{Payload\+Func@{Payload\+Func}!Telemetry\+Protocol.\+h@{Telemetry\+Protocol.\+h}}
+\subsubsection{\texorpdfstring{Payload\+Func}{PayloadFunc}}
+{\footnotesize\ttfamily typedef std\+::function$<$void (uint32\+\_\+t, uint16\+\_\+t, \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$, uint8\+\_\+t $\ast$)$>$ \mbox{\hyperlink{_telemetry_protocol_8h_a98c05796bd59110e8ae10dc71580b759}{Payload\+Func}}}
+
+\mbox{\Hypertarget{_telemetry_protocol_8h_a2b53b967d745b3b918f0d6f97305d109}\label{_telemetry_protocol_8h_a2b53b967d745b3b918f0d6f97305d109}} 
+\index{Telemetry\+Protocol.\+h@{Telemetry\+Protocol.\+h}!Peripheral\+Status@{Peripheral\+Status}}
+\index{Peripheral\+Status@{Peripheral\+Status}!Telemetry\+Protocol.\+h@{Telemetry\+Protocol.\+h}}
+\subsubsection{\texorpdfstring{Peripheral\+Status}{PeripheralStatus}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}}}
+

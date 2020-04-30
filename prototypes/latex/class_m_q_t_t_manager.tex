@@ -1,0 +1,223 @@
+\hypertarget{class_m_q_t_t_manager}{}\section{M\+Q\+T\+T\+Manager Class Reference}
+\label{class_m_q_t_t_manager}\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+
+
+Responsible for publishing and subscribing to topics on the M\+Q\+TT broker.  
+
+
+
+
+{\ttfamily \#include $<$M\+Q\+T\+T\+Manager.\+h$>$}
+
+
+
+Collaboration diagram for M\+Q\+T\+T\+Manager\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{class_m_q_t_t_manager__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_m_q_t_t_manager_af4a0454e2b8c10d989df9647c31611ad}{M\+Q\+T\+T\+Manager}} (\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} \&\mbox{\hyperlink{main_8cpp_a1fa047c23d7c85d1ad97022cd6b157d0}{runtime}})
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a522f958b12d67c372a02c55ec0c24261}{setup}} ()
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a9266e647933501851b411b6d2a9a1f95}{loop}} ()
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_aa7c667290f7d20e611f58de25b9b0354}{tx\+Registration}} (std\+::vector$<$ \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} $>$ $\ast$statuses)
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a99b5f971ca290bec4afe7d6da0003812}{attempt\+Connection}} ()
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a19b077a9e80135537efee44963883b3c}{tick}} ()
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a517bb71c7de061b711a025013564e232}{tx\+Payload}} (uint32\+\_\+t bus\+Id, uint16\+\_\+t bus\+Address, \mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$def, uint8\+\_\+t $\ast$payload)
+\item 
+bool \mbox{\hyperlink{class_m_q_t_t_manager_a1559f6ac139c883032ecf9283304b3f4}{publish}} (uint8\+\_\+t $\ast$payload, unsigned int len)
+\item 
+bool \mbox{\hyperlink{class_m_q_t_t_manager_aba95650540cd217055d1e0b993988561}{publish}} (char $\ast$payload)
+\item 
+bool \mbox{\hyperlink{class_m_q_t_t_manager_aec3beb05d7f795b3334d9f9a5c9d9421}{publish}} (std\+::string payload)
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_ad714e14eda21ba3edb0957ccb6bf8ef4}{subscribe}} ()
+\item 
+void \mbox{\hyperlink{class_m_q_t_t_manager_a8e90a9d70e31ba4af28da5370d68902d}{on\+Payload}} (char $\ast$topic, uint8\+\_\+t $\ast$payload, unsigned int size)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} \& \mbox{\hyperlink{class_m_q_t_t_manager_a3356cf93c237e44a28fbdc9e08e0b200}{m\+Runtime}}
+\item 
+Preferences \mbox{\hyperlink{class_m_q_t_t_manager_ab66bec340759e027dfa3ba3d37c1e6f7}{m\+Preferences}}
+\item 
+Wi\+Fi\+Client \mbox{\hyperlink{class_m_q_t_t_manager_af2d0eee7437193b3488b83e7afa56cd8}{m\+Wi\+Fi\+Client}}
+\item 
+Pub\+Sub\+Client \mbox{\hyperlink{class_m_q_t_t_manager_a7c702f0eda3bfa291a11591cebdaeed5}{m\+Pub\+Sub}}
+\item 
+\mbox{\hyperlink{class_scheduler}{Scheduler}} \mbox{\hyperlink{class_m_q_t_t_manager_aa6c36179bc117250fac8068de441775c}{m\+Scheduler}}
+\item 
+\mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} \mbox{\hyperlink{class_m_q_t_t_manager_abce927e68d9a29836f6e24425a99e6fc}{m\+Schedule\+Tick\+Id}}
+\item 
+char \mbox{\hyperlink{class_m_q_t_t_manager_a5a9517149033c08d3915df0625da08ff}{m\+U\+U\+ID}} \mbox{[}13\mbox{]}
+\item 
+char \mbox{\hyperlink{class_m_q_t_t_manager_ad7c10e50256600dc9952501ac7a3eebb}{m\+T\+X\+U\+U\+ID}} \mbox{[}16\mbox{]}
+\item 
+char \mbox{\hyperlink{class_m_q_t_t_manager_ab03da55b905537f50873245b60944b8c}{m\+R\+X\+U\+U\+ID}} \mbox{[}16\mbox{]}
+\item 
+bool \mbox{\hyperlink{class_m_q_t_t_manager_a8c1e9df7f05ec6ca83421f4e2ad9fa33}{m\+Is\+Subscribed}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Responsible for publishing and subscribing to topics on the M\+Q\+TT broker. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_m_q_t_t_manager_af4a0454e2b8c10d989df9647c31611ad}\label{class_m_q_t_t_manager_af4a0454e2b8c10d989df9647c31611ad}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{M\+Q\+T\+T\+Manager()}{MQTTManager()}}
+{\footnotesize\ttfamily M\+Q\+T\+T\+Manager\+::\+M\+Q\+T\+T\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}} \&}]{runtime }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_m_q_t_t_manager_a99b5f971ca290bec4afe7d6da0003812}\label{class_m_q_t_t_manager_a99b5f971ca290bec4afe7d6da0003812}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!attempt\+Connection@{attempt\+Connection}}
+\index{attempt\+Connection@{attempt\+Connection}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{attempt\+Connection()}{attemptConnection()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::attempt\+Connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a9266e647933501851b411b6d2a9a1f95}\label{class_m_q_t_t_manager_a9266e647933501851b411b6d2a9a1f95}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!loop@{loop}}
+\index{loop@{loop}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a8e90a9d70e31ba4af28da5370d68902d}\label{class_m_q_t_t_manager_a8e90a9d70e31ba4af28da5370d68902d}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!on\+Payload@{on\+Payload}}
+\index{on\+Payload@{on\+Payload}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{on\+Payload()}{onPayload()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::on\+Payload (\begin{DoxyParamCaption}\item[{char $\ast$}]{topic,  }\item[{uint8\+\_\+t $\ast$}]{payload,  }\item[{unsigned int}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a1559f6ac139c883032ecf9283304b3f4}\label{class_m_q_t_t_manager_a1559f6ac139c883032ecf9283304b3f4}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!publish@{publish}}
+\index{publish@{publish}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{publish()}{publish()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily bool M\+Q\+T\+T\+Manager\+::publish (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{payload,  }\item[{unsigned int}]{len }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_aba95650540cd217055d1e0b993988561}\label{class_m_q_t_t_manager_aba95650540cd217055d1e0b993988561}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!publish@{publish}}
+\index{publish@{publish}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{publish()}{publish()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool M\+Q\+T\+T\+Manager\+::publish (\begin{DoxyParamCaption}\item[{char $\ast$}]{payload }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_aec3beb05d7f795b3334d9f9a5c9d9421}\label{class_m_q_t_t_manager_aec3beb05d7f795b3334d9f9a5c9d9421}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!publish@{publish}}
+\index{publish@{publish}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{publish()}{publish()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool M\+Q\+T\+T\+Manager\+::publish (\begin{DoxyParamCaption}\item[{std\+::string}]{payload }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a522f958b12d67c372a02c55ec0c24261}\label{class_m_q_t_t_manager_a522f958b12d67c372a02c55ec0c24261}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!setup@{setup}}
+\index{setup@{setup}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::setup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_ad714e14eda21ba3edb0957ccb6bf8ef4}\label{class_m_q_t_t_manager_ad714e14eda21ba3edb0957ccb6bf8ef4}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!subscribe@{subscribe}}
+\index{subscribe@{subscribe}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{subscribe()}{subscribe()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::subscribe (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a19b077a9e80135537efee44963883b3c}\label{class_m_q_t_t_manager_a19b077a9e80135537efee44963883b3c}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!tick@{tick}}
+\index{tick@{tick}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{tick()}{tick()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::tick (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a517bb71c7de061b711a025013564e232}\label{class_m_q_t_t_manager_a517bb71c7de061b711a025013564e232}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!tx\+Payload@{tx\+Payload}}
+\index{tx\+Payload@{tx\+Payload}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{tx\+Payload()}{txPayload()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::tx\+Payload (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{bus\+Id,  }\item[{uint16\+\_\+t}]{bus\+Address,  }\item[{\mbox{\hyperlink{struct_read_definition}{Read\+Definition}} $\ast$}]{def,  }\item[{uint8\+\_\+t $\ast$}]{payload }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_aa7c667290f7d20e611f58de25b9b0354}\label{class_m_q_t_t_manager_aa7c667290f7d20e611f58de25b9b0354}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!tx\+Registration@{tx\+Registration}}
+\index{tx\+Registration@{tx\+Registration}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{tx\+Registration()}{txRegistration()}}
+{\footnotesize\ttfamily void M\+Q\+T\+T\+Manager\+::tx\+Registration (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{struct_peripheral_status}{Peripheral\+Status}} $>$ $\ast$}]{statuses }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_m_q_t_t_manager_a8c1e9df7f05ec6ca83421f4e2ad9fa33}\label{class_m_q_t_t_manager_a8c1e9df7f05ec6ca83421f4e2ad9fa33}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Is\+Subscribed@{m\+Is\+Subscribed}}
+\index{m\+Is\+Subscribed@{m\+Is\+Subscribed}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Is\+Subscribed}{mIsSubscribed}}
+{\footnotesize\ttfamily bool M\+Q\+T\+T\+Manager\+::m\+Is\+Subscribed\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_ab66bec340759e027dfa3ba3d37c1e6f7}\label{class_m_q_t_t_manager_ab66bec340759e027dfa3ba3d37c1e6f7}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Preferences@{m\+Preferences}}
+\index{m\+Preferences@{m\+Preferences}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Preferences}{mPreferences}}
+{\footnotesize\ttfamily Preferences M\+Q\+T\+T\+Manager\+::m\+Preferences\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a7c702f0eda3bfa291a11591cebdaeed5}\label{class_m_q_t_t_manager_a7c702f0eda3bfa291a11591cebdaeed5}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Pub\+Sub@{m\+Pub\+Sub}}
+\index{m\+Pub\+Sub@{m\+Pub\+Sub}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Pub\+Sub}{mPubSub}}
+{\footnotesize\ttfamily Pub\+Sub\+Client M\+Q\+T\+T\+Manager\+::m\+Pub\+Sub\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a3356cf93c237e44a28fbdc9e08e0b200}\label{class_m_q_t_t_manager_a3356cf93c237e44a28fbdc9e08e0b200}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Runtime@{m\+Runtime}}
+\index{m\+Runtime@{m\+Runtime}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Runtime}{mRuntime}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_i2_c_runtime}{I2\+C\+Runtime}}\& M\+Q\+T\+T\+Manager\+::m\+Runtime\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_ab03da55b905537f50873245b60944b8c}\label{class_m_q_t_t_manager_ab03da55b905537f50873245b60944b8c}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+R\+X\+U\+U\+ID@{m\+R\+X\+U\+U\+ID}}
+\index{m\+R\+X\+U\+U\+ID@{m\+R\+X\+U\+U\+ID}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+R\+X\+U\+U\+ID}{mRXUUID}}
+{\footnotesize\ttfamily char M\+Q\+T\+T\+Manager\+::m\+R\+X\+U\+U\+ID\mbox{[}16\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_aa6c36179bc117250fac8068de441775c}\label{class_m_q_t_t_manager_aa6c36179bc117250fac8068de441775c}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Scheduler@{m\+Scheduler}}
+\index{m\+Scheduler@{m\+Scheduler}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Scheduler}{mScheduler}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_scheduler}{Scheduler}} M\+Q\+T\+T\+Manager\+::m\+Scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_abce927e68d9a29836f6e24425a99e6fc}\label{class_m_q_t_t_manager_abce927e68d9a29836f6e24425a99e6fc}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Schedule\+Tick\+Id@{m\+Schedule\+Tick\+Id}}
+\index{m\+Schedule\+Tick\+Id@{m\+Schedule\+Tick\+Id}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Schedule\+Tick\+Id}{mScheduleTickId}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_scheduler_8h_a1e3b4605bdcbb8f6df7c47013e26e910}{Schedule\+Id}} M\+Q\+T\+T\+Manager\+::m\+Schedule\+Tick\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_ad7c10e50256600dc9952501ac7a3eebb}\label{class_m_q_t_t_manager_ad7c10e50256600dc9952501ac7a3eebb}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+T\+X\+U\+U\+ID@{m\+T\+X\+U\+U\+ID}}
+\index{m\+T\+X\+U\+U\+ID@{m\+T\+X\+U\+U\+ID}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+T\+X\+U\+U\+ID}{mTXUUID}}
+{\footnotesize\ttfamily char M\+Q\+T\+T\+Manager\+::m\+T\+X\+U\+U\+ID\mbox{[}16\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_a5a9517149033c08d3915df0625da08ff}\label{class_m_q_t_t_manager_a5a9517149033c08d3915df0625da08ff}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+U\+U\+ID@{m\+U\+U\+ID}}
+\index{m\+U\+U\+ID@{m\+U\+U\+ID}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+U\+U\+ID}{mUUID}}
+{\footnotesize\ttfamily char M\+Q\+T\+T\+Manager\+::m\+U\+U\+ID\mbox{[}13\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_m_q_t_t_manager_af2d0eee7437193b3488b83e7afa56cd8}\label{class_m_q_t_t_manager_af2d0eee7437193b3488b83e7afa56cd8}} 
+\index{M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}!m\+Wi\+Fi\+Client@{m\+Wi\+Fi\+Client}}
+\index{m\+Wi\+Fi\+Client@{m\+Wi\+Fi\+Client}!M\+Q\+T\+T\+Manager@{M\+Q\+T\+T\+Manager}}
+\subsubsection{\texorpdfstring{m\+Wi\+Fi\+Client}{mWiFiClient}}
+{\footnotesize\ttfamily Wi\+Fi\+Client M\+Q\+T\+T\+Manager\+::m\+Wi\+Fi\+Client\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_m_q_t_t_manager_8h}{M\+Q\+T\+T\+Manager.\+h}}\item 
+src/\mbox{\hyperlink{_m_q_t_t_manager_8cpp}{M\+Q\+T\+T\+Manager.\+cpp}}\end{DoxyCompactItemize}
