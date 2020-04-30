@@ -15,3 +15,4 @@
 * Firmware: Refer to [`prototypes/README.md`](./prototypes/)
 * Sample Dashboard: Refer to [`dashboard/README.md`](./dashboard/)
 * Peripheral Processor: Refer to [`sht31-controller/README.md`](./sht31-controller)
+* Backend Controller: Refer to [`backend/README.md`](./backend)

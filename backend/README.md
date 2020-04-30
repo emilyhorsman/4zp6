@@ -1,10 +1,39 @@
 # Telemetry Backend
 
-## Deploying
+## Environment Configuration
+To deploy the backend controller and all necessary services, both [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) are required.
+Before deploying the stack, the Docker daemon must be running.
 
-[Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) is required. The following command will build and deploy the backend in daemonized mode. 
+## Deployment
+Once the environment is running, from this `backend` directory, please run the following:
 ```sh
 docker-compose up -d --build
 ```
+This command will download all required Docker images for Telemetry to function.
+The following services will be downloaded, configured, and launched:
+* RabbitMQ: AMQP broker
+* VerneMQ: MQTT broker
+* Postgres: Relational database
+* Caddy: Webserver proxy
 
-To teardown, run `docker-compose down`.
+The command will also trigger the build process for Telemetry.
+When the build process is complete, Telemetry will also configure itself and launch.
+
+## Monitoring
+The status of running Docker containers may be checked by running the following:
+```sh
+docker ps -a
+```
+Additionally, logs regarding a particular service may be viewed by running the following:
+```sh
+docker logs containerName
+```
+The name of the container can be determined by running the status command above.
+
+## Cleanup
+To stop and delete all containers, please run the following:
+```sh
+docker-compose down
+```
+This will preserve all persistent volumes created (Caddy and Postgres).
+To remove persistent volumes, please reference Docker documentation.
