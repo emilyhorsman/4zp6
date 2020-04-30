@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import throttle from './Throttle';
 
 function App() {
     const [status, setStatus] = useState({});
 
     useEffect(() => {
         const socket = new WebSocket("wss://telemetry.0xt.ca/ws");
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            setStatus({
-                ...status,
-                [data.uuid]: {data: data.data, timestamp: data.timestamp}
-            });
-        };
+        socket.onmessage = throttle(
+            function(event) {
+                const data = JSON.parse(event.data);
+                setStatus({
+                    ...status,
+                    [data.uuid]: {data: data.data, timestamp: data.timestamp}
+                });
+            },
+            500
+        );
     });
 
     return (
