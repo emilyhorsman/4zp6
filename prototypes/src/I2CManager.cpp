@@ -13,6 +13,7 @@ I2CManager::I2CManager(TwoWire *wire, Duration interScanPeriod, Duration intraSc
 , mCurPollingAddress(0)
 , mWire(wire)
 , mDidTransmit(false)
+, mOnChangeCallback(NULL)
 {
     mInterScanScheduleId = mScheduler.addSchedule(
         std::make_shared<Func>(
@@ -45,20 +46,24 @@ void I2CManager::poll()
         mScheduler.kickSchedule(mInterScanScheduleId);
         mScheduler.disableSchedule(mIntraScanScheduleId);
         mScheduler.enableSchedule(mInterScanScheduleId);
-        this->printReport(&Serial);
         return;
     }
 
     if (mDidTransmit) {
         mWire->requestFrom(mCurPollingAddress, 1u);
-        bool status = mWire->available() == 1;
+        bool status = mCurPollingAddress == 0x44 || mWire->available() == 1;
+        bool old = mAddressStatus[mCurPollingAddress];
         mAddressStatus[mCurPollingAddress] = status;
         if (status) {
             // Anything the device sent back won't be relevant and we want to avoid
             // reading it in the future.
             mWire->read();
         }
-        
+
+        if (status != old && mOnChangeCallback != NULL) {
+            (*mOnChangeCallback)(mCurPollingAddress);
+        }
+
         mCurPollingAddress++;
 
         // Some peripherals need a delay between the initial transmission and
@@ -78,4 +83,17 @@ void I2CManager::poll()
 void I2CManager::printReport(Stream *stream)
 {
     stream->printf("Connected Devices: %d\n", mAddressStatus.count());
+}
+
+
+void I2CManager::setCallback(std::shared_ptr<std::function<void(uint8_t)>> f) {
+    mOnChangeCallback = f;
+}
+
+
+bool I2CManager::isConnected(uint8_t busAddr) {
+    if (busAddr > 127) {
+        return false;
+    }
+    return mAddressStatus[busAddr];
 }

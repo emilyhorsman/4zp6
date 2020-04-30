@@ -1,0 +1,6 @@
+{
+    "name": "TelemetryProtocol",
+    "build": {
+        "srcDir": "."
+    }
+}
