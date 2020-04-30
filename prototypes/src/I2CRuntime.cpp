@@ -76,6 +76,10 @@ uint8_t ** I2CPeripheralManager::getBuffer() {
     return mBuffer;
 }
 
+uint8_t I2CPeripheralManager::getBusAddr() {
+    return mPeripheral->busAddress;
+}
+
 I2CRuntime::I2CRuntime(TwoWire *wire)
 : mManagers()
 , mWire(wire)
@@ -83,7 +87,17 @@ I2CRuntime::I2CRuntime(TwoWire *wire)
 {}
 
 std::size_t I2CRuntime::addPeripheral(Peripheral *peripheral) {
-    mManagers.push_back(new I2CPeripheralManager(peripheral, mWire, this));
+    I2CPeripheralManager *m = new I2CPeripheralManager(peripheral, mWire, this);
+    for (std::size_t i = 0; i < mManagers.size(); i++) {
+        if (mManagers[i]->getBusAddr() == peripheral->busAddress) {
+            // TODO: free old peripheral manager
+            mManagers[i] = m;
+            Serial.printf("%lu Added peripheral %d\n", millis(), i);
+            return i;
+        }
+    }
+
+    mManagers.push_back(m);
     Serial.printf("%lu Added peripheral %d\n", millis(), mManagers.size() - 1);
     return mManagers.size() - 1;
 }

@@ -33,6 +33,7 @@ class I2CPeripheralManager {
         ~I2CPeripheralManager();
         void loop();
         uint8_t ** getBuffer();
+        uint8_t getBusAddr();
 };
 
 class I2CRuntime {
