@@ -162,8 +162,8 @@ This version of \name\ will support the following features.
 This provides users with a non real-time data source for integration with legacy applications.
 
 \subsubsection{Microcontroller and Peripheral Autodiscovery}
-\name\ provides the user with an Arduino library and a containerized controller.
-The library is be responsible for:
+\name\ will provide the user with an Arduino library and a containerized controller.
+The library will be responsible for:
 \begin{enumerate}
 \item Initializing and re-establishing a connection to the controller.
 \item Autodiscovery of \proto\ peripherals.
@@ -226,7 +226,7 @@ Connected to the \textbf{microcontroller} through direct hardwired connection.
 \subsubsection{Microcontroller}
 An Arduino powered computer.
 Responsible for establishing hardware connection with \textbf{peripheral(s)}.
-The microcontroller will run \name's Arduino library.
+The microcontroller will run \name's Arduino firmware.
 
 \subsubsection{MQTT Broker}
 Responsible for exposing an MQTT server, a lightweight publish/subscribe message transport protocol.
@@ -347,8 +347,7 @@ If a new \textbf{provisioning frame} is received by a \textbf{microcontroller}, 
 
 A \textbf{controller} must send a request frame when:
 \begin{enumerate}
-\item The user requests the \textbf{microcontroller} to reboot.
-\item The user requests the \textbf{microcontroller} to manually perform one iteration of the \textbf{schedule}.
+\item The \textbf{controller} requires a \textbf{microcontroller} to resend a registration frame.
 \end{enumerate}
 
 The request frame contains:
