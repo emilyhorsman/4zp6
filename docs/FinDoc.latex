@@ -27,6 +27,7 @@
 
 \name saves significant development time for common embedded applications.
 It offers a ``plug-and-play'' experience for \proto-based sensors, with immediate data logging and real-time streaming.
+Refer to section ~\ref{sec:features} for a complete list of features.
 
 There is a large market of hardware peripherals which use an \proto bus to communicate with a computer.
 They usually interface with an embedded device.\footnote{``Arduino-compatible'' microcontrollers are popular choices amongst hobbyists and industrial prototypers.}
@@ -34,7 +35,7 @@ These embedded controllers need to be flashed to change application logic and th
 There are thousands of such peripherals including sensors that measure temperature, moisture, colour, current, etc.
 Hobbyists and industrial prototypers buy these sensors from distributors such as Adafruit and Sparkfun.
 These distributors often share libraries that allow these sensors to be used with common embedded controllers with little development time.\footnote{e.g., For the SHT31 temperature and humidity sensor: \url{https://github.com/adafruit/Adafruit_SHT31}}
-However, these libraries have a lot of redundancy amongst them and often contain technical tradeoffs.\footnote{e.g., calling functions which sleep the device instead of using an event loop that would allow other tasks to be performed.}
+However, these libraries have a lot of redundancy amongst them and choose unacceptable technical tradeoffs for complex projects.\footnote{e.g., calling functions which sleep the device instead of using an event loop that would allow other tasks to be performed.}
 
 Writing a program for embedded controllers that reads and writes to \proto-based hardware peripherals traditionally involves three tasks:
 
@@ -111,7 +112,7 @@ November 2, 2019  & 1.0              & Initial document.                        
 November 6, 2019  & 1.1              & \begin{tabular}[c]{@{}l@{}}Extend project background,\\ system overview.\end{tabular}                                                                                                                                                                                                                                                 & Emily Horsman                                                        \\ \hline
 December 31, 2019 & 2.0              & \begin{tabular}[c]{@{}l@{}}Add software design specification,\\ architecture.\end{tabular}                                                                                                                                                                                                                                            & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
 April 29, 2020    & 2.1              & \begin{tabular}[c]{@{}l@{}}Update network protocols to\\ reflect changes in implementation.\\ \\ Minor corrections to software design\\ specification.\\ \\ Add requested viewpoints: interface,\\ structure, interaction, resource.\\ \\ Add user (application) interface\\ specifications.\\ \\ Add programming guide.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
-April 30, 2020    & 2.1              & \begin{tabular}[c]{@{}l@{}}Add API interface information.\\ \\ Finalize code guide.\\ \\ Update viewpoints.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
+April 30, 2020    & 2.2              & \begin{tabular}[c]{@{}l@{}}Add API interface information.\\ \\ Finalize code guide.\\ \\ Update viewpoints.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Emily Horsman,\\ Tanner Ryan\end{tabular} \\ \hline
 \end{tabular}
 \end{figure}
 \newpage
@@ -513,6 +514,7 @@ The controller will run this event loop while concurrently responding to HTTP re
 \section{Interface viewpoint}
 \name\ does not provide a graphical user interface.
 The primary interface is through the \textbf{Websocket} and \textbf{API} interfaces.
+\footnote{The final submission does include a sample GUI which utilizes the WebSocket interface. However this is not a primary requirement.}
 
 \subsection{Websocket Interface}
 When \name\ is deployed, the Websocket interface is accessible on \texttt{/api/ws}.
@@ -790,6 +792,7 @@ Language Summary: C++, Go, Haskell, JavaScript, Python
 \end{enumerate}
 
 \subsection{Completed Features and Details}
+\label{sec:features}
 
 \begin{enumerate}
 \item An abstraction for generalizing \proto sensors. This is reflected in the architecture of the entire repository. A primary artifact with detailed comments can be found in \texttt{protocol/telemetry.proto}. This is a Protocol Buffers definition for messages that generalize the behaviour of \proto sensors. A processor such as the one found in \texttt{sht31-controller/} can then specify the interaction with a sensor in a declarative fashion --- without writing new application logic or physically updating firmware. The low-level task of reading from the bus and understanding the sensors' protocol is decoupled from processing the data.
