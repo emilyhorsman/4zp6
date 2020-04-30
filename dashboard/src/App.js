@@ -1,6 +1,26 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 import throttle from './Throttle';
+import {VictoryLine, VictoryChart} from 'victory';
+
+function Peripheral({uuid, data}) {
+    const {temp, humidity, denominator} = data[data.length - 1].data;
+    const series = data.map(({timestamp, data}) => ({x: timestamp, y: data.temp / data.denominator}));
+    return (
+        <>
+            <p>
+                {uuid}:
+                {' '}
+                {temp / denominator}°C,
+                {' '}
+                {humidity / denominator}% Humidity
+            </p>
+            <VictoryChart>
+                <VictoryLine data={series} />
+            </VictoryChart>
+        </>
+    );
+}
 
 function App() {
     const [status, setStatus] = useState({});
@@ -11,9 +31,10 @@ function App() {
         socket.current.onmessage = throttle(
             function(event) {
                 const data = JSON.parse(event.data);
+                const prev = status[data.uuid] || [];
                 setStatus({
                     ...status,
-                    [data.uuid]: {data: data.data, timestamp: data.timestamp}
+                    [data.uuid]: prev.concat([{data: data.data, timestamp: data.timestamp}])
                 });
             },
             500
@@ -26,18 +47,7 @@ function App() {
 
     return (
         <div className="App">
-            {Object.keys(status).map(uuid => {
-                const {temp, humidity, denominator} = status[uuid].data;
-                return (
-                    <p>
-                        {uuid}:
-                        {' '}
-                        {temp / denominator}°C,
-                        {' '}
-                        {humidity / denominator}% Humidity
-                    </p>
-                );
-            })}
+            {Object.keys(status).map(uuid => <Peripheral key={uuid} uuid={uuid} data={status[uuid]} />)}
         </div>
     );
 }
