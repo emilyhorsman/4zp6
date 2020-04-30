@@ -400,16 +400,16 @@ The configuration profile must be in the following JSON format:
 
 \begin{minted}[breaklines,frame=single]{json}
 {
-  "busAddr": 68,
-  "name": "SHT31",
+  "busAddr": 0,
+  "name": "",
   "readDefinitions": [
     {
-      "definitionId": 1,
-      "registerIdLength": 16,
-      "registerId": 9216,
-      "registerBlockLength": 1,
-      "numBytesPerRegister": 6,
-      "readPeriod": 500
+      "definitionId": 0,
+      "registerIdLength": 0,
+      "registerId": 0,
+      "registerBlockLength": 0,
+      "numBytesPerRegister": 0,
+      "readPeriod": 0
     }
   ]
 }
@@ -428,7 +428,6 @@ All data requested and returned by \textbf{API} is to be in valid JSON format.
 React is an open source JavaScript framework, allowing for the creation of interactive, modular user interfaces.
 React allows us to write a lightweight user interface in a declarative fashion with modern functional-style JavaScript.
 Typed JavaScript has good support for React.
-The \textbf{dashboard} includes many state transitions (e.g., \textbf{microcontrollers} and \textbf{peripherals} coming online and offline) which are better handled in a declarative fashion than an imperative one, where synchronization bugs are common.
 The React community offers many well-written open-source ``batteries'' for data visualization that will aide in a rapid development process.
 
 \subsection{Transport Layer: MQTT}
@@ -508,6 +507,58 @@ The controller will run this event loop while concurrently responding to HTTP re
 \end{enumerate}
 
 \section*{Software Design Description}
+
+\section{Interface viewpoint}
+\name\ does not provide a graphical user interface.
+The primary interface is through the \textbf{Websocket} and \textbf{API} interfaces.
+
+\subsection{Websocket Interface}
+When \name\ is deployed, the Websocket interface is accessible on \texttt{/api/ws}.
+The Websocket stream will emit frames in real-time as \textbf{peripheral} data is sent from \textbf{microcontrollers}.
+The Websocket frame will be a JSON payload in the following format:
+
+\begin{minted}[breaklines,frame=single]{json}
+{
+  "uuid": "",
+  "busAddr": 0,
+  "timestamp": "",
+  "data": {}
+}
+\end{minted}
+
+The \texttt{uuid} filed will match the MAC address of the \textbf{microcontroller}, and the \texttt{busAddr} field will match the bus address of the \textbf{peripheral} where the data was collected.
+The \texttt{timestamp} is an RFC3339 timestamp of when the data was received on the \textbf{controller}.
+The \texttt{data} field contains a standard JSON object.
+This object will contain the JSON output from the \textbf{peripheral processor}.
+
+The following is an example of a Websocket frame:
+
+\begin{minted}[breaklines,frame=single]{json}
+{
+  "uuid": "807d3abcad84",
+  "busAddr": 68,
+  "timestamp": "2020-04-30T02:29:00Z",
+  "data": {
+    "denominator": 100,
+    "humidity": 4790,
+    "temp": 2464
+  }
+}
+\end{minted}
+
+Multiple subscribers may bind to the Websocket interface at once.
+
+\subsection{API Interface}
+API documentation.
+
+\section{Interaction viewpoint}
+TODO
+
+\section{Algorithm viewpoint}
+There are no applicable algorithmic viewpoints for \name.
+
+\section{Resource viewpoint}
+TODO
 
 \newpage
 
