@@ -24,11 +24,11 @@ github.com/satori/go.uuid
 github.com/sirupsen/logrus
 # github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 github.com/streadway/amqp
-# golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
+# golang.org/x/net v0.7.0
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
 golang.org/x/net/websocket
-# golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
+# golang.org/x/sys v0.5.0
 golang.org/x/sys/unix
 # google.golang.org/protobuf v1.21.0
 google.golang.org/protobuf/encoding/prototext
